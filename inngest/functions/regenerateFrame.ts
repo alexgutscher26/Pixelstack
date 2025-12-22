@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { generateText, stepCountIs } from "ai";
 import { inngest } from "../client";
 import { openrouter } from "@/lib/openrouter";
@@ -40,7 +41,10 @@ export const regenerateFrame = inngest.createFunction(
       `;
 
       const result = await generateText({
-        model: openrouter.chat("google/gemini-2.5-flash"),
+        model:
+          process.env.OPENROUTER_API_KEY
+            ? openrouter.chat("google/gemini-2.5-flash")
+            : ("google/gemini-3-pro-preview" as any),
         system: GENERATION_SYSTEM_PROMPT,
         tools: {
           searchUnsplash: unsplashTool,

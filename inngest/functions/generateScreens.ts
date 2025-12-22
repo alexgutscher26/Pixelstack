@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { generateObject, generateText, stepCountIs } from "ai";
 import { inngest } from "../client";
 import { z } from "zod";
@@ -107,15 +108,18 @@ export const generateScreens = inngest.createFunction(
         `.trim();
 
       const { object } = await generateObject({
-        model: openrouter.chat("google/gemini-2.5-flash"),
+        model:
+          process.env.OPENROUTER_API_KEY
+            ? openrouter.chat("google/gemini-2.5-flash")
+            : ("google/gemini-3-pro-preview" as any),
         schema: AnalysisSchema,
         system: ANALYSIS_PROMPT,
         prompt: analysisPrompt,
       });
 
-      const themeToUse = isExistingGeneration ? existingTheme : object.theme;
+  const themeToUse = isExistingGeneration ? existingTheme : object.theme;
 
-      if (!isExistingGeneration) {
+  if (!isExistingGeneration) {
         await prisma.project.update({
           where: {
             id: projectId,
@@ -165,7 +169,10 @@ export const generateScreens = inngest.createFunction(
 
       await step.run(`generated-screen-${i}`, async () => {
         const result = await generateText({
-          model: openrouter.chat("google/gemini-2.5-flash"),
+          model:
+            process.env.OPENROUTER_API_KEY
+              ? openrouter.chat("google/gemini-2.5-flash")
+              : ("google/gemini-3-pro-preview" as any),
           system: GENERATION_SYSTEM_PROMPT,
           tools: {
             searchUnsplash: unsplashTool,
