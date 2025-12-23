@@ -4,7 +4,7 @@ import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
-import { LogOutIcon, MoonIcon, SunIcon } from "lucide-react";
+import { LogOutIcon, MoonIcon, SunIcon, MonitorIcon, CheckIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import {
@@ -18,9 +18,9 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Header = () => {
-  const { theme, setTheme } = useTheme();
+  const { theme, resolvedTheme, setTheme } = useTheme();
   const { user } = useKindeBrowserClient();
-  const isDark = theme === "dark";
+  const isDark = (resolvedTheme ?? theme) === "dark";
   return (
     <div className="sticky top-0 right-0 left-0 z-30">
       <header className="h-16 border-b bg-background py-4">
@@ -48,25 +48,44 @@ const Header = () => {
 
           "
           >
-            <Button
-              variant="outline"
-              size="icon"
-              className="relative rounded-full h-8 w-8"
-              onClick={() => setTheme(isDark ? "light" : "dark")}
-            >
-              <SunIcon
-                className={cn(
-                  "absolute h-5 w-5 transition",
-                  isDark ? "scale-100" : "scale-0"
-                )}
-              />
-              <MoonIcon
-                className={cn(
-                  "absolute h-5 w-5 transition",
-                  isDark ? "scale-0" : "scale-100"
-                )}
-              />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="relative rounded-full h-8 w-8"
+                >
+                  <SunIcon
+                    className={cn(
+                      "absolute h-5 w-5 transition",
+                      isDark ? "scale-100" : "scale-0"
+                    )}
+                  />
+                  <MoonIcon
+                    className={cn(
+                      "absolute h-5 w-5 transition",
+                      isDark ? "scale-0" : "scale-100"
+                    )}
+                  />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-40">
+                <DropdownMenuLabel>Theme</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => setTheme("system")} className="justify-between">
+                  System
+                  {theme === "system" && <CheckIcon className="size-4" />}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("light")} className="justify-between">
+                  Light
+                  {resolvedTheme === "light" && <CheckIcon className="size-4" />}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("dark")} className="justify-between">
+                  Dark
+                  {resolvedTheme === "dark" && <CheckIcon className="size-4" />}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger>

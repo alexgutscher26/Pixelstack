@@ -39,9 +39,8 @@ Comprehensive backlog of improvements and features. Use checkboxes to track prog
 - [x] Add skeleton loaders for perceived performance
 - [x] Improve empty states with helpful calls‑to‑action
 - [x] Make dialogs and toasts consistent across app
-- [ ] Introduce design tokens for light/dark/auto themes
-- [ ] Add microcopy guidelines for clarity and tone
-- [ ] Create UX writing checklist and review process
+- [x] Introduce design tokens for light/dark/auto themes
+- [x] Create UX writing checklist and review process ([docs/ux-writing-checklist.md](docs/ux-writing-checklist.md))
 
 ## Mobile App
 
