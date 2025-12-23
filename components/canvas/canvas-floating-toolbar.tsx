@@ -5,7 +5,7 @@ import { useCanvas } from "@/context/canvas-context";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover";
 import PromptInput from "../prompt-input";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { parseThemeColors } from "@/lib/themes";
 import ThemeSelector from "./theme-selector";
 import { Separator } from "../ui/separator";
@@ -15,6 +15,9 @@ import {
   useUpdateProject,
 } from "@/features/use-project-id";
 import { Spinner } from "../ui/spinner";
+import axios from "axios";
+import { toast } from "sonner";
+import { getHTMLWrapper } from "@/lib/frame-wrapper";
 
 const CanvasFloatingToolbar = ({
   projectId,
@@ -25,8 +28,10 @@ const CanvasFloatingToolbar = ({
   isScreenshotting: boolean;
   onScreenshot: () => void;
 }) => {
-  const { themes, theme: currentTheme, setTheme } = useCanvas();
+  const { themes, theme: currentTheme, setTheme, selectedFrame, frames } = useCanvas();
   const [promptText, setPromptText] = useState<string>("");
+  const [isExportingSelected, setIsExportingSelected] = useState(false);
+  const [isExportingAll, setIsExportingAll] = useState(false);
 
   const { mutate, isPending } = useGenerateDesignById(projectId);
 
@@ -41,6 +46,156 @@ const CanvasFloatingToolbar = ({
     if (!currentTheme) return;
     update.mutate(currentTheme.id);
   };
+
+  const exportWidth = 420;
+
+  const measureHeight = useCallback(async (fullHtml: string, frameId: string) => {
+    return await new Promise<number>((resolve) => {
+      let done = false;
+      const handler = (e: MessageEvent) => {
+        if (e.data?.type === "FRAME_HEIGHT" && e.data?.frameId === frameId && !done) {
+          done = true;
+          window.removeEventListener("message", handler);
+          if (iframe.parentNode) document.body.removeChild(iframe);
+          resolve(Math.max(800, Number(e.data?.height) || 800));
+        }
+      };
+      window.addEventListener("message", handler);
+      const iframe = document.createElement("iframe");
+      iframe.style.position = "fixed";
+      iframe.style.left = "-99999px";
+      iframe.style.top = "-99999px";
+      iframe.style.width = `${exportWidth}px`;
+      iframe.style.height = `800px`;
+      iframe.setAttribute("sandbox", "allow-scripts allow-same-origin");
+      document.body.appendChild(iframe);
+      iframe.srcdoc = fullHtml;
+      setTimeout(() => {
+        if (!done) {
+          done = true;
+          window.removeEventListener("message", handler);
+          if (iframe.parentNode) document.body.removeChild(iframe);
+          resolve(900);
+        }
+      }, 1200);
+    });
+  }, []);
+
+  const handleExportSelectedPng = useCallback(async () => {
+    if (!selectedFrame || isExportingSelected) return;
+    setIsExportingSelected(true);
+    try {
+      const fid = `sel-${Math.random().toString(36).slice(2)}`;
+      const fullHtml = getHTMLWrapper(
+        selectedFrame.htmlContent,
+        selectedFrame.title,
+        currentTheme?.style,
+        fid
+      );
+      const h = await measureHeight(fullHtml, fid);
+      const response = await axios.post(
+        "/api/screenshot",
+        {
+          html: fullHtml,
+          width: exportWidth,
+          height: h,
+        },
+        {
+          responseType: "blob",
+          validateStatus: (s) => (s >= 200 && s < 300) || s === 304,
+        }
+      );
+      const url = window.URL.createObjectURL(response.data);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${selectedFrame.title.replace(/\s+/g, "-").toLowerCase()}-${Date.now()}.png`;
+      link.click();
+      window.URL.revokeObjectURL(url);
+      toast.success("Selected frame exported");
+    } catch {
+      toast.error("Failed to export selected frame");
+    } finally {
+      setIsExportingSelected(false);
+    }
+  }, [selectedFrame, isExportingSelected, currentTheme?.style, measureHeight]);
+
+  const handleDownloadSelectedHtml = useCallback(() => {
+    if (!selectedFrame || isExportingSelected) return;
+    const fullHtml = getHTMLWrapper(
+      selectedFrame.htmlContent,
+      selectedFrame.title,
+      currentTheme?.style
+    );
+    const blob = new Blob([fullHtml], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${selectedFrame.title.replace(/\s+/g, "-").toLowerCase()}-${Date.now()}.html`;
+    link.click();
+    URL.revokeObjectURL(url);
+    toast.success("Selected frame HTML downloaded");
+  }, [selectedFrame, currentTheme?.style, isExportingSelected]);
+
+  const handleExportAllPng = useCallback(async () => {
+    if (isExportingAll || frames.length === 0) return;
+    setIsExportingAll(true);
+    try {
+      for (const f of frames) {
+        const fid = `all-${Math.random().toString(36).slice(2)}`;
+        const fullHtml = getHTMLWrapper(f.htmlContent, f.title, currentTheme?.style, fid);
+        const h = await measureHeight(fullHtml, fid);
+        const response = await axios.post(
+          "/api/screenshot",
+          {
+            html: fullHtml,
+            width: exportWidth,
+            height: h,
+          },
+          {
+            responseType: "blob",
+            validateStatus: (s) => (s >= 200 && s < 300) || s === 304,
+          }
+        );
+        const url = window.URL.createObjectURL(response.data);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${f.title.replace(/\s+/g, "-").toLowerCase()}-${Date.now()}.png`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+        await new Promise((r) => setTimeout(r, 150));
+      }
+      toast.success("All frames exported");
+    } catch {
+      toast.error("Failed to export all frames");
+    } finally {
+      setIsExportingAll(false);
+    }
+  }, [frames, currentTheme?.style, isExportingAll, measureHeight]);
+
+  const handleDownloadAllHtml = useCallback(async () => {
+    if (isExportingAll || frames.length === 0) return;
+    setIsExportingAll(true);
+    try {
+      for (const f of frames) {
+        const fullHtml = getHTMLWrapper(f.htmlContent, f.title, currentTheme?.style);
+        const blob = new Blob([fullHtml], { type: "text/html" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${f.title.replace(/\s+/g, "-").toLowerCase()}-${Date.now()}.html`;
+        link.click();
+        URL.revokeObjectURL(url);
+        await new Promise((r) => setTimeout(r, 120));
+      }
+      toast.success("All frames HTML downloaded");
+    } catch {
+      toast.error("Failed to download all HTML");
+    } finally {
+      setIsExportingAll(false);
+    }
+  }, [frames, currentTheme?.style, isExportingAll]);
+
+  const hasSelected = useMemo(() => !!selectedFrame, [selectedFrame]);
 
   return (
     <div
@@ -140,7 +295,6 @@ const CanvasFloatingToolbar = ({
             </PopoverContent>
           </Popover>
 
-          {/* Divider */}
           <Separator orientation="vertical" className="h-4!" />
 
           <Popover>
@@ -151,7 +305,7 @@ const CanvasFloatingToolbar = ({
                 <ChevronDown className="size-4" />
               </div>
             </PopoverTrigger>
-            <PopoverContent className="w-[260px]">
+            <PopoverContent className="w-[300px]">
               <div className="space-y-3">
                 <div className="text-sm font-medium">Export Options</div>
                 <Button
@@ -161,10 +315,46 @@ const CanvasFloatingToolbar = ({
                   onClick={onScreenshot}
                   disabled={isScreenshotting}
                 >
-                  {isScreenshotting ? <Spinner /> : <>Export to Figma (PNG)</>}
+                  {isScreenshotting ? <Spinner /> : <>Canvas (PNG)</>}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={handleExportSelectedPng}
+                  disabled={!hasSelected || isExportingSelected}
+                >
+                  {isExportingSelected ? <Spinner /> : <>Selected Frame (PNG)</>}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={handleDownloadSelectedHtml}
+                  disabled={!hasSelected}
+                >
+                  Selected Frame (HTML)
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="w-full"
+                  onClick={handleExportAllPng}
+                  disabled={isExportingAll || frames.length === 0}
+                >
+                  {isExportingAll ? <Spinner /> : <>All Frames (PNG)</>}
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="w-full"
+                  onClick={handleDownloadAllHtml}
+                  disabled={isExportingAll || frames.length === 0}
+                >
+                  All Frames (HTML)
                 </Button>
                 <p className="text-xs text-muted-foreground">
-                  Downloads a high-res PNG of the current canvas. Drag and drop into Figma.
+                  PNGs work with Figma and similar tools. HTML downloads preserve theme variables.
                 </p>
               </div>
             </PopoverContent>
