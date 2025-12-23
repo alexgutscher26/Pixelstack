@@ -15,11 +15,27 @@ Comprehensive backlog of improvements and features. Use checkboxes to track prog
 - [ ] Implement idea triage process and RFC template
 - [ ] Quarterly roadmap review and re‑prioritization cadence
 
+## Core Features
+
+- [ ] Conversational agent chat with tool calling
+- [ ] Knowledge base with RAG search and embeddings
+- [ ] File uploads with document parsing and indexing
+- [ ] Workflow automation builder with triggers and actions
+- [ ] Voice input and TTS responses
+- [ ] Real‑time collaboration in chats and canvases
+- [ ] Templates gallery and starter agent presets
+- [ ] Agent sharing and marketplace
+- [ ] Role presets and granular permissions
+- [ ] Saved prompts, sessions, and replay
+- [ ] Multi‑agent sessions and handoffs
+- [ ] Context‑aware notifications and reminders
+- [ ] Mobile offline queue and sync conflict resolution
+- [ ] In‑app feedback, ratings, and improvement loop
+
 ## UI/UX
 
-- [ ] Audit app navigation and reduce deep nesting
-- [ ] Standardize spacing, typography, and color tokens
-- [ ] Build responsive layout primitives
+- [x] Standardize spacing, typography, and color tokens
+- [x] Build responsive layout primitives
 - [ ] Add skeleton loaders for perceived performance
 - [ ] Improve empty states with helpful calls‑to‑action
 - [ ] Rework forms with inline validation and error recovery
