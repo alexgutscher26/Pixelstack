@@ -293,11 +293,40 @@ const LandingSection = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mt-3">
-                    {projects?.map((project: ProjectType) => (
-                      <ProjectCard key={project.id} project={project} />
-                    ))}
-                  </div>
+                  projects && projects.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mt-3">
+                      {projects.map((project: ProjectType) => (
+                        <ProjectCard key={project.id} project={project} />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="mt-3 border rounded-xl p-8 bg-card text-card-foreground flex flex-col items-center gap-4">
+                      <div className="w-16 h-16 rounded-full bg-primary/15 flex items-center justify-center text-primary">
+                        <FolderOpenDotIcon className="size-7" />
+                      </div>
+                      <div className="text-center space-y-1">
+                        <h2 className="text-lg font-semibold tracking-tight">No projects yet</h2>
+                        <p className="text-sm text-muted-foreground">
+                          Kickstart your first design by using a suggested prompt.
+                        </p>
+                      </div>
+                      <Button
+                        type="button"
+                        className="px-6"
+                        onClick={() => {
+                          const starter = suggestions[0]?.value ?? "Create a modern mobile app home screen";
+                          mutate({
+                            prompt: starter,
+                            totalScreens,
+                            onboardingScreens,
+                            includePaywall,
+                          });
+                        }}
+                      >
+                        Start a new project
+                      </Button>
+                    </div>
+                  )
                 )}
               </div>
             )}
