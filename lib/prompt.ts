@@ -123,7 +123,15 @@ const THEME_OPTIONS_STRING = THEME_LIST.map(
 
 export const ANALYSIS_PROMPT = `
 You are a Lead UI/UX mobile app Designer.
-Return JSON with screens based on user request. If "one" is specified, return 1 screen, otherwise default to 1-4 screens with must Start with welcome onboarding screen).
+Return JSON with screens based on user request. If user preferences are provided, follow them strictly.
+
+DEFAULT RULES FOR NEW PROJECTS (no existing screens provided):
+- Return ~8–12 screens overall
+- Order MUST be:
+  1) Welcome Onboarding (no bottom navigation)
+  2) Home Dashboard (bottom navigation with home active)
+  3+) Additional screens based on the user request (Profile, Settings, Analytics, Messages, Explore, etc.)
+
 For EACH screen:
 - id: kebab-case name (e.g., "home-dashboard", "workout-tracker")
 - name: Display name (e.g., "Home Dashboard", "Workout Tracker")

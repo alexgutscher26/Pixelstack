@@ -41,7 +41,7 @@ const AnalysisSchema = z.object({
       })
     )
     .min(1)
-    .max(4),
+    .max(20),
 });
 
 export const generateScreens = inngest.createFunction(
@@ -56,6 +56,12 @@ export const generateScreens = inngest.createFunction(
       frames,
       theme: existingTheme,
     } = event.data;
+    const preferences = (event.data as any).preferences || {};
+    const desiredTotal =
+      Math.max(1, Math.min(10, Number(preferences.totalScreens) || 0)) || 9;
+    const desiredOnboarding =
+      Math.max(1, Math.min(5, Number(preferences.onboardingScreens) || 0)) || 1;
+    const includePaywall = Boolean(preferences.includePaywall);
     const CHANNEL = `user:${userId}`;
     const isExistingGeneration = Array.isArray(frames) && frames.length > 0;
 
@@ -105,6 +111,10 @@ export const generateScreens = inngest.createFunction(
         `.trim()
         : `
           USER REQUEST: ${prompt}
+          USER PREFERENCES:
+          - Non-onboarding screens to generate (including Home): ${desiredTotal}
+          - Onboarding screens count: ${desiredOnboarding}
+          - Include paywall in onboarding: ${includePaywall ? "Yes" : "No"}
         `.trim();
 
       const { object } = await generateObject({
@@ -120,6 +130,226 @@ export const generateScreens = inngest.createFunction(
   const themeToUse = isExistingGeneration ? existingTheme : object.theme;
 
   if (!isExistingGeneration) {
+        // Ensure onboarding and home screens exist and are ordered first
+        const screens = Array.isArray(object.screens) ? [...object.screens] : [];
+
+        const hasOnboarding = screens.some(
+          (s) =>
+            /onboarding|welcome|splash|intro|getting-started/i.test(
+              `${s.id} ${s.name}`
+            )
+        );
+        const hasHome = screens.some(
+          (s) =>
+            /home|dashboard|main/i.test(`${s.id} ${s.name}`)
+        );
+
+        const onboardingPlan = hasOnboarding
+          ? screens.find((s) =>
+              /onboarding|welcome|splash|intro|getting-started/i.test(
+                `${s.id} ${s.name}`
+              )
+            )!
+          : {
+            id: "onboarding-welcome",
+            name: "Welcome Onboarding",
+            purpose:
+              "Introduce the app and guide new users through a quick setup.",
+            visualDescription:
+              [
+                "Root: relative w-full min-h-screen bg-[var(--background)] with inner scrollable content.",
+                "Hero: large illustration/searchUnsplash hero (topic: abstract gradient onboarding), app logo top-center.",
+                "Copy: bold title and subtext describing app value, bullets with lucide:check icons.",
+                "Progress: step indicator with rounded-full progress bar.",
+                "Actions: primary CTA button 'Continue' (rounded-full, shadow-2xl), secondary 'Skip' text button.",
+                "Footer: subtle terms/privacy links.",
+                "NO bottom navigation on onboarding.",
+              ].join(" "),
+          };
+
+        const homePlan = hasHome
+          ? screens.find((s) => /home|dashboard|main/i.test(`${s.id} ${s.name}`))!
+          : {
+            id: "home-dashboard",
+            name: "Home Dashboard",
+            purpose:
+              "Primary landing screen showing overview cards, charts, and quick actions.",
+            visualDescription:
+              [
+                "Root: relative w-full min-h-screen bg-[var(--background)] with inner scrollable content.",
+                "Header: glassmorphic sticky header with user avatar (https://i.pravatar.cc/150?u=jane), greeting 'Welcome Jane', notifications with red dot.",
+                "Overview: 2x2 grid of metric cards (e.g., Balance $12,430; Steps 8,432; Sleep 7h 20m; Calories 420 kcal).",
+                "Charts: SVG line/area chart for weekly trend and circular progress for goals.",
+                "Quick actions: rounded-full buttons row.",
+                "Bottom navigation: 5 icons (lucide:home ACTIVE, lucide:bar-chart-2, lucide:zap, lucide:user, lucide:menu) — floating, glassmorphic, exact styling with active glow.",
+              ].join(" "),
+          };
+
+        // Filter out any duplicates of the mandatory screens from the rest
+        const rest = screens.filter(
+          (s) =>
+            !/onboarding|welcome|splash|intro|getting-started/i.test(
+              `${s.id} ${s.name}`
+            ) &&
+            !/home|dashboard|main/i.test(`${s.id} ${s.name}`)
+        );
+
+        const extraOnboardingPlans: typeof screens = [];
+        if (desiredOnboarding > 1) {
+          extraOnboardingPlans.push({
+            id: "onboarding-features",
+            name: "Onboarding Features",
+            purpose: "Showcase key features and benefits before starting.",
+            visualDescription: [
+              "Root: relative w-full min-h-screen bg-[var(--background)] with inner scrollable content.",
+              "Header: minimal top bar with skip button.",
+              "Feature highlights: stacked rounded-3xl cards with lucide icons and short descriptions.",
+              "Progress: step indicator.",
+              "Primary CTA: 'Next' rounded-full button.",
+              "NO bottom navigation on onboarding.",
+            ].join(" "),
+          });
+        }
+        if (desiredOnboarding > 2) {
+          extraOnboardingPlans.push({
+            id: "onboarding-permissions",
+            name: "Onboarding Permissions",
+            purpose: "Request optional permissions with clear benefits.",
+            visualDescription: [
+              "Root: relative w-full min-h-screen bg-[var(--background)] with inner scrollable content.",
+              "Permission list: cards for Notifications, Location, Health with lucide icons.",
+              "Toggle style buttons and a clear CTA to continue.",
+              "Progress: step indicator.",
+              "NO bottom navigation on onboarding.",
+            ].join(" "),
+          });
+        }
+
+        const paywallPlan = includePaywall
+          ? {
+              id: "onboarding-paywall",
+              name: "Onboarding Paywall",
+              purpose:
+                "Offer premium plan with benefits, pricing tiers, and trial.",
+              visualDescription: [
+                "Root: relative w-full min-h-screen bg-[var(--background)] with inner scrollable content.",
+                "Pricing: tier cards (Free, Pro, Premium) with features checklist.",
+                "Hero: subtle gradient banner and lucide:zap badge for best value.",
+                "CTA: 'Start Free Trial' and secondary 'Continue Free' buttons.",
+                "Trust: small testimonials or trust badges row.",
+                "NO bottom navigation on onboarding.",
+              ].join(" "),
+            }
+          : null;
+
+        const onboardingSequence = [
+          onboardingPlan,
+          ...extraOnboardingPlans,
+          ...(paywallPlan ? [paywallPlan] : []),
+        ];
+
+        const fillerCatalog = [
+          {
+            id: "analytics-overview",
+            name: "Analytics Overview",
+            purpose: "Visualize key metrics and trends at a glance.",
+            visualDescription: [
+              "Root: relative w-full min-h-screen bg-[var(--background)] with inner scrollable content.",
+              "Header: sticky glass header with title 'Analytics'.",
+              "Charts: SVG area/line chart, donut chart for distributions.",
+              "Cards: KPIs with icons and subtle glow.",
+              "Bottom navigation present with lucide:bar-chart-2 ACTIVE.",
+            ].join(" "),
+          },
+          {
+            id: "transactions-list",
+            name: "Transactions",
+            purpose: "List of recent transactions with filters and details.",
+            visualDescription: [
+              "Root: relative w-full min-h-screen bg-[var(--background)] with inner scrollable content.",
+              "Header: sticky with filter chips.",
+              "List: item cards with logo, title, amount, time.",
+              "Bottom navigation present with lucide:menu ACTIVE.",
+            ].join(" "),
+          },
+          {
+            id: "messages-center",
+            name: "Messages",
+            purpose: "Conversations and support messages.",
+            visualDescription: [
+              "Root: relative w-full min-h-screen bg-[var(--background)].",
+              "Threads: card list with avatar, name, snippet, time.",
+              "Bottom navigation present with lucide:message-circle ACTIVE.",
+            ].join(" "),
+          },
+          {
+            id: "profile",
+            name: "Profile",
+            purpose: "User profile details and preferences.",
+            visualDescription: [
+              "Root: relative w-full min-h-screen bg-[var(--background)].",
+              "Header: avatar, name, settings button.",
+              "Sections: info cards, achievements, connected accounts.",
+              "Bottom navigation present with lucide:user ACTIVE.",
+            ].join(" "),
+          },
+          {
+            id: "settings",
+            name: "Settings",
+            purpose: "App settings, theme, notifications.",
+            visualDescription: [
+              "Root: relative w-full min-h-screen bg-[var(--background)].",
+              "List: settings cards with toggles and chevrons.",
+              "Bottom navigation present with lucide:user ACTIVE.",
+            ].join(" "),
+          },
+          {
+            id: "notifications",
+            name: "Notifications",
+            purpose: "Alerts and updates.",
+            visualDescription: [
+              "Root: relative w-full min-h-screen.",
+              "Feed: notification cards with status chips.",
+              "Bottom navigation present with lucide:zap ACTIVE.",
+            ].join(" "),
+          },
+          {
+            id: "explore",
+            name: "Explore",
+            purpose: "Discover content and recommendations.",
+            visualDescription: [
+              "Root: relative w-full min-h-screen.",
+              "Grid: cards with thumbnails and tags.",
+              "Bottom navigation present with lucide:compass ACTIVE.",
+            ].join(" "),
+          },
+          {
+            id: "search",
+            name: "Search",
+            purpose: "Search with recent and popular queries.",
+            visualDescription: [
+              "Root: relative w-full min-h-screen.",
+              "Search bar with filters.",
+              "Results list with avatars/images and summary.",
+              "Bottom navigation present with lucide:compass ACTIVE.",
+            ].join(" "),
+          },
+        ];
+
+        while (rest.length < 20 && rest.length < desiredTotal * 2) {
+          const next = fillerCatalog[rest.length % fillerCatalog.length];
+          rest.push(next as any);
+        }
+
+        // desiredTotal counts non-onboarding screens including Home
+        const allowedRestCount = Math.max(0, desiredTotal - 1);
+        const finalScreens = [
+          ...onboardingSequence,
+          homePlan,
+          ...rest.slice(0, allowedRestCount),
+        ];
+        object.screens = finalScreens;
+
         await prisma.project.update({
           where: {
             id: projectId,

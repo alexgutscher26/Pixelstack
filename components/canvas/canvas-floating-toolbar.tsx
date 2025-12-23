@@ -1,6 +1,6 @@
 "use client";
 
-import { CameraIcon, ChevronDown, Palette, Save, Wand2 } from "lucide-react";
+import { CameraIcon, ChevronDown, Palette, Save, Wand2, Send } from "lucide-react";
 import { useCanvas } from "@/context/canvas-context";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover";
@@ -142,6 +142,33 @@ const CanvasFloatingToolbar = ({
 
           {/* Divider */}
           <Separator orientation="vertical" className="h-4!" />
+
+          <Popover>
+            <PopoverTrigger>
+              <div className="flex items-center gap-2 px-3 py-2">
+                <Send className="size-4" />
+                <span className="text-sm">Export</span>
+                <ChevronDown className="size-4" />
+              </div>
+            </PopoverTrigger>
+            <PopoverContent className="w-[260px]">
+              <div className="space-y-3">
+                <div className="text-sm font-medium">Export Options</div>
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="w-full"
+                  onClick={onScreenshot}
+                  disabled={isScreenshotting}
+                >
+                  {isScreenshotting ? <Spinner /> : <>Export to Figma (PNG)</>}
+                </Button>
+                <p className="text-xs text-muted-foreground">
+                  Downloads a high-res PNG of the current canvas. Drag and drop into Figma.
+                </p>
+              </div>
+            </PopoverContent>
+          </Popover>
 
           <div className="flex items-center gap-2">
             <Button

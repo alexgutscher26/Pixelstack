@@ -40,7 +40,12 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const { prompt } = await request.json();
+    const {
+      prompt,
+      totalScreens,
+      onboardingScreens,
+      includePaywall,
+    } = await request.json();
     const { getKindeServerSession } = await import(
       "@kinde-oss/kinde-auth-nextjs/server"
     );
@@ -71,6 +76,11 @@ export async function POST(request: Request) {
           userId,
           projectId: project.id,
           prompt,
+          preferences: {
+            totalScreens: Number(totalScreens) || undefined,
+            onboardingScreens: Number(onboardingScreens) || undefined,
+            includePaywall: Boolean(includePaywall) || false,
+          },
         },
       });
     } catch (error) {

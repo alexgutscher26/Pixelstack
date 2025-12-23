@@ -6,10 +6,15 @@ import { toast } from "sonner";
 export const useCreateProject = () => {
   const router = useRouter();
   return useMutation({
-    mutationFn: async (prompt: string) =>
+    mutationFn: async (payload: {
+      prompt: string;
+      totalScreens?: number;
+      onboardingScreens?: number;
+      includePaywall?: boolean;
+    }) =>
       await axios
         .post("/api/project", {
-          prompt,
+          ...payload,
         })
         .then((res) => res.data),
     onSuccess: (data) => {
