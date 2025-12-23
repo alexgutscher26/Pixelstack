@@ -13,6 +13,7 @@ import { ProjectType } from "@/types/project";
 import { useRouter } from "next/navigation";
 import { FolderOpenDotIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const LandingSection = () => {
   const { user } = useKindeBrowserClient();
@@ -278,19 +279,21 @@ const LandingSection = () => {
                 </h1>
 
                 {isLoading ? (
-                  <div
-                    className="flex items-center
-                  justify-center py-2
-                  "
-                  >
-                    <Spinner className="size-10" />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mt-3">
+                    {Array.from({ length: 6 }).map((_, i) => (
+                      <div key={i} className="w-full flex flex-col border rounded-xl overflow-hidden">
+                        <div className="h-40 bg-background">
+                          <Skeleton className="w-full h-full rounded-none" />
+                        </div>
+                        <div className="p-4 space-y-2">
+                          <Skeleton className="h-4 w-3/5" />
+                          <Skeleton className="h-3 w-1/4" />
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 ) : (
-                  <div
-                    className="grid grid-cols-1 sm:grid-cols-2
-                  md:grid-cols-3 gap-3 mt-3
-                    "
-                  >
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mt-3">
                     {projects?.map((project: ProjectType) => (
                       <ProjectCard key={project.id} project={project} />
                     ))}

@@ -36,7 +36,7 @@ Comprehensive backlog of improvements and features. Use checkboxes to track prog
 
 - [x] Standardize spacing, typography, and color tokens
 - [x] Build responsive layout primitives
-- [ ] Add skeleton loaders for perceived performance
+- [x] Add skeleton loaders for perceived performance
 - [ ] Improve empty states with helpful calls‑to‑action
 - [ ] Rework forms with inline validation and error recovery
 - [ ] Make dialogs and toasts consistent across app
