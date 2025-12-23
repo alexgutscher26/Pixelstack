@@ -64,12 +64,19 @@ const DeviceFrameToolbar = ({
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const handleRegenerate = () => {
-    if (promptValue.trim()) {
+    if (promptValue.trim().length >= 10) {
       onRegenerate?.(promptValue);
       setPromptValue("");
       setIsPopoverOpen(false);
     }
   };
+  const trimmed = promptValue.trim();
+  const invalidMsg =
+    trimmed.length === 0
+      ? "Please enter a prompt"
+      : trimmed.length < 10
+      ? "Enter at least 10 characters"
+      : "";
   return (
     <div
       className={cn(
@@ -198,8 +205,13 @@ const DeviceFrameToolbar = ({
                       value={promptValue}
                       onChange={(e) => setPromptValue(e.target.value)}
                       className="ring-0! border-0!  shadow-none! bg-transparent! xda-no-drag"
+                      aria-invalid={!!invalidMsg}
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {
+                          if (invalidMsg) {
+                            e.preventDefault();
+                            return;
+                          }
                           handleRegenerate();
                         }
                       }}
@@ -207,7 +219,7 @@ const DeviceFrameToolbar = ({
                     <InputGroupAddon align="inline-end">
                       <Button
                         size="icon-sm"
-                        disabled={!promptValue.trim() || isRegenerating}
+                        disabled={!!invalidMsg || isRegenerating}
                         onClick={handleRegenerate}
                       >
                         {isRegenerating ? (
@@ -218,6 +230,11 @@ const DeviceFrameToolbar = ({
                       </Button>
                     </InputGroupAddon>
                   </InputGroup>
+                  {invalidMsg && (
+                    <div className="text-destructive text-xs font-medium px-1">
+                      {invalidMsg}
+                    </div>
+                  )}
                 </div>
               </PopoverContent>
             </Popover>

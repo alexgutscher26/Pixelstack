@@ -38,8 +38,7 @@ Comprehensive backlog of improvements and features. Use checkboxes to track prog
 - [x] Build responsive layout primitives
 - [x] Add skeleton loaders for perceived performance
 - [x] Improve empty states with helpful calls‑to‑action
-- [ ] Rework forms with inline validation and error recovery
-- [ ] Make dialogs and toasts consistent across app
+- [x] Make dialogs and toasts consistent across app
 - [ ] Introduce design tokens for light/dark/auto themes
 - [ ] Add microcopy guidelines for clarity and tone
 - [ ] Create UX writing checklist and review process
