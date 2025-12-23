@@ -11,6 +11,10 @@ import DeviceFrameToolbar from "./device-frame-toolbar";
 import { toast } from "sonner";
 import DeviceFrameSkeleton from "./device-frame-skeleton";
 import { useRegenerateFrame, useDeleteFrame } from "@/features/use-frame";
+import { InputGroup, InputGroupAddon } from "../ui/input-group";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { Wand2Icon, Send } from "lucide-react";
 
 type PropsType = {
   html: string;
@@ -55,6 +59,8 @@ const DeviceFrame = ({
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const isSelected = selectedFrameId === frameId;
   const fullHtml = getHTMLWrapper(html, title, theme_style, frameId);
+  const [selectedOuterHTML, setSelectedOuterHTML] = useState<string | null>(null);
+  const [partialPrompt, setPartialPrompt] = useState<string>("");
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -67,10 +73,23 @@ const DeviceFrame = ({
           height: event.data.height,
         }));
       }
+      if (event.data.type === "ELEMENT_SELECTED" && event.data.frameId === frameId) {
+        setSelectedFrameId(frameId);
+        setSelectedOuterHTML(event.data.outerHTML || null);
+      }
     };
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
   }, [frameId]);
+
+  useEffect(() => {
+    const win = iframeRef.current?.contentWindow;
+    if (!win) return;
+    win.postMessage(
+      { type: "SELECT_MODE", frameId, enabled: isSelected && toolMode === TOOL_MODE_ENUM.SELECT },
+      "*"
+    );
+  }, [toolMode, isSelected, frameId]);
 
   const handleDownloadPng = useCallback(async () => {
     if (isDownloading) return;
@@ -107,7 +126,7 @@ const DeviceFrame = ({
   const handleRegenerate = useCallback(
     (prompt: string) => {
       regenerateMutation.mutate(
-        { frameId, prompt },
+        { frameId, prompt, targetOuterHTML: undefined },
         {
           onSuccess: () => {
             updateFrame(frameId, { isLoading: true });
@@ -120,6 +139,23 @@ const DeviceFrame = ({
     },
     [frameId, regenerateMutation, updateFrame]
   );
+
+  const handlePartialRegenerate = useCallback(() => {
+    if (!selectedOuterHTML || !partialPrompt.trim()) return;
+    regenerateMutation.mutate(
+      { frameId, prompt: partialPrompt, targetOuterHTML: selectedOuterHTML },
+      {
+        onSuccess: () => {
+          updateFrame(frameId, { isLoading: true });
+          setPartialPrompt("");
+          setSelectedOuterHTML(null);
+        },
+        onError: () => {
+          updateFrame(frameId, { isLoading: false });
+        },
+      }
+    );
+  }, [frameId, partialPrompt, regenerateMutation, selectedOuterHTML, updateFrame]);
 
   const handleDeleteFrame = useCallback(() => {
     deleteMutation.mutate(frameId);
@@ -139,9 +175,10 @@ const DeviceFrame = ({
         width: frameSize.width,
         height: frameSize.height,
       }}
-      disableDragging={toolMode === TOOL_MODE_ENUM.HAND}
+      disableDragging={toolMode !== TOOL_MODE_ENUM.HAND}
       enableResizing={isSelected && toolMode !== TOOL_MODE_ENUM.HAND}
       scale={scale}
+      cancel=".xda-no-drag"
       onClick={(e: any) => {
         e.stopPropagation();
         if (toolMode === TOOL_MODE_ENUM.SELECT) {
@@ -226,7 +263,7 @@ const DeviceFrame = ({
                   minHeight: `${minHeight}px`,
                   height: `${frameSize.height}px`,
                   border: "none",
-                  pointerEvents: "none",
+                  pointerEvents: isSelected && toolMode === TOOL_MODE_ENUM.SELECT ? "auto" : "none",
                   display: "block",
                   background: "transparent",
                 }}
@@ -234,6 +271,38 @@ const DeviceFrame = ({
             )}
           </div>
         </div>
+        {isSelected && selectedOuterHTML && (
+          <div
+            className="absolute top-4 right-4 z-20 bg-white dark:bg-muted rounded-xl shadow-lg border p-2 w-[360px] max-w-[85%] xda-no-drag"
+          >
+            <div className="text-xs font-medium mb-1">Edit selected part with AI</div>
+            <InputGroup className="bg-transparent! border-0! shadow-none! ring-0! px-0!">
+              <InputGroupAddon>
+                <Wand2Icon />
+              </InputGroupAddon>
+              <Input
+                placeholder="Describe the change..."
+                value={partialPrompt}
+                onChange={(e) => setPartialPrompt(e.target.value)}
+                className="ring-0! border-0! shadow-none! bg-transparent!"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handlePartialRegenerate();
+                  }
+                }}
+              />
+              <InputGroupAddon align="inline-end">
+                <Button
+                  size="icon-sm"
+                  disabled={!partialPrompt.trim() || regenerateMutation.isPending}
+                  onClick={handlePartialRegenerate}
+                >
+                  {regenerateMutation.isPending ? <></> : <Send className="size-4" />}
+                </Button>
+              </InputGroupAddon>
+            </InputGroup>
+          </div>
+        )}
       </div>
     </Rnd>
   );

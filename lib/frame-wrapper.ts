@@ -57,6 +57,67 @@ export function getHTMLWrapper(
     })();
   </script>
 
+  <script>
+    (()=>{
+      const fid='${frameId}';
+      let enabled=false;
+      let currentEl=null;
+      const overlay=document.createElement('div');
+      overlay.style.position='fixed';
+      overlay.style.pointerEvents='none';
+      overlay.style.zIndex='2147483647';
+      overlay.style.border='2px solid rgba(var(--primary-rgb,59,130,246),0.7)';
+      overlay.style.borderRadius='12px';
+      overlay.style.boxShadow='0 0 16px rgba(var(--primary-rgb,59,130,246),0.5)';
+      overlay.style.background='transparent';
+      overlay.style.display='none';
+      document.body.appendChild(overlay);
+      function computePath(el){
+        const path=[];
+        let node=el;
+        while(node && node!==document.body){
+          let index=0;
+          let sib=node;
+          while(sib.previousElementSibling){
+            index++;
+            sib=sib.previousElementSibling;
+          }
+          path.unshift({tag:(node.tagName||'').toLowerCase(),id:node.id||null,classes:Array.from(node.classList||[]),index});
+          node=node.parentElement;
+        }
+        return path;
+      }
+      function onMove(e){
+        if(!enabled) return;
+        const el=document.elementFromPoint(e.clientX,e.clientY);
+        if(!el) return;
+        currentEl=el;
+        const rect=el.getBoundingClientRect();
+        overlay.style.left=rect.left+'px';
+        overlay.style.top=rect.top+'px';
+        overlay.style.width=rect.width+'px';
+        overlay.style.height=rect.height+'px';
+        overlay.style.display='block';
+      }
+      function onClick(e){
+        if(!enabled) return;
+        e.preventDefault();
+        e.stopPropagation();
+        if(!currentEl) return;
+        const rect=currentEl.getBoundingClientRect();
+        parent.postMessage({type:'ELEMENT_SELECTED',frameId:fid,outerHTML:currentEl.outerHTML,path:computePath(currentEl),rect:{x:rect.left,y:rect.top,width:rect.width,height:rect.height}},'*');
+      }
+      window.addEventListener('message',(event)=>{
+        const d=event.data;
+        if(d && d.type==='SELECT_MODE' && d.frameId===fid){
+          enabled=!!d.enabled;
+          overlay.style.display='none';
+        }
+      });
+      document.addEventListener('mousemove',onMove,true);
+      document.addEventListener('click',onClick,true);
+    })();
+  </script>
 
 </body>
 </html>`;

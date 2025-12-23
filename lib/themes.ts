@@ -1,4 +1,5 @@
 export interface ThemeType {
+  [x: string]: string;
   id: string;
   name: string;
   style: string;

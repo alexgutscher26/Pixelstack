@@ -7,11 +7,6 @@ import {
   GripVertical,
   MoreHorizontalIcon,
   Trash2Icon,
-  Trash2,
-  ReplaceIcon,
-  Redo2Icon,
-  RotateCwIcon,
-  Sparkles,
   Send,
   Wand2,
   Wand2Icon,
@@ -192,9 +187,9 @@ const DeviceFrameToolbar = ({
                   <TooltipContent>AI Regenerate</TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-              <PopoverContent align="end" className="w-80 p-1! rounded-lg!">
+              <PopoverContent align="end" className="w-80 p-1! rounded-lg! xda-no-drag">
                 <div className="space-y-2">
-                  <InputGroup className="bg-transparent! border-0! shadow-none! ring-0! px-0!">
+                  <InputGroup className="bg-transparent! border-0! shadow-none! ring-0! px-0! xda-no-drag">
                     <InputGroupAddon>
                       <Wand2Icon />
                     </InputGroupAddon>
@@ -202,7 +197,7 @@ const DeviceFrameToolbar = ({
                       placeholder="Edit with AI..."
                       value={promptValue}
                       onChange={(e) => setPromptValue(e.target.value)}
-                      className="ring-0! border-0!  shadow-none! bg-transparent! "
+                      className="ring-0! border-0!  shadow-none! bg-transparent! xda-no-drag"
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {
                           handleRegenerate();
