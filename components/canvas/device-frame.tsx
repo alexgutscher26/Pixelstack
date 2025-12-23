@@ -25,6 +25,7 @@ type PropsType = {
   isLoading?: boolean;
   projectId: string;
   onOpenHtmlDialog: () => void;
+  onOpenReactDialog?: () => void;
 };
 const DeviceFrame = ({
   html,
@@ -39,6 +40,7 @@ const DeviceFrame = ({
   isLoading = false,
   projectId,
   onOpenHtmlDialog,
+  onOpenReactDialog,
 }: PropsType) => {
   const { selectedFrameId, setSelectedFrameId, updateFrame } = useCanvas();
   const [frameSize, setFrameSize] = useState({
@@ -191,6 +193,7 @@ const DeviceFrame = ({
           onRegenerate={handleRegenerate}
           onDeleteFrame={handleDeleteFrame}
           onOpenHtmlDialog={onOpenHtmlDialog}
+          onOpenReactDialog={onOpenReactDialog}
         />
 
         <div

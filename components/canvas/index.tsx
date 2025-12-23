@@ -9,6 +9,7 @@ import { TOOL_MODE_ENUM, ToolModeType } from "@/constant/canvas";
 import CanvasControls from "./canvas-controls";
 import DeviceFrame from "./device-frame";
 import HtmlDialog from "./html-dialog";
+import ReactDialog from "./react-dialog";
 import { toast } from "sonner";
 
 const DEMO_HTML = `
@@ -37,6 +38,7 @@ const Canvas = ({
   const [zoomPercent, setZoomPercent] = useState<number>(53);
   const [currentScale, setCurrentScale] = useState<number>(0.53);
   const [openHtmlDialog, setOpenHtmlDialog] = useState(false);
+  const [openReactDialog, setOpenReactDialog] = useState(false);
   const [isScreenshotting, setIsScreenshotting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -77,6 +79,9 @@ const Canvas = ({
 
   const onOpenHtmlDialog = () => {
     setOpenHtmlDialog(true);
+  };
+  const onOpenReactDialog = () => {
+    setOpenReactDialog(true);
   };
 
   function getCanvasHtmlContent() {
@@ -242,12 +247,13 @@ const Canvas = ({
                             x: baseX,
                             y,
                           }}
-                          toolMode={toolMode}
-                          theme_style={theme?.style}
-                          onOpenHtmlDialog={onOpenHtmlDialog}
-                        />
-                      );
-                    })}
+                        toolMode={toolMode}
+                        theme_style={theme?.style}
+                        onOpenHtmlDialog={onOpenHtmlDialog}
+                        onOpenReactDialog={onOpenReactDialog}
+                      />
+                    );
+                  })}
                   </div>
                   {/* <DeviceFrame
                     frameId="demo"
@@ -283,6 +289,12 @@ const Canvas = ({
         theme_style={theme?.style}
         open={openHtmlDialog}
         onOpenChange={setOpenHtmlDialog}
+      />
+      <ReactDialog
+        html={selectedFrame?.htmlContent || ""}
+        title={selectedFrame?.title}
+        open={openReactDialog}
+        onOpenChange={setOpenReactDialog}
       />
     </>
   );

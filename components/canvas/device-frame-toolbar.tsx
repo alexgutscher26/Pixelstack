@@ -46,6 +46,7 @@ type PropsType = {
   isRegenerating?: boolean;
   isDeleting?: boolean;
   onOpenHtmlDialog: () => void;
+  onOpenReactDialog?: () => void;
   onDownloadPng?: () => void;
   onRegenerate?: (prompt: string) => void;
   onDeleteFrame?: () => void;
@@ -59,6 +60,7 @@ const DeviceFrameToolbar = ({
   isRegenerating = false,
   isDeleting = false,
   onOpenHtmlDialog,
+  onOpenReactDialog,
   onDownloadPng,
   onRegenerate,
   onDeleteFrame,
@@ -128,6 +130,23 @@ const DeviceFrameToolbar = ({
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>View HTML</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    disabled={disabled}
+                    size="icon-xs"
+                    variant="ghost"
+                    className="rounded-full!"
+                    onClick={onOpenReactDialog}
+                  >
+                    <CodeIcon className="size-3.5! stroke-1.5! mt-px" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>View React</TooltipContent>
               </Tooltip>
             </TooltipProvider>
 
