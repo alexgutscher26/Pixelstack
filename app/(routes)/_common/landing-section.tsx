@@ -248,7 +248,7 @@ const LandingSection = () => {
               <div
                 className="-translate-x-1/2 absolute
                bottom-[calc(100%-300px)] left-1/2
-               h-[2000px] w-[2000px]
+               h-500 w-500
                opacity-20 bg-radial-primary"
               ></div>
               <div
