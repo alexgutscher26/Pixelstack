@@ -77,11 +77,36 @@ const DeviceFrame = ({
         setSelectedFrameId(frameId);
         setSelectedOuterHTML(event.data.outerHTML || null);
       }
+      if (event.data.type === "PERF_METRICS" && event.data.frameId === frameId) {
+        const store = (window as any).__perfStore || ((window as any).__perfStore = {});
+        if (!store[frameId]) store[frameId] = [];
+        store[frameId].push({
+          ts: Date.now(),
+          title,
+          ...event.data.metrics,
+        });
+        const arr = store[frameId];
+        if (arr.length % 5 === 0) {
+          console.info("PERF_METRICS", frameId, arr[arr.length - 1]);
+        }
+      }
     };
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
   }, [frameId]);
 
+  useEffect(() => {
+    if (!(window as any).exportPerf) {
+      (window as any).exportPerf = () => {
+        try {
+          const data = (window as any).__perfStore || {};
+          return JSON.stringify(data, null, 2);
+        } catch {
+          return "{}";
+        }
+      };
+    }
+  }, []);
   useEffect(() => {
     const win = iframeRef.current?.contentWindow;
     if (!win) return;

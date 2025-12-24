@@ -15,14 +15,39 @@ export function getHTMLWrapper(
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>${title}</title>
 
-  <!-- Google Font -->
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script>
+    (function(){
+      try{
+        var dm = (navigator as any).deviceMemory || 4;
+        var hc = (navigator && navigator.hardwareConcurrency) || 4;
+        var et = (navigator as any).connection && (navigator as any).connection.effectiveType || '4g';
+        var low = (dm && dm <= 2) || (hc && hc <= 4) || (/^(slow-2g|2g|3g)$/).test(String(et));
+        (window as any).__quality = low ? 'low' : 'high';
+        document.documentElement.classList.toggle('quality-low', !!low);
+      }catch(e){
+        (window as any).__quality = 'high';
+      }
+    })();
+  </script>
+  <script>
+    (function(){
+      // Inject fonts only for non-low quality devices
+      if((window as any).__quality !== 'low'){
+        var fonts = [
+          'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap',
+          'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap',
+          'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap',
+          'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap'
+        ];
+        fonts.forEach(function(href){
+          var link=document.createElement('link');
+          link.rel='stylesheet';
+          link.href=href;
+          document.head.appendChild(link);
+        });
+      }
+    })();
+  </script>
 
   <!-- Tailwind + Iconify -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -37,6 +62,14 @@ export function getHTMLWrapper(
     #root {width:100%;min-height:100vh;}
     * {scrollbar-width:none;-ms-overflow-style:none;}
     *::-webkit-scrollbar {display:none;}
+    /* Low-end overrides */
+    .quality-low * { transition: none !important; animation: none !important; }
+    .quality-low [class*="backdrop-blur"] { backdrop-filter: none !important; }
+    .quality-low [class*="shadow-"] { box-shadow: none !important; }
+    .quality-low [class*="drop-shadow"] { filter: none !important; }
+    .quality-low .glassmorphic { backdrop-filter: none !important; }
+    .quality-low section, .quality-low main { content-visibility: auto; contain-intrinsic-size: 800px; }
+    .quality-low img { image-rendering: -webkit-optimize-contrast; }
   </style>
 </head>
 <body>
@@ -116,6 +149,80 @@ export function getHTMLWrapper(
       });
       document.addEventListener('mousemove',onMove,true);
       document.addEventListener('click',onClick,true);
+    })();
+  </script>
+  
+  <script>
+    (()=>{
+      const fid='${frameId}';
+      // FPS estimation via rAF
+      let frames=0, fps=0;
+      let lastTick=performance.now();
+      function raf(t){
+        frames++;
+        if(t - lastTick >= 1000){
+          fps = frames;
+          frames = 0;
+          lastTick = t;
+        }
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+      // Long Task observer
+      let longTasks=0, longTaskTotal=0;
+      try{
+        const po=new PerformanceObserver((list)=>{
+          list.getEntries().forEach((e)=>{
+            longTasks++;
+            longTaskTotal += e.duration;
+          });
+        });
+        po.observe({entryTypes:['longtask']});
+      }catch{}
+      // Memory
+      function getMemory(){
+        const m=(performance as any).memory;
+        if(!m) return null;
+        return { used:m.usedJSHeapSize, total:m.totalJSHeapSize, limit:m.jsHeapSizeLimit };
+      }
+      // Battery
+      async function getBattery(){
+        try{
+          const b=await (navigator as any).getBattery();
+          return { level:b.level, charging:b.charging, dischargingTime:b.dischargingTime };
+        }catch{return null;}
+      }
+      // Frame time sampling
+      let frameTimes=[];
+      function sampleFrame(){
+        const start=performance.now();
+        requestAnimationFrame(()=>{
+          const dt=performance.now()-start;
+          frameTimes.push(dt);
+          if(frameTimes.length>120) frameTimes.shift();
+        });
+      }
+      setInterval(sampleFrame, 200);
+      // Emit metrics periodically
+      setInterval(async ()=>{
+        const memory=getMemory();
+        const battery=await getBattery();
+        const avgFrameTime=frameTimes.length?frameTimes.reduce((a,b)=>a+b,0)/frameTimes.length:null;
+        parent.postMessage({
+          type:'PERF_METRICS',
+          frameId:fid,
+          metrics:{
+            fps,
+            longTasks,
+            longTaskTotal,
+            avgFrameTime,
+            memory,
+            battery,
+            quality:(window as any).__quality
+          }
+        },'*');
+        longTasks=0; longTaskTotal=0;
+      },2000);
     })();
   </script>
 

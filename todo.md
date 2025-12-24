@@ -44,7 +44,7 @@ Comprehensive backlog of improvements and features. Use checkboxes to track prog
 
 ## Mobile App
 
-- [ ] Profile performance on low‑end devices
+- [x] Profile performance on low‑end devices
 - [ ] Optimize startup time and bundle size
 - [ ] Implement offline mode with background sync
 - [ ] Add deep linking support and universal links
