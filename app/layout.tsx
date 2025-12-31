@@ -24,15 +24,17 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${jostSans.className} antialiased`}>
         <QueryProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-            <Toaster richColors position="bottom-center" />
-          </ThemeProvider>
+          <SessionProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+              <Toaster richColors position="bottom-center" />
+            </ThemeProvider>
+          </SessionProvider>
         </QueryProvider>
       </body>
     </html>
