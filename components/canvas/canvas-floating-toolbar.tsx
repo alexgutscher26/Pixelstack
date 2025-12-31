@@ -207,10 +207,10 @@ const CanvasFloatingToolbar = ({
 
   return (
     <div className="fixed top-6 left-1/2 z-50 -translate-x-1/2">
-      <div className="bg-background w-full max-w-2xl rounded-full border shadow-xl dark:bg-gray-950">
-        <div className="flex flex-row items-center gap-2 px-3">
+      <TooltipProvider delayDuration={150} skipDelayDuration={500}>
+        <div className="bg-background w-full max-w-2xl rounded-full border shadow-xl dark:bg-gray-950">
+          <div className="flex flex-row items-center gap-2 px-3">
           <Popover>
-            <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <PopoverTrigger asChild>
@@ -225,7 +225,6 @@ const CanvasFloatingToolbar = ({
                 </TooltipTrigger>
                 <TooltipContent>AI Design</TooltipContent>
               </Tooltip>
-            </TooltipProvider>
             <PopoverContent className="mt-1 w-80 rounded-xl! border p-2! shadow-lg">
               <PromptInput
                 promptText={promptText}
@@ -244,7 +243,6 @@ const CanvasFloatingToolbar = ({
           </Popover>
 
           <Popover>
-            <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <PopoverTrigger asChild>
@@ -281,7 +279,6 @@ const CanvasFloatingToolbar = ({
                 </TooltipTrigger>
                 <TooltipContent>Theme</TooltipContent>
               </Tooltip>
-            </TooltipProvider>
             <PopoverContent className="rounded-xl border px-0 shadow">
               <ThemeSelector />
             </PopoverContent>
@@ -290,7 +287,6 @@ const CanvasFloatingToolbar = ({
           <Separator orientation="vertical" className="h-4!" />
 
           <Popover>
-            <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <PopoverTrigger asChild>
@@ -303,7 +299,6 @@ const CanvasFloatingToolbar = ({
                 </TooltipTrigger>
                 <TooltipContent>Export</TooltipContent>
               </Tooltip>
-            </TooltipProvider>
             <PopoverContent className="w-[300px]">
               <div className="space-y-3">
                 <div className="text-sm font-medium">Export Options</div>
@@ -360,7 +355,6 @@ const CanvasFloatingToolbar = ({
           </Popover>
 
           <div className="flex items-center gap-2">
-            <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
@@ -376,8 +370,6 @@ const CanvasFloatingToolbar = ({
                 </TooltipTrigger>
                 <TooltipContent>Screenshot</TooltipContent>
               </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
@@ -398,10 +390,10 @@ const CanvasFloatingToolbar = ({
                 </TooltipTrigger>
                 <TooltipContent>Save</TooltipContent>
               </Tooltip>
-            </TooltipProvider>
+          </div>
           </div>
         </div>
-      </div>
+      </TooltipProvider>
     </div>
   );
 };
