@@ -235,7 +235,7 @@ const CanvasFloatingToolbar = ({
               />
               <Button
                 disabled={isPending}
-                className="mt-2 w-full cursor-pointer rounded-2xl bg-linear-to-r from-purple-500 to-indigo-600 text.white shadow-lg shadow-purple-200/50"
+                className="mt-2 w-full cursor-pointer rounded-2xl bg-linear-to-r from-purple-500 to-indigo-600 text-white shadow-lg shadow-purple-200/50"
                 onClick={handleAIGenerate}
               >
                 {isPending ? <Spinner /> : <>Design</>}
