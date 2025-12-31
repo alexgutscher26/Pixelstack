@@ -35,7 +35,7 @@ export default function RootLayout({
             >
               {children}
               <MobileBlocker />
-              <Toaster richColors position="bottom-center" />
+              <Toaster richColors position="bottom-right" />
             </ThemeProvider>
           </SessionProvider>
         </QueryProvider>

@@ -11,14 +11,16 @@ import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { Spinner } from "@/components/ui/spinner";
 import { ProjectType } from "@/types/project";
 import { useRouter } from "next/navigation";
-import { FolderOpenDotIcon, ChevronLeft, ChevronRight } from "lucide-react";
+import { FolderOpenDotIcon, ChevronLeft, ChevronRight, SearchIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FallbackImage } from "@/components/ui/fallback-image";
+import { Input } from "@/components/ui/input";
 
 const LandingSection = () => {
   const { user } = useKindeBrowserClient();
   const [promptText, setPromptText] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [totalScreens, setTotalScreens] = useState<number>(9);
   const [onboardingScreens, setOnboardingScreens] = useState<number>(1);
   const [includePaywall, setIncludePaywall] = useState<boolean>(false);
@@ -27,6 +29,10 @@ const LandingSection = () => {
   const { data: projects, isLoading, isError } = useGetProjects(userId);
   const { mutate, isPending } = useCreateProject();
   const carouselRef = useRef<HTMLDivElement>(null);
+
+  const filteredProjects = projects?.filter((project) =>
+    project.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const suggestions = [
     {
@@ -271,13 +277,18 @@ const LandingSection = () => {
           <div className="mx-auto max-w-3xl">
             {userId && (
               <div>
-                <h1
-                  className="font-medium text-xl
-              tracking-tight
-              "
-                >
-                  Recent Projects
-                </h1>
+                <div className="flex items-center justify-between mb-4">
+                  <h1 className="font-medium text-xl tracking-tight">Recent Projects</h1>
+                  <div className="relative w-full max-w-xs">
+                    <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Search projects..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-9 h-9"
+                    />
+                  </div>
+                </div>
 
                 {isLoading ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mt-3">
@@ -294,11 +305,15 @@ const LandingSection = () => {
                     ))}
                   </div>
                 ) : (
-                  projects && projects.length > 0 ? (
+                  filteredProjects && filteredProjects.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mt-3">
-                      {projects.map((project: ProjectType) => (
+                      {filteredProjects.map((project: ProjectType) => (
                         <ProjectCard key={project.id} project={project} />
                       ))}
+                    </div>
+                  ) : searchQuery ? (
+                    <div className="mt-10 text-center text-muted-foreground">
+                      No projects found matching &quot;{searchQuery}&quot;
                     </div>
                   ) : (
                     <div className="mt-3 border rounded-xl p-8 bg-card text-card-foreground flex flex-col items-center gap-4">

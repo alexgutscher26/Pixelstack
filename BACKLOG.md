@@ -25,8 +25,7 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 
 - [x] **Mobile Layout Blocker**: Add a "Please use Desktop" overlay for screens smaller than 768px (temporary fix until mobile support).
 - [x] **Z-Index Wars**: Fix z-index issues where the dropdown menu gets hidden behind the canvas toolbar.
-- [ ] **Scrollbar Jumping**: Fix layout shift caused by the scrollbar appearing/disappearing in the dashboard.
-- [ ] **Toast Overlap**: Ensure `Sonner` toasts do not overlap with critical action buttons.
+- [x] **Toast Overlap**: Ensure `Sonner` toasts do not overlap with critical action buttons.
 
 ---
 
@@ -34,7 +33,7 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 
 ### Dashboard Experience
 
-- [ ] **Project Search**: Add a search bar to filter projects by name.
+- [x] **Project Search**: Add a search bar to filter projects by name.
 - [ ] **Sort Projects**: Add sorting options: "Newest First", "Oldest First", "Alphabetical".
 - [ ] **Project Thumbnails**: Generate and store actual screenshots of project canvases as thumbnails instead of generic icons.
 - [ ] **Empty State Illustration**: Add a high-quality SVG illustration for the "No Projects" state.
