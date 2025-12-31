@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { FolderOpenDotIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { FallbackImage } from "@/components/ui/fallback-image";
 
 const LandingSection = () => {
   const { user } = useKindeBrowserClient();
@@ -363,11 +364,11 @@ const ProjectCard = memo(({ project }: { project: ProjectType }) => {
         "
       >
         {thumbnail ? (
-          <img
+          <FallbackImage
             src={thumbnail}
-            className="w-full h-full object-cover object-left
-           scale-110
-          "
+            alt={project.name}
+            className="w-full h-full object-cover object-left scale-110"
+            fallbackType="folder"
           />
         ) : (
           <div
