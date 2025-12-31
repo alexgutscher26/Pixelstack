@@ -23,6 +23,11 @@ interface CanvasContextType {
 
   loadingStatus: LoadingStatusType | null;
   setLoadingStatus: (status: LoadingStatusType | null) => void;
+
+  backgroundType: "dots" | "grid" | "solid";
+  setBackgroundType: (type: "dots" | "grid" | "solid") => void;
+  backgroundColor: string;
+  setBackgroundColor: (color: string) => void;
 }
 
 const CanvasContext = createContext<CanvasContextType | undefined>(undefined);
@@ -47,6 +52,9 @@ export const CanvasProvider = ({
 
   const [loadingStatus, setLoadingStatus] = useState<LoadingStatusType | null>(null);
 
+  const [backgroundType, setBackgroundType] = useState<"dots" | "grid" | "solid">("dots");
+  const [backgroundColor, setBackgroundColor] = useState<string>("#7c5cff");
+
   const [prevProjectId, setPrevProjectId] = useState(projectId);
   if (projectId !== prevProjectId) {
     setPrevProjectId(projectId);
@@ -54,6 +62,8 @@ export const CanvasProvider = ({
     setFrames(initialFrames);
     setThemeId(initialThemeId || THEME_LIST[0].id);
     setSelectedFrameId(null);
+    setBackgroundType("dots");
+    setBackgroundColor("#7c5cff");
   }
 
   const theme = THEME_LIST.find((t) => t.id === themeId);
@@ -144,6 +154,10 @@ export const CanvasProvider = ({
         addFrame,
         loadingStatus,
         setLoadingStatus,
+        backgroundType,
+        setBackgroundType,
+        backgroundColor,
+        setBackgroundColor,
       }}
     >
       {children}

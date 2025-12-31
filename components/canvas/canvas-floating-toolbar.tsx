@@ -16,6 +16,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { getHTMLWrapper } from "@/lib/frame-wrapper";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import { Input } from "../ui/input";
 
 const CanvasFloatingToolbar = ({
   projectId,
@@ -28,7 +29,17 @@ const CanvasFloatingToolbar = ({
   onScreenshot: () => void;
   onSave?: () => void;
 }) => {
-  const { themes, theme: currentTheme, setTheme, selectedFrame, frames } = useCanvas();
+  const {
+    themes,
+    theme: currentTheme,
+    setTheme,
+    selectedFrame,
+    frames,
+    backgroundType,
+    setBackgroundType,
+    backgroundColor,
+    setBackgroundColor,
+  } = useCanvas();
   const [promptText, setPromptText] = useState<string>("");
   const [isExportingSelected, setIsExportingSelected] = useState(false);
   const [isExportingAll, setIsExportingAll] = useState(false);
@@ -281,6 +292,64 @@ const CanvasFloatingToolbar = ({
               </Tooltip>
             <PopoverContent className="rounded-xl border px-0 shadow">
               <ThemeSelector />
+            </PopoverContent>
+          </Popover>
+
+          <Popover>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <PopoverTrigger asChild>
+                    <div className="flex items-center gap-2 px-3 py-2">
+                      <span className="text-sm">Background</span>
+                      <ChevronDown className="size-4" />
+                    </div>
+                  </PopoverTrigger>
+                </TooltipTrigger>
+                <TooltipContent>Canvas Background</TooltipContent>
+              </Tooltip>
+            <PopoverContent className="mt-1 w-80 rounded-xl! border p-3! shadow-lg">
+              <div className="space-y-4">
+                <div className="text-sm font-medium">Background Options</div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant={backgroundType === "dots" ? "default" : "outline"}
+                    size="sm"
+                    className="cursor-pointer rounded-2xl flex-1"
+                    onClick={() => setBackgroundType("dots")}
+                  >
+                    Dots
+                  </Button>
+                  <Button
+                    variant={backgroundType === "grid" ? "default" : "outline"}
+                    size="sm"
+                    className="cursor-pointer rounded-2xl flex-1"
+                    onClick={() => setBackgroundType("grid")}
+                  >
+                    Grid
+                  </Button>
+                  <Button
+                    variant={backgroundType === "solid" ? "default" : "outline"}
+                    size="sm"
+                    className="cursor-pointer rounded-2xl flex-1"
+                    onClick={() => setBackgroundType("solid")}
+                  >
+                    Solid
+                  </Button>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="text-sm">Color</div>
+                  <Input
+                    type="color"
+                    value={backgroundColor}
+                    onChange={(e) => setBackgroundColor(e.target.value)}
+                    className="h-8 w-12 p-0"
+                  />
+                  <div
+                    className="bg-background/50 ring-1 ring-border h-8 w-8 rounded-md"
+                    style={{ background: backgroundColor }}
+                  />
+                </div>
+              </div>
             </PopoverContent>
           </Popover>
 

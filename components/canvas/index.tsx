@@ -29,8 +29,16 @@ const Canvas = ({
   isPending: boolean;
   projectName: string | null;
 }) => {
-  const { theme, frames, selectedFrame, setSelectedFrameId, loadingStatus, setLoadingStatus } =
-    useCanvas();
+  const {
+    theme,
+    frames,
+    selectedFrame,
+    setSelectedFrameId,
+    loadingStatus,
+    setLoadingStatus,
+    backgroundType,
+    backgroundColor,
+  } = useCanvas();
   const [toolMode, setToolMode] = useState<ToolModeType>(TOOL_MODE_ENUM.SELECT);
   const [zoomPercent, setZoomPercent] = useState<number>(53);
   const [currentScale, setCurrentScale] = useState<number>(0.53);
@@ -230,8 +238,15 @@ const Canvas = ({
                     : "cursor-default"
                 )}
                 style={{
-                  backgroundImage: "radial-gradient(circle, var(--primary) 1px, transparent 1px)",
-                  backgroundSize: "20px 20px",
+                  backgroundColor: backgroundType === "solid" ? backgroundColor : undefined,
+                  backgroundImage:
+                    backgroundType === "dots"
+                      ? `radial-gradient(circle, ${backgroundColor} 1px, transparent 1px)`
+                      : backgroundType === "grid"
+                        ? `linear-gradient(${backgroundColor} 1px, transparent 1px), linear-gradient(90deg, ${backgroundColor} 1px, transparent 1px)`
+                        : undefined,
+                  backgroundSize: backgroundType === "dots" ? "20px 20px" : backgroundType === "grid" ? "20px 20px" : undefined,
+                  backgroundPosition: backgroundType === "grid" ? "0 0, 0 0" : undefined,
                 }}
               >
                 <TransformComponent

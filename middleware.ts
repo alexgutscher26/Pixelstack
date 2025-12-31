@@ -7,8 +7,7 @@ export default withAuth(
   },
   {
     isReturnToCurrentPage: true,
-    // Add public paths if needed, but the matcher handles most of it
-    // publicPaths: ["/"],
+    publicPaths: ["/", "/project/:path*"],
   }
 );
 
