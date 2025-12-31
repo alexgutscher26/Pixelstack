@@ -3,6 +3,7 @@ import { Jost } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { MobileBlocker } from "@/components/mobile-blocker";
 import { QueryProvider } from "@/context/query-provider";
 import { SessionProvider } from "@/context/session-provider";
 
@@ -33,6 +34,7 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               {children}
+              <MobileBlocker />
               <Toaster richColors position="bottom-center" />
             </ThemeProvider>
           </SessionProvider>
