@@ -34,7 +34,6 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 ### Dashboard Experience
 
 - [x] **Project Search**: Add a search bar to filter projects by name.
-- [ ] **Sort Projects**: Add sorting options: "Newest First", "Oldest First", "Alphabetical".
 - [ ] **Project Thumbnails**: Generate and store actual screenshots of project canvases as thumbnails instead of generic icons.
 - [ ] **Empty State Illustration**: Add a high-quality SVG illustration for the "No Projects" state.
 - [ ] **Rename Project**: Add "Rename" option in the project dropdown menu.

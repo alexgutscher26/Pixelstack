@@ -1,14 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
 "use client";
-import React, { memo, useRef, useState } from "react";
+import { memo, useRef, useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { Suggestion, Suggestions } from "@/components/ai-elements/suggestion";
 import PromptInput from "@/components/prompt-input";
 import Header from "./header";
 import { useCreateProject, useGetProjects } from "@/features/use-project";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import { Spinner } from "@/components/ui/spinner";
 import { ProjectType } from "@/types/project";
 import { useRouter } from "next/navigation";
 import { FolderOpenDotIcon, ChevronLeft, ChevronRight, SearchIcon } from "lucide-react";
@@ -30,7 +29,7 @@ const LandingSection = () => {
   const { mutate, isPending } = useCreateProject();
   const carouselRef = useRef<HTMLDivElement>(null);
 
-  const filteredProjects = projects?.filter((project) =>
+  const filteredProjects = projects?.filter((project: { name: string; }) =>
     project.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
