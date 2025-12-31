@@ -23,10 +23,13 @@ const CanvasControls = ({ zoomIn, zoomOut, zoomPercent, toolMode, setToolMode }:
                 size="icon-sm"
                 variant="ghost"
                 className={cn(
-                  "cursor-pointer rounded-full text-white! hover:bg-white/20!",
-                  toolMode === TOOL_MODE_ENUM.SELECT && "bg-white/20"
+                  "cursor-pointer rounded-full text-white! hover:bg-white/25!",
+                  toolMode === TOOL_MODE_ENUM.SELECT && "bg-white/30 ring-2 ring-white/70 shadow"
                 )}
                 onClick={() => setToolMode(TOOL_MODE_ENUM.SELECT)}
+                aria-pressed={toolMode === TOOL_MODE_ENUM.SELECT}
+                data-active={toolMode === TOOL_MODE_ENUM.SELECT || undefined}
+                aria-label="Select tool"
               >
                 <MousePointerIcon />
               </Button>
@@ -41,10 +44,13 @@ const CanvasControls = ({ zoomIn, zoomOut, zoomPercent, toolMode, setToolMode }:
                 size="icon-sm"
                 variant="ghost"
                 className={cn(
-                  "cursor-pointer rounded-full text-white! hover:bg-white/20!",
-                  toolMode === TOOL_MODE_ENUM.HAND && "bg-white/20"
+                  "cursor-pointer rounded-full text-white! hover:bg-white/25!",
+                  toolMode === TOOL_MODE_ENUM.HAND && "bg-white/30 ring-2 ring-white/70 shadow"
                 )}
                 onClick={() => setToolMode(TOOL_MODE_ENUM.HAND)}
+                aria-pressed={toolMode === TOOL_MODE_ENUM.HAND}
+                data-active={toolMode === TOOL_MODE_ENUM.HAND || undefined}
+                aria-label="Hand tool"
               >
                 <HandIcon />
               </Button>
