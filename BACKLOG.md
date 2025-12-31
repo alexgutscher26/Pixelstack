@@ -41,7 +41,7 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 
 ### Editor UI Improvements
 
-- [ ] **Toolbar Tooltips**: Add keyboard shortcut tooltips to all toolbar buttons (e.g., "Select (V)", "Hand (H)").
+- [x] **Toolbar Tooltips**: Add keyboard shortcut tooltips to all toolbar buttons (e.g., "Select (V)", "Hand (H)").
 - [ ] **Active State Indicators**: clearly highlight the currently active tool in the toolbar.
 - [ ] **Sidebar Resizing**: Allow the left sidebar (layers/settings) to be collapsible and resizable.
 - [ ] **Canvas Background**: Allow changing the canvas background color (dots, grid, solid colors).

@@ -15,6 +15,7 @@ import { Spinner } from "../ui/spinner";
 import axios from "axios";
 import { toast } from "sonner";
 import { getHTMLWrapper } from "@/lib/frame-wrapper";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 
 const CanvasFloatingToolbar = ({
   projectId,
@@ -209,15 +210,22 @@ const CanvasFloatingToolbar = ({
       <div className="bg-background w-full max-w-2xl rounded-full border shadow-xl dark:bg-gray-950">
         <div className="flex flex-row items-center gap-2 px-3">
           <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                size="icon-sm"
-                className="cursor-pointer rounded-2xl bg-linear-to-r from-purple-500 to-indigo-600 px-4 text-white shadow-lg shadow-purple-200/50"
-                aria-label="Open AI design generator"
-              >
-                <Wand2 className="size-4" />
-              </Button>
-            </PopoverTrigger>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <PopoverTrigger asChild>
+                    <Button
+                      size="icon-sm"
+                      className="cursor-pointer rounded-2xl bg-linear-to-r from-purple-500 to-indigo-600 px-4 text-white shadow-lg shadow-purple-200/50"
+                      aria-label="Open AI design generator"
+                    >
+                      <Wand2 className="size-4" />
+                    </Button>
+                  </PopoverTrigger>
+                </TooltipTrigger>
+                <TooltipContent>AI Design</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <PopoverContent className="mt-1 w-80 rounded-xl! border p-2! shadow-lg">
               <PromptInput
                 promptText={promptText}
@@ -227,7 +235,7 @@ const CanvasFloatingToolbar = ({
               />
               <Button
                 disabled={isPending}
-                className="mt-2 w-full cursor-pointer rounded-2xl bg-linear-to-r from-purple-500 to-indigo-600 text-white shadow-lg shadow-purple-200/50"
+                className="mt-2 w-full cursor-pointer rounded-2xl bg-linear-to-r from-purple-500 to-indigo-600 text.white shadow-lg shadow-purple-200/50"
                 onClick={handleAIGenerate}
               >
                 {isPending ? <Spinner /> : <>Design</>}
@@ -236,37 +244,44 @@ const CanvasFloatingToolbar = ({
           </Popover>
 
           <Popover>
-            <PopoverTrigger>
-              <div className="flex items-center gap-2 px-3 py-2">
-                <Palette className="size-4" />
-                <div className="flex gap-1.5">
-                  {themes?.slice(0, 4)?.map((theme, index) => {
-                    const color = parseThemeColors(theme.style);
-                    return (
-                      <div
-                        role="button"
-                        key={index}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setTheme(theme.id);
-                        }}
-                        className={cn(
-                          `h-6.5 w-6.5 cursor-pointer rounded-full`,
-                          currentTheme?.id === theme.id && "ring-1 ring-offset-1"
-                        )}
-                        style={{
-                          background: `linear-gradient(135deg, ${color.primary}, ${color.accent})`,
-                        }}
-                      />
-                    );
-                  })}
-                </div>
-                <div className="flex items-center gap-1 text-sm">
-                  +{themes?.length - 4} more
-                  <ChevronDown className="size-4" />
-                </div>
-              </div>
-            </PopoverTrigger>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <PopoverTrigger asChild>
+                    <div className="flex items-center gap-2 px-3 py-2">
+                      <Palette className="size-4" />
+                      <div className="flex gap-1.5">
+                        {themes?.slice(0, 4)?.map((theme, index) => {
+                          const color = parseThemeColors(theme.style);
+                          return (
+                            <div
+                              role="button"
+                              key={index}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setTheme(theme.id);
+                              }}
+                              className={cn(
+                                `h-6.5 w-6.5 cursor-pointer rounded-full`,
+                                currentTheme?.id === theme.id && "ring-1 ring-offset-1"
+                              )}
+                              style={{
+                                background: `linear-gradient(135deg, ${color.primary}, ${color.accent})`,
+                              }}
+                            />
+                          );
+                        })}
+                      </div>
+                      <div className="flex items-center gap-1 text-sm">
+                        +{themes?.length - 4} more
+                        <ChevronDown className="size-4" />
+                      </div>
+                    </div>
+                  </PopoverTrigger>
+                </TooltipTrigger>
+                <TooltipContent>Theme</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <PopoverContent className="rounded-xl border px-0 shadow">
               <ThemeSelector />
             </PopoverContent>
@@ -275,13 +290,20 @@ const CanvasFloatingToolbar = ({
           <Separator orientation="vertical" className="h-4!" />
 
           <Popover>
-            <PopoverTrigger>
-              <div className="flex items-center gap-2 px-3 py-2">
-                <Send className="size-4" />
-                <span className="text-sm">Export</span>
-                <ChevronDown className="size-4" />
-              </div>
-            </PopoverTrigger>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <PopoverTrigger asChild>
+                    <div className="flex items-center gap-2 px-3 py-2">
+                      <Send className="size-4" />
+                      <span className="text-sm">Export</span>
+                      <ChevronDown className="size-4" />
+                    </div>
+                  </PopoverTrigger>
+                </TooltipTrigger>
+                <TooltipContent>Export</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <PopoverContent className="w-[300px]">
               <div className="space-y-3">
                 <div className="text-sm font-medium">Export Options</div>
@@ -338,31 +360,45 @@ const CanvasFloatingToolbar = ({
           </Popover>
 
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="icon-sm"
-              className="cursor-pointer rounded-full"
-              disabled={isScreenshotting}
-              onClick={onScreenshot}
-              aria-label="Take canvas screenshot"
-            >
-              {isScreenshotting ? <Spinner /> : <CameraIcon className="size-4.5" />}
-            </Button>
-            <Button
-              variant="default"
-              size="sm"
-              className="cursor-pointer rounded-full"
-              onClick={handleUpdate}
-            >
-              {update.isPending ? (
-                <Spinner />
-              ) : (
-                <>
-                  <Save className="size-4" />
-                  Save
-                </>
-              )}
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon-sm"
+                    className="cursor-pointer rounded-full"
+                    disabled={isScreenshotting}
+                    onClick={onScreenshot}
+                    aria-label="Take canvas screenshot"
+                  >
+                    {isScreenshotting ? <Spinner /> : <CameraIcon className="size-4.5" />}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Screenshot</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="cursor-pointer rounded-full"
+                    onClick={handleUpdate}
+                  >
+                    {update.isPending ? (
+                      <Spinner />
+                    ) : (
+                      <>
+                        <Save className="size-4" />
+                        Save
+                      </>
+                    )}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Save</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
       </div>
