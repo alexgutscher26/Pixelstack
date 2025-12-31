@@ -16,11 +16,16 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { usePathname, useSearchParams } from "next/navigation";
 
 const Header = () => {
   const { theme, resolvedTheme, setTheme } = useTheme();
   const { user } = useKindeBrowserClient();
   const isDark = (resolvedTheme ?? theme) === "dark";
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const redirectURL =
+    pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : "");
   return (
     <div className="sticky top-0 right-0 left-0 z-30">
       <header className="h-16 border-b bg-background py-4">
@@ -115,7 +120,7 @@ const Header = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <LoginLink postLoginRedirectURL="/dashboard">
+              <LoginLink postLoginRedirectURL={redirectURL}>
                 <Button>Sign in</Button>
               </LoginLink>
             )}

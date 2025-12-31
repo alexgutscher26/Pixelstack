@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -7,7 +9,16 @@ export function cn(...inputs: ClassValue[]) {
 
 export const safeLogger = {
   info: (message: string, meta?: Record<string, any>) => {
-    console.log(JSON.stringify({ level: "info", message, ...meta }));
+    try {
+      console.log(JSON.stringify({ 
+        level: "info", 
+        message, 
+        timestamp: new Date().toISOString(),
+        meta 
+      }));
+    } catch (err) {
+      console.log(JSON.stringify({ level: "info", message, meta: "[Unserializable]" }));
+    }
   },
   error: (message: string, error?: any) => {
     const safeError =
