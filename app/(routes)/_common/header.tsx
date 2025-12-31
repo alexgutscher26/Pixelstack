@@ -115,7 +115,7 @@ const Header = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <LoginLink>
+              <LoginLink postLoginRedirectURL="/dashboard">
                 <Button>Sign in</Button>
               </LoginLink>
             )}
