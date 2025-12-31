@@ -24,9 +24,15 @@ export function FallbackImage({
         className={cn("bg-secondary/50 flex h-full w-full items-center justify-center", className)}
       >
         {fallbackType === "folder" ? (
-          <FolderOpenDotIcon className="text-muted-foreground h-10 w-10" />
+          <div className="flex flex-col items-center gap-2">
+            <FolderOpenDotIcon className="text-muted-foreground h-10 w-10" />
+            <span className="text-xs text-muted-foreground">Folder</span>
+          </div>
         ) : (
-          <ImageIcon className="text-muted-foreground h-10 w-10" />
+          <div className="flex flex-col items-center gap-2">
+            <ImageIcon className="text-muted-foreground h-10 w-10" />
+            <span className="text-xs text-muted-foreground">Image</span>
+          </div>
         )}
       </div>
     );

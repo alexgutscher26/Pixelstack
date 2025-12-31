@@ -221,7 +221,7 @@ const LandingSection = () => {
                     <Suggestion
                       key={s.label}
                       suggestion={s.label}
-                      className="h-8! px-3 pt-1.5! text-xs!"
+                      className="!h-8 px-3 !pt-1.5 !text-xs"
                       onClick={() => handleSuggestionClick(s.value)}
                     >
                       {s.icon}

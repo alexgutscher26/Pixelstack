@@ -203,6 +203,7 @@ const CanvasFloatingToolbar = ({
               <Button
                 size="icon-sm"
                 className="cursor-pointer rounded-2xl bg-linear-to-r from-purple-500 to-indigo-600 px-4 text-white shadow-lg shadow-purple-200/50"
+                aria-label="Open AI design generator"
               >
                 <Wand2 className="size-4" />
               </Button>
@@ -333,6 +334,7 @@ const CanvasFloatingToolbar = ({
               className="cursor-pointer rounded-full"
               disabled={isScreenshotting}
               onClick={onScreenshot}
+              aria-label="Take canvas screenshot"
             >
               {isScreenshotting ? <Spinner /> : <CameraIcon className="size-4.5" />}
             </Button>

@@ -158,7 +158,7 @@ export const generateScreens = inngest.createFunction(
       const { object } = await generateObject({
         model: process.env.OPENROUTER_API_KEY
           ? openrouter.chat("google/gemini-2.5-flash")
-          : ("google/gemini-3-pro-preview" as any),
+          : openrouter.chat("google/gemini-2.0-flash-lite-preview-02-05:free"),
         schema: AnalysisSchema,
         system: ANALYSIS_PROMPT,
         prompt: analysisPrompt,
@@ -531,7 +531,7 @@ export const generateScreens = inngest.createFunction(
         const result = await generateText({
           model: process.env.OPENROUTER_API_KEY
             ? openrouter.chat("google/gemini-2.5-flash")
-            : ("google/gemini-3-pro-preview" as any),
+            : openrouter.chat("google/gemini-2.0-flash-lite-preview-02-05:free"),
           system: GENERATION_SYSTEM_PROMPT,
           tools: {
             searchUnsplash: unsplashTool,
