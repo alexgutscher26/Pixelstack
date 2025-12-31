@@ -16,7 +16,7 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 
 ### Core Stability
 
-- [ ] **Canvas Crash Prevention**: Add a global ErrorBoundary around the `Canvas` component to catch rendering errors without crashing the app.
+- [x] **Canvas Crash Prevention**: Add a global ErrorBoundary around the `Canvas` component to catch rendering errors without crashing the app.
 - [ ] **Network Recovery**: Implement `react-query` retry logic with exponential backoff for poor network conditions.
 - [ ] **Image Loading Fallbacks**: Replace broken image links with a local placeholder if Unsplash/external assets fail to load.
 - [ ] **Database Connection Pooling**: Verify Prisma connection pooling settings to prevent timeout errors under load.

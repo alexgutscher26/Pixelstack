@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Header from "./_common/header";
 import Canvas from "@/components/canvas";
 import { CanvasProvider } from "@/context/canvas-context";
+import { ErrorBoundary } from "@/components/ui/error-boundary";
 
 const Page = () => {
   const params = useParams();
@@ -36,11 +37,13 @@ const Page = () => {
       >
         <div className="flex flex-1 overflow-hidden">
           <div className="relative flex-1">
-            <Canvas
-              projectId={project?.id}
-              projectName={project?.name}
-              isPending={isPending}
-            />
+            <ErrorBoundary>
+              <Canvas
+                projectId={project?.id}
+                projectName={project?.name}
+                isPending={isPending}
+              />
+            </ErrorBoundary>
           </div>
         </div>
       </CanvasProvider>
