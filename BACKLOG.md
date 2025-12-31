@@ -10,7 +10,7 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 
 - [x] **Token Persistence**: Investigate and fix reported issues where Kinde auth tokens are lost on refresh.
 - [x] **Session Expiry Handling**: Implement a graceful logout or "re-authenticate" modal when the session expires while working.
-- [ ] **Auth Error Boundaries**: Add specific error boundaries for the `/api/auth` routes to prevent white screens.
+- [x] **Auth Error Boundaries**: Add specific error boundaries for the `/api/auth` routes to prevent white screens.
 - [ ] **Middleware Optimization**: Review `middleware.ts` to ensure protected routes are efficiently guarded without unnecessary redirects.
 - [ ] **Post-Login Redirection**: Ensure users are redirected back to the project they were viewing after logging in.
 
