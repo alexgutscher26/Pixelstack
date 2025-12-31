@@ -4,9 +4,7 @@ import { inngest } from "@/inngest/client";
 import { getSubscriptionToken } from "@inngest/realtime";
 
 export async function fetchRealtimeSubscriptionToken() {
-  const { getKindeServerSession } = await import(
-    "@kinde-oss/kinde-auth-nextjs/server"
-  );
+  const { getKindeServerSession } = await import("@kinde-oss/kinde-auth-nextjs/server");
   const session = await getKindeServerSession();
   const user = await session.getUser();
   if (!user) return null;

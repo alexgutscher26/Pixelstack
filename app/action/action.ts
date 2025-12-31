@@ -35,7 +35,7 @@ Return ONLY the project name, nothing else.`,
     });
 
     const projectName = text?.trim();
-    
+
     // Validation
     if (!projectName || projectName.length === 0) {
       return "Untitled Project";

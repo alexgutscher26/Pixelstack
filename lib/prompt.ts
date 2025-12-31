@@ -291,9 +291,7 @@ Start immediately with:
 NO explanations. NO markdown. NO comments. Just pure, beautiful HTML.
 `;
 
-const THEME_OPTIONS_STRING = THEME_LIST.map(
-  (t) => `- ${t.id}: ${t.name}`
-).join("\n");
+const THEME_OPTIONS_STRING = THEME_LIST.map((t) => `- ${t.id}: ${t.name}`).join("\n");
 
 export const ANALYSIS_PROMPT = `
 You are a Lead Product Designer specializing in mobile app UI/UX.

@@ -24,21 +24,14 @@ const Header = () => {
   const isDark = (resolvedTheme ?? theme) === "dark";
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const redirectURL =
-    pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : "");
+  const redirectURL = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : "");
   return (
     <div className="sticky top-0 right-0 left-0 z-30">
-      <header className="h-16 border-b bg-background py-4">
-        <div
-          className="w-full max-w-6xl mx-auto
-         flex items-center justify-between"
-        >
+      <header className="bg-background h-16 border-b py-4">
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between">
           <Logo />
 
-          <div
-            className="hidden flex-1 items-center
-          justify-center gap-8 md:flex"
-          >
+          <div className="hidden flex-1 items-center justify-center gap-8 md:flex">
             <Link href="/" className="text-foreground-muted text-sm">
               Home
             </Link>
@@ -47,30 +40,15 @@ const Header = () => {
             </Link>
           </div>
 
-          <div
-            className="flex flex-1 items-center
-           justify-end gap-3
-
-          "
-          >
+          <div className="flex flex-1 items-center justify-end gap-3">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="relative rounded-full h-8 w-8"
-                >
+                <Button variant="outline" size="icon" className="relative h-8 w-8 rounded-full">
                   <SunIcon
-                    className={cn(
-                      "absolute h-5 w-5 transition",
-                      isDark ? "scale-100" : "scale-0"
-                    )}
+                    className={cn("absolute h-5 w-5 transition", isDark ? "scale-100" : "scale-0")}
                   />
                   <MoonIcon
-                    className={cn(
-                      "absolute h-5 w-5 transition",
-                      isDark ? "scale-0" : "scale-100"
-                    )}
+                    className={cn("absolute h-5 w-5 transition", isDark ? "scale-0" : "scale-100")}
                   />
                 </Button>
               </DropdownMenuTrigger>
@@ -94,14 +72,8 @@ const Header = () => {
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger>
-                  <Avatar
-                    className="h-8 w-8
-                  shrink-0 rounded-full"
-                  >
-                    <AvatarImage
-                      src={user?.picture || ""}
-                      alt={user?.given_name || ""}
-                    />
+                  <Avatar className="h-8 w-8 shrink-0 rounded-full">
+                    <AvatarImage src={user?.picture || ""} alt={user?.given_name || ""} />
                     <AvatarFallback className="rounded-lg">
                       {user?.given_name?.charAt(0)}
                       {user?.family_name?.charAt(0)}
@@ -112,7 +84,7 @@ const Header = () => {
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
-                    <LogoutLink className="w-full flex items-center">
+                    <LogoutLink className="flex w-full items-center">
                       <LogOutIcon className="size-4" />
                       Logout
                     </LogoutLink>

@@ -2,15 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { inngest } from "@/inngest/client";
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const { getKindeServerSession } = await import(
-      "@kinde-oss/kinde-auth-nextjs/server"
-    );
+    const { getKindeServerSession } = await import("@kinde-oss/kinde-auth-nextjs/server");
     const session = await getKindeServerSession();
     const user = await session.getUser();
 
@@ -49,16 +44,11 @@ export async function GET(
   }
 }
 
-export async function POST(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const { prompt } = await request.json();
-    const { getKindeServerSession } = await import(
-      "@kinde-oss/kinde-auth-nextjs/server"
-    );
+    const { getKindeServerSession } = await import("@kinde-oss/kinde-auth-nextjs/server");
     const session = await getKindeServerSession();
     const user = await session.getUser();
 
@@ -109,16 +99,11 @@ export async function POST(
   }
 }
 
-export async function PATCH(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const { themeId } = await request.json();
-    const { getKindeServerSession } = await import(
-      "@kinde-oss/kinde-auth-nextjs/server"
-    );
+    const { getKindeServerSession } = await import("@kinde-oss/kinde-auth-nextjs/server");
     const session = await getKindeServerSession();
     const user = await session.getUser();
 

@@ -29,7 +29,7 @@ const LandingSection = () => {
   const { mutate, isPending } = useCreateProject();
   const carouselRef = useRef<HTMLDivElement>(null);
 
-  const filteredProjects = projects?.filter((project: { name: string; }) =>
+  const filteredProjects = projects?.filter((project: { name: string }) =>
     project.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -106,41 +106,28 @@ const LandingSection = () => {
   };
 
   return (
-    <div className=" w-full min-h-screen">
+    <div className="min-h-screen w-full">
       <div className="flex flex-col">
         <Header />
 
         <div className="relative overflow-hidden pt-28">
-          <div
-            className="max-w-6xl mx-auto flex flex-col
-         items-center justify-center gap-8
-        "
-          >
+          <div className="mx-auto flex max-w-6xl flex-col items-center justify-center gap-8">
             <div className="space-y-3">
-              <h1
-                className="text-center font-semibold text-4xl
-            tracking-tight sm:text-5xl
-            "
-              >
+              <h1 className="text-center text-4xl font-semibold tracking-tight sm:text-5xl">
                 Design mobile apps <br className="md:hidden" />
                 <span className="text-primary">in minutes</span>
               </h1>
-              <div className="mx-auto max-w-2xl ">
-                <p className="text-center font-medium text-foreground leading-relaxed sm:text-lg">
-                  Go from idea to beautiful app mockups in minutes by chatting
-                  with AI.
+              <div className="mx-auto max-w-2xl">
+                <p className="text-foreground text-center leading-relaxed font-medium sm:text-lg">
+                  Go from idea to beautiful app mockups in minutes by chatting with AI.
                 </p>
               </div>
             </div>
 
-            <div
-              className="flex w-full max-w-3xl flex-col
-            item-center gap-8 relative z-50
-            "
-            >
+            <div className="item-center relative z-50 flex w-full max-w-3xl flex-col gap-8">
               <div className="w-full">
                 <PromptInput
-                  className="ring-2 ring-primary"
+                  className="ring-primary ring-2"
                   promptText={promptText}
                   setPromptText={setPromptText}
                   isLoading={isPending}
@@ -148,20 +135,20 @@ const LandingSection = () => {
                 />
               </div>
               <div className="w-full px-5">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                   <div className="flex flex-col gap-1">
-                    <label className="text-sm font-medium">Non-onboarding screens (incl. Home)</label>
+                    <label className="text-sm font-medium">
+                      Non-onboarding screens (incl. Home)
+                    </label>
                     <input
                       type="number"
                       min={1}
                       max={10}
                       value={totalScreens}
                       onChange={(e) =>
-                        setTotalScreens(
-                          Math.max(1, Math.min(10, Number(e.target.value)))
-                        )
+                        setTotalScreens(Math.max(1, Math.min(10, Number(e.target.value))))
                       }
-                      className="h-10 rounded-lg border bg-background px-3"
+                      className="bg-background h-10 rounded-lg border px-3"
                     />
                   </div>
                   <div className="flex flex-col gap-1">
@@ -172,11 +159,9 @@ const LandingSection = () => {
                       max={5}
                       value={onboardingScreens}
                       onChange={(e) =>
-                        setOnboardingScreens(
-                          Math.max(1, Math.min(5, Number(e.target.value)))
-                        )
+                        setOnboardingScreens(Math.max(1, Math.min(5, Number(e.target.value))))
                       }
-                      className="h-10 rounded-lg border bg-background px-3"
+                      className="bg-background h-10 rounded-lg border px-3"
                     />
                   </div>
                   <div className="flex flex-col gap-1">
@@ -197,12 +182,12 @@ const LandingSection = () => {
               </div>
 
               <div className="relative w-full px-5">
-                <div className="pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 z-10">
+                <div className="pointer-events-none absolute top-1/2 left-0 z-10 -translate-y-1/2">
                   <Button
                     type="button"
                     size="icon"
                     variant="outline"
-                    className="pointer-events-auto rounded-full bg-background/80 backdrop-blur border"
+                    className="bg-background/80 pointer-events-auto rounded-full border backdrop-blur"
                     onClick={() => {
                       const viewport = carouselRef.current?.querySelector(
                         '[data-slot="scroll-area-viewport"]'
@@ -214,12 +199,12 @@ const LandingSection = () => {
                     <ChevronLeft className="size-4" />
                   </Button>
                 </div>
-                <div className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 z-10">
+                <div className="pointer-events-none absolute top-1/2 right-0 z-10 -translate-y-1/2">
                   <Button
                     type="button"
                     size="icon"
                     variant="outline"
-                    className="pointer-events-auto rounded-full bg-background/80 backdrop-blur border"
+                    className="bg-background/80 pointer-events-auto rounded-full border backdrop-blur"
                     onClick={() => {
                       const viewport = carouselRef.current?.querySelector(
                         '[data-slot="scroll-area-viewport"]'
@@ -236,7 +221,7 @@ const LandingSection = () => {
                     <Suggestion
                       key={s.label}
                       suggestion={s.label}
-                      className="text-xs! h-8! px-3 pt-1.5!"
+                      className="h-8! px-3 pt-1.5! text-xs!"
                       onClick={() => handleSuggestionClick(s.value)}
                     >
                       {s.icon}
@@ -247,27 +232,10 @@ const LandingSection = () => {
               </div>
             </div>
 
-            <div
-              className="absolute -translate-x-1/2
-             left-1/2 w-[5000px] h-[3000px] top-[80%]
-             -z-10"
-            >
-              <div
-                className="-translate-x-1/2 absolute
-               bottom-[calc(100%-300px)] left-1/2
-               h-500 w-500
-               opacity-20 bg-radial-primary"
-              ></div>
-              <div
-                className="absolute -mt-2.5
-              size-full rounded-[50%]
-               bg-primary/20 opacity-70
-               [box-shadow:0_-15px_24.8px_var(--primary)]"
-              ></div>
-              <div
-                className="absolute z-0 size-full
-               rounded-[50%] bg-background"
-              ></div>
+            <div className="absolute top-[80%] left-1/2 -z-10 h-[3000px] w-[5000px] -translate-x-1/2">
+              <div className="bg-radial-primary absolute bottom-[calc(100%-300px)] left-1/2 h-500 w-500 -translate-x-1/2 opacity-20"></div>
+              <div className="bg-primary/20 absolute -mt-2.5 size-full rounded-[50%] opacity-70 [box-shadow:0_-15px_24.8px_var(--primary)]"></div>
+              <div className="bg-background absolute z-0 size-full rounded-[50%]"></div>
             </div>
           </div>
         </div>
@@ -276,72 +244,74 @@ const LandingSection = () => {
           <div className="mx-auto max-w-3xl">
             {userId && (
               <div>
-                <div className="flex items-center justify-between mb-4">
-                  <h1 className="font-medium text-xl tracking-tight">Recent Projects</h1>
+                <div className="mb-4 flex items-center justify-between">
+                  <h1 className="text-xl font-medium tracking-tight">Recent Projects</h1>
                   <div className="relative w-full max-w-xs">
-                    <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <SearchIcon className="text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4" />
                     <Input
                       placeholder="Search projects..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-9 h-9"
+                      className="h-9 pl-9"
                     />
                   </div>
                 </div>
 
                 {isLoading ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mt-3">
+                  <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
                     {Array.from({ length: 6 }).map((_, i) => (
-                      <div key={i} className="w-full flex flex-col border rounded-xl overflow-hidden">
-                        <div className="h-40 bg-background">
-                          <Skeleton className="w-full h-full rounded-none" />
+                      <div
+                        key={i}
+                        className="flex w-full flex-col overflow-hidden rounded-xl border"
+                      >
+                        <div className="bg-background h-40">
+                          <Skeleton className="h-full w-full rounded-none" />
                         </div>
-                        <div className="p-4 space-y-2">
+                        <div className="space-y-2 p-4">
                           <Skeleton className="h-4 w-3/5" />
                           <Skeleton className="h-3 w-1/4" />
                         </div>
                       </div>
                     ))}
                   </div>
+                ) : filteredProjects && filteredProjects.length > 0 ? (
+                  <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+                    {filteredProjects.map((project: ProjectType) => (
+                      <ProjectCard key={project.id} project={project} />
+                    ))}
+                  </div>
+                ) : searchQuery ? (
+                  <div className="text-muted-foreground mt-10 text-center">
+                    No projects found matching &quot;{searchQuery}&quot;
+                  </div>
                 ) : (
-                  filteredProjects && filteredProjects.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mt-3">
-                      {filteredProjects.map((project: ProjectType) => (
-                        <ProjectCard key={project.id} project={project} />
-                      ))}
+                  <div className="bg-card text-card-foreground mt-3 flex flex-col items-center gap-4 rounded-xl border p-8">
+                    <div className="bg-primary/15 text-primary flex h-16 w-16 items-center justify-center rounded-full">
+                      <FolderOpenDotIcon className="size-7" />
                     </div>
-                  ) : searchQuery ? (
-                    <div className="mt-10 text-center text-muted-foreground">
-                      No projects found matching &quot;{searchQuery}&quot;
+                    <div className="space-y-1 text-center">
+                      <h2 className="text-lg font-semibold tracking-tight">No projects yet</h2>
+                      <p className="text-muted-foreground text-sm">
+                        Kickstart your first design by using a suggested prompt.
+                      </p>
                     </div>
-                  ) : (
-                    <div className="mt-3 border rounded-xl p-8 bg-card text-card-foreground flex flex-col items-center gap-4">
-                      <div className="w-16 h-16 rounded-full bg-primary/15 flex items-center justify-center text-primary">
-                        <FolderOpenDotIcon className="size-7" />
-                      </div>
-                      <div className="text-center space-y-1">
-                        <h2 className="text-lg font-semibold tracking-tight">No projects yet</h2>
-                        <p className="text-sm text-muted-foreground">
-                          Kickstart your first design by using a suggested prompt.
-                        </p>
-                      </div>
-                      <Button
-                        type="button"
-                        className="px-6"
-                        onClick={() => {
-                          const starter = suggestions[0]?.value ?? "Create a modern mobile app home screen";
-                          mutate({
-                            prompt: starter,
-                            totalScreens,
-                            onboardingScreens,
-                            includePaywall,
-                          });
-                        }}
-                      >
-                        Start a new project
-                      </Button>
-                    </div>
-                  )
+                    <Button
+                      type="button"
+                      className="px-6"
+                      onClick={() => {
+                        const starter =
+                          suggestions[0]?.value ?? "Create a modern mobile app home screen";
+                        mutate({
+                          prompt: starter,
+                          totalScreens,
+                          onboardingScreens,
+                          includePaywall,
+                        });
+                      }}
+                    >
+                      Start a new project
+                    </Button>
+                  </div>
                 )}
               </div>
             )}
@@ -367,42 +337,27 @@ const ProjectCard = memo(({ project }: { project: ProjectType }) => {
   return (
     <div
       role="button"
-      className="w-full flex flex-col border rounded-xl cursor-pointer
-    hover:shadow-md overflow-hidden
-    "
+      className="flex w-full cursor-pointer flex-col overflow-hidden rounded-xl border hover:shadow-md"
       onClick={onRoute}
     >
-      <div
-        className="h-40 bg-[#eee] relative overflow-hidden
-        flex items-center justify-center
-        "
-      >
+      <div className="relative flex h-40 items-center justify-center overflow-hidden bg-[#eee]">
         {thumbnail ? (
           <FallbackImage
             src={thumbnail}
             alt={project.name}
-            className="w-full h-full object-cover object-left scale-110"
+            className="h-full w-full scale-110 object-cover object-left"
             fallbackType="folder"
           />
         ) : (
-          <div
-            className="w-16 h-16 rounded-full bg-primary/20
-              flex items-center justify-center text-primary
-            "
-          >
+          <div className="bg-primary/20 text-primary flex h-16 w-16 items-center justify-center rounded-full">
             <FolderOpenDotIcon />
           </div>
         )}
       </div>
 
-      <div className="p-4 flex flex-col">
-        <h3
-          className="font-semibold
-         text-sm truncate w-full mb-1 line-clamp-1"
-        >
-          {project.name}
-        </h3>
-        <p className="text-xs text-muted-foreground">{timeAgo}</p>
+      <div className="flex flex-col p-4">
+        <h3 className="mb-1 line-clamp-1 w-full truncate text-sm font-semibold">{project.name}</h3>
+        <p className="text-muted-foreground text-xs">{timeAgo}</p>
       </div>
     </div>
   );

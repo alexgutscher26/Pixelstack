@@ -8,7 +8,9 @@ export const unsplashTool = tool({
     query: z
       .string()
       .min(1)
-      .describe("Descriptive image search query (e.g., 'sunset over mountains', 'modern office workspace', 'data visualization chart')"),
+      .describe(
+        "Descriptive image search query (e.g., 'sunset over mountains', 'modern office workspace', 'data visualization chart')"
+      ),
     orientation: z
       .enum(["landscape", "portrait", "squarish"])
       .optional()
@@ -30,12 +32,12 @@ export const unsplashTool = tool({
   }),
   execute: async ({ query, orientation, count = 1, quality = "full" }) => {
     const accessKey = process.env.UNSPLASH_ACCESS_KEY;
-    
+
     if (!accessKey) {
       return {
         success: false,
         error: "Unsplash API key not configured",
-        images: []
+        images: [],
       };
     }
 
@@ -48,31 +50,28 @@ export const unsplashTool = tool({
         order_by: "relevant", // Get most relevant high-quality results
       });
 
-      const res = await fetch(
-        `https://api.unsplash.com/search/photos?${params}`,
-        {
-          headers: {
-            "Accept-Version": "v1",
-          },
-        }
-      );
+      const res = await fetch(`https://api.unsplash.com/search/photos?${params}`, {
+        headers: {
+          "Accept-Version": "v1",
+        },
+      });
 
       if (!res.ok) {
         const errorText = await res.text();
         return {
           success: false,
           error: `Unsplash API error (${res.status}): ${errorText}`,
-          images: []
+          images: [],
         };
       }
 
       const data = await res.json();
-      
+
       if (!data.results || data.results.length === 0) {
         return {
           success: false,
           error: `No images found for query: "${query}"`,
-          images: []
+          images: [],
         };
       }
 
@@ -80,30 +79,31 @@ export const unsplashTool = tool({
       const images = data.results.map((result: any) => {
         // Select the highest quality URL based on preference
         const highQualityUrl = result.urls?.[quality] || result.urls?.full || result.urls?.raw;
-        
+
         return {
           // Primary high-quality URL
           url: highQualityUrl,
-          
+
           // Alternative quality options
-          raw: result.urls?.raw,        // Original uncompressed
-          full: result.urls?.full,      // Max 2000px (best for web)
+          raw: result.urls?.raw, // Original uncompressed
+          full: result.urls?.full, // Max 2000px (best for web)
           regular: result.urls?.regular, // 1080px width
-          small: result.urls?.small,    // 400px width
-          thumb: result.urls?.thumb,    // 200px width
-          
+          small: result.urls?.small, // 400px width
+          thumb: result.urls?.thumb, // 200px width
+
           // Image metadata
           alt: result.alt_description || result.description || query,
           width: result.width,
           height: result.height,
-          aspectRatio: result.width && result.height ? (result.width / result.height).toFixed(2) : null,
+          aspectRatio:
+            result.width && result.height ? (result.width / result.height).toFixed(2) : null,
           color: result.color,
-          
+
           // Attribution (required by Unsplash)
           photographer: result.user?.name,
           photographerUrl: result.user?.links?.html,
           photographerUsername: result.user?.username,
-          
+
           // Additional info
           downloads: result.downloads,
           likes: result.likes,
@@ -123,7 +123,7 @@ export const unsplashTool = tool({
       return {
         success: false,
         error: error instanceof Error ? error.message : "Unknown error occurred",
-        images: []
+        images: [],
       };
     }
   },

@@ -10,10 +10,7 @@ import { parseThemeColors } from "@/lib/themes";
 import ThemeSelector from "./theme-selector";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
-import {
-  useGenerateDesignById,
-  useUpdateProject,
-} from "@/features/use-project-id";
+import { useGenerateDesignById, useUpdateProject } from "@/features/use-project-id";
 import { Spinner } from "../ui/spinner";
 import axios from "axios";
 import { toast } from "sonner";
@@ -198,50 +195,28 @@ const CanvasFloatingToolbar = ({
   const hasSelected = useMemo(() => !!selectedFrame, [selectedFrame]);
 
   return (
-    <div
-      className="
-   fixed top-6 left-1/2 -translate-x-1/2 z-50
-  "
-    >
-      <div
-        className="w-full max-w-2xl bg-background
-     dark:bg-gray-950 rounded-full shadow-xl border
-    "
-      >
+    <div className="fixed top-6 left-1/2 z-50 -translate-x-1/2">
+      <div className="bg-background w-full max-w-2xl rounded-full border shadow-xl dark:bg-gray-950">
         <div className="flex flex-row items-center gap-2 px-3">
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 size="icon-sm"
-                className="px-4  bg-linear-to-r
-                 from-purple-500 to-indigo-600
-                  text-white rounded-2xl
-                  shadow-lg shadow-purple-200/50 cursor-pointer"
+                className="cursor-pointer rounded-2xl bg-linear-to-r from-purple-500 to-indigo-600 px-4 text-white shadow-lg shadow-purple-200/50"
               >
                 <Wand2 className="size-4" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent
-              className="w-80 p-2!
-             rounded-xl! shadow-lg border mt-1
-            "
-            >
+            <PopoverContent className="mt-1 w-80 rounded-xl! border p-2! shadow-lg">
               <PromptInput
                 promptText={promptText}
                 setPromptText={setPromptText}
-                className="min-h-[150px] ring-1! ring-purple-500!
-                rounded-xl! shadow-none border-muted
-                "
+                className="border-muted min-h-[150px] rounded-xl! shadow-none ring-1! ring-purple-500!"
                 hideSubmitBtn={true}
               />
               <Button
                 disabled={isPending}
-                className="mt-2 w-full
-                  bg-linear-to-r
-                 from-purple-500 to-indigo-600
-                  text-white rounded-2xl
-                  shadow-lg shadow-purple-200/50 cursor-pointer
-                "
+                className="mt-2 w-full cursor-pointer rounded-2xl bg-linear-to-r from-purple-500 to-indigo-600 text-white shadow-lg shadow-purple-200/50"
                 onClick={handleAIGenerate}
               >
                 {isPending ? <Spinner /> : <>Design</>}
@@ -265,10 +240,8 @@ const CanvasFloatingToolbar = ({
                           setTheme(theme.id);
                         }}
                         className={cn(
-                          `w-6.5 h-6.5 rounded-full cursor-pointer
-                           `,
-                          currentTheme?.id === theme.id &&
-                            "ring-1 ring-offset-1"
+                          `h-6.5 w-6.5 cursor-pointer rounded-full`,
+                          currentTheme?.id === theme.id && "ring-1 ring-offset-1"
                         )}
                         style={{
                           background: `linear-gradient(135deg, ${color.primary}, ${color.accent})`,
@@ -277,20 +250,13 @@ const CanvasFloatingToolbar = ({
                     );
                   })}
                 </div>
-                <div
-                  className="flex items-center gap-1 text-sm
-                "
-                >
+                <div className="flex items-center gap-1 text-sm">
                   +{themes?.length - 4} more
                   <ChevronDown className="size-4" />
                 </div>
               </div>
             </PopoverTrigger>
-            <PopoverContent
-              className="px-0 rounded-xl
-            shadow border
-            "
-            >
+            <PopoverContent className="rounded-xl border px-0 shadow">
               <ThemeSelector />
             </PopoverContent>
           </Popover>
@@ -353,7 +319,7 @@ const CanvasFloatingToolbar = ({
                 >
                   All Frames (HTML)
                 </Button>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-muted-foreground text-xs">
                   PNGs work with Figma and similar tools. HTML downloads preserve theme variables.
                 </p>
               </div>
@@ -364,20 +330,16 @@ const CanvasFloatingToolbar = ({
             <Button
               variant="outline"
               size="icon-sm"
-              className="rounded-full cursor-pointer"
+              className="cursor-pointer rounded-full"
               disabled={isScreenshotting}
               onClick={onScreenshot}
             >
-              {isScreenshotting ? (
-                <Spinner />
-              ) : (
-                <CameraIcon className="size-4.5" />
-              )}
+              {isScreenshotting ? <Spinner /> : <CameraIcon className="size-4.5" />}
             </Button>
             <Button
               variant="default"
               size="sm"
-              className="rounded-full cursor-pointer"
+              className="cursor-pointer rounded-full"
               onClick={handleUpdate}
             >
               {update.isPending ? (

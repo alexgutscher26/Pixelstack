@@ -34,19 +34,19 @@ ${escapedHtml}
 `.trim();
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full sm:max-w-7xl h-[90vh]">
+      <DialogContent className="h-[90vh] w-full sm:max-w-7xl">
         <DialogHeader>
           <DialogTitle>{title || "Untitled"}</DialogTitle>
         </DialogHeader>
-        <div className="relative w-full h-full overflow-y-auto">
+        <div className="relative h-full w-full overflow-y-auto">
           <div>
             <CodeBlock
-              className="w-full h-[78vh] [&>div]:h-full [&>div>div]:h-full"
+              className="h-[78vh] w-full [&>div]:h-full [&>div>div]:h-full"
               code={jsxCode}
               language="tsx"
               showLineNumbers
             >
-              <CodeBlockCopyButton className="fixed top-16 right-12 z-50 bg-muted!" />
+              <CodeBlockCopyButton className="bg-muted! fixed top-16 right-12 z-50" />
             </CodeBlock>
           </div>
         </div>

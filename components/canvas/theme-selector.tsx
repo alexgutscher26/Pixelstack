@@ -9,10 +9,10 @@ const ThemeSelector = () => {
   const { themes, theme: currentTheme, setTheme } = useCanvas();
 
   return (
-    <div className="flex flex-col max-h-96">
-      <div className="flex-1 pb-2 px-3 overflow-y-auto">
-        <h3 className="font-semibold text-sm mb-2">Choose a theme</h3>
-        <div className="py-2 space-y-3">
+    <div className="flex max-h-96 flex-col">
+      <div className="flex-1 overflow-y-auto px-3 pb-2">
+        <h3 className="mb-2 text-sm font-semibold">Choose a theme</h3>
+        <div className="space-y-3 py-2">
           {themes?.map((theme) => (
             <ThemeItem
               key={theme.id}
@@ -41,10 +41,7 @@ function ThemeItem({
     <button
       onClick={onSelect}
       className={cn(
-        `flex items-center justify-between w-full
-        p-1 rounded-xl border gap-4 bg-background
-        hover:border-primary/50 hover:bg-accent/50
-        `,
+        `bg-background hover:border-primary/50 hover:bg-accent/50 flex w-full items-center justify-between gap-4 rounded-xl border p-1`,
         isSelected ? "border-2" : "border"
       )}
       style={{
@@ -55,7 +52,7 @@ function ThemeItem({
         {["primary", "secondary", "accent", "muted"].map((key) => (
           <div
             key={key}
-            className="w-4 h-4 rounded-full border"
+            className="h-4 w-4 rounded-full border"
             style={{
               backgroundColor: color[key],
               borderColor: "#ccc",
@@ -64,7 +61,7 @@ function ThemeItem({
         ))}
       </div>
 
-      <div className="flex items-center gap-2 flex-[0.9]">
+      <div className="flex flex-[0.9] items-center gap-2">
         <span className="text-sm">{theme.name}</span>
         {isSelected && <CheckIcon size={16} color={color.primary} />}
       </div>

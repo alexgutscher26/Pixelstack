@@ -10,12 +10,14 @@ export function cn(...inputs: ClassValue[]) {
 export const safeLogger = {
   info: (message: string, meta?: Record<string, any>) => {
     try {
-      console.log(JSON.stringify({ 
-        level: "info", 
-        message, 
-        timestamp: new Date().toISOString(),
-        meta 
-      }));
+      console.log(
+        JSON.stringify({
+          level: "info",
+          message,
+          timestamp: new Date().toISOString(),
+          meta,
+        })
+      );
     } catch (err) {
       console.log(JSON.stringify({ level: "info", message, meta: "[Unserializable]" }));
     }

@@ -2,15 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { inngest } from "@/inngest/client";
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id: projectId } = await params;
-    const { getKindeServerSession } = await import(
-      "@kinde-oss/kinde-auth-nextjs/server"
-    );
+    const { getKindeServerSession } = await import("@kinde-oss/kinde-auth-nextjs/server");
     const session = await getKindeServerSession();
     const user = await session.getUser();
     if (!user) {
@@ -19,10 +14,7 @@ export async function POST(
     const { frameId, prompt, targetOuterHTML } = await request.json();
 
     if (!frameId || !prompt) {
-      return NextResponse.json(
-        { error: "frameId and prompt are required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "frameId and prompt are required" }, { status: 400 });
     }
     const project = await prisma.project.findFirst({
       where: {
@@ -66,9 +58,6 @@ export async function POST(
     });
   } catch (error) {
     console.log("Regenerate frame error:", error);
-    return NextResponse.json(
-      { error: "Failed to regenerate frame" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to regenerate frame" }, { status: 500 });
   }
 }

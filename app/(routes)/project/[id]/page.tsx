@@ -22,11 +22,7 @@ const Page = () => {
   }
 
   return (
-    <div
-      className="relative h-screen w-full
-   flex flex-col
-  "
-    >
+    <div className="relative flex h-screen w-full flex-col">
       <Header projectName={project?.name} />
 
       <CanvasProvider
@@ -38,11 +34,7 @@ const Page = () => {
         <div className="flex flex-1 overflow-hidden">
           <div className="relative flex-1">
             <ErrorBoundary>
-              <Canvas
-                projectId={project?.id}
-                projectName={project?.name}
-                isPending={isPending}
-              />
+              <Canvas projectId={project?.id} projectName={project?.name} isPending={isPending} />
             </ErrorBoundary>
           </div>
         </div>

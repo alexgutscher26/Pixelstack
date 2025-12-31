@@ -19,23 +19,14 @@ const HtmlDialog = ({
   const fullHtml = getHTMLWrapper(html, title, theme_style);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="w-full sm:max-w-7xl
-       h-[90vh]
-      "
-      >
+      <DialogContent className="h-[90vh] w-full sm:max-w-7xl">
         <DialogHeader>
           <DialogTitle>{title || "Untitled"}</DialogTitle>
         </DialogHeader>
-        <div className="relative w-full h-full overflow-y-auto">
+        <div className="relative h-full w-full overflow-y-auto">
           <div>
-            <CodeBlock
-              className="w-full h-auto"
-              code={fullHtml}
-              language="html"
-              showLineNumbers
-            >
-              <CodeBlockCopyButton className="fixed top-16 right-12 z-50 bg-muted!" />
+            <CodeBlock className="h-auto w-full" code={fullHtml} language="html" showLineNumbers>
+              <CodeBlockCopyButton className="bg-muted! fixed top-16 right-12 z-50" />
             </CodeBlock>
           </div>
         </div>

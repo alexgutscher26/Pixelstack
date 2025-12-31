@@ -1,15 +1,10 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id: projectId } = await params;
-    const { getKindeServerSession } = await import(
-      "@kinde-oss/kinde-auth-nextjs/server"
-    );
+    const { getKindeServerSession } = await import("@kinde-oss/kinde-auth-nextjs/server");
     const session = await getKindeServerSession();
     const user = await session.getUser();
 
@@ -50,9 +45,6 @@ export async function DELETE(
     if (error.code === "P2025") {
       return NextResponse.json({ error: "Frame not found" }, { status: 404 });
     }
-    return NextResponse.json(
-      { error: "Failed to delete frame" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to delete frame" }, { status: 500 });
   }
 }

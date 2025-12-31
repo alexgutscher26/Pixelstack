@@ -64,10 +64,7 @@ const DeviceFrame = ({
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      if (
-        event.data.type === "FRAME_HEIGHT" &&
-        event.data.frameId === frameId
-      ) {
+      if (event.data.type === "FRAME_HEIGHT" && event.data.frameId === frameId) {
         setFrameSize((prev) => ({
           ...prev,
           height: event.data.height,
@@ -230,23 +227,16 @@ const DeviceFrame = ({
       }}
       className={cn(
         "relative z-10",
-        isSelected &&
-          toolMode !== TOOL_MODE_ENUM.HAND &&
-          "ring-3 ring-blue-400 ring-offset-1",
-        toolMode === TOOL_MODE_ENUM.HAND
-          ? "cursor-grab! active:cursor-grabbing!"
-          : "cursor-move"
+        isSelected && toolMode !== TOOL_MODE_ENUM.HAND && "ring-3 ring-blue-400 ring-offset-1",
+        toolMode === TOOL_MODE_ENUM.HAND ? "cursor-grab! active:cursor-grabbing!" : "cursor-move"
       )}
     >
-      <div className="w-full h-full">
+      <div className="h-full w-full">
         <DeviceFrameToolbar
           title={title}
           isSelected={isSelected && toolMode !== TOOL_MODE_ENUM.HAND}
           disabled={
-            isDownloading ||
-            isLoading ||
-            regenerateMutation.isPending ||
-            deleteMutation.isPending
+            isDownloading || isLoading || regenerateMutation.isPending || deleteMutation.isPending
           }
           isDownloading={isDownloading}
           isRegenerating={regenerateMutation.isPending}
@@ -260,14 +250,11 @@ const DeviceFrame = ({
 
         <div
           className={cn(
-            `relative w-full h-auto
-            rounded-[36px] overflow-hidden bg-black
-            shadow-2xl
-              `,
+            `relative h-auto w-full overflow-hidden rounded-[36px] bg-black shadow-2xl`,
             isSelected && toolMode !== TOOL_MODE_ENUM.HAND && "rounded-none"
           )}
         >
-          <div className="relative bg-white dark:bg-background overflow-hidden">
+          <div className="dark:bg-background relative overflow-hidden bg-white">
             {isLoading ? (
               <DeviceFrameSkeleton
                 style={{
@@ -297,11 +284,9 @@ const DeviceFrame = ({
           </div>
         </div>
         {isSelected && selectedOuterHTML && (
-          <div
-            className="absolute top-4 right-4 z-20 bg-white dark:bg-muted rounded-xl shadow-lg border p-2 w-[360px] max-w-[85%] xda-no-drag"
-          >
-            <div className="text-xs font-medium mb-1">Edit selected part with AI</div>
-            <InputGroup className="bg-transparent! border-0! shadow-none! ring-0! px-0!">
+          <div className="dark:bg-muted xda-no-drag absolute top-4 right-4 z-20 w-[360px] max-w-[85%] rounded-xl border bg-white p-2 shadow-lg">
+            <div className="mb-1 text-xs font-medium">Edit selected part with AI</div>
+            <InputGroup className="border-0! bg-transparent! px-0! shadow-none! ring-0!">
               <InputGroupAddon>
                 <Wand2Icon />
               </InputGroupAddon>
@@ -309,7 +294,7 @@ const DeviceFrame = ({
                 placeholder="Describe the change..."
                 value={partialPrompt}
                 onChange={(e) => setPartialPrompt(e.target.value)}
-                className="ring-0! border-0! shadow-none! bg-transparent!"
+                className="border-0! bg-transparent! shadow-none! ring-0!"
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     handlePartialRegenerate();
@@ -333,11 +318,6 @@ const DeviceFrame = ({
   );
 };
 
-const Handle = () => (
-  <div
-    className="z-30 h-4 w-4
-     bg-white border-2 border-blue-500"
-  />
-);
+const Handle = () => <div className="z-30 h-4 w-4 border-2 border-blue-500 bg-white" />;
 
 export default DeviceFrame;

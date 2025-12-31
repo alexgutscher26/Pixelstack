@@ -13,12 +13,12 @@ const DeviceFrameSkeleton = ({ style }: PropsType) => {
         ...style,
       }}
     >
-      <div className="flex items-center gap-2 p-3 border-b">
+      <div className="flex items-center gap-2 border-b p-3">
         <Skeleton className="h-5 w-5 rounded-md" />
         <Skeleton className="h-4 w-32" />
       </div>
 
-      <div className="p-4 space-y-4">
+      <div className="space-y-4 p-4">
         <Skeleton className="h-6 w-3/4" />
         <Skeleton className="h-6 w-1/2" />
         <Skeleton className="h-4 w-full" />

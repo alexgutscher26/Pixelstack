@@ -14,14 +14,11 @@ export const useRegenerateFrame = (projectId: string) => {
       prompt: string;
       targetOuterHTML?: string;
     }) => {
-      const res = await axios.post(
-        `/api/project/${projectId}/frame/regenerate`,
-        {
-          frameId,
-          prompt,
-          targetOuterHTML,
-        }
-      );
+      const res = await axios.post(`/api/project/${projectId}/frame/regenerate`, {
+        frameId,
+        prompt,
+        targetOuterHTML,
+      });
       return res.data;
     },
     onSuccess: () => {

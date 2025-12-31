@@ -21,27 +21,18 @@ export function FallbackImage({
   if (error || !src) {
     return (
       <div
-        className={cn(
-          "h-full w-full flex items-center justify-center bg-secondary/50",
-          className
-        )}
+        className={cn("bg-secondary/50 flex h-full w-full items-center justify-center", className)}
       >
         {fallbackType === "folder" ? (
-          <FolderOpenDotIcon className="h-10 w-10 text-muted-foreground" />
+          <FolderOpenDotIcon className="text-muted-foreground h-10 w-10" />
         ) : (
-          <ImageIcon className="h-10 w-10 text-muted-foreground" />
+          <ImageIcon className="text-muted-foreground h-10 w-10" />
         )}
       </div>
     );
   }
 
   return (
-    <img
-      src={src}
-      alt={alt}
-      className={className}
-      onError={() => setError(true)}
-      {...props}
-    />
+    <img src={src} alt={alt} className={className} onError={() => setError(true)} {...props} />
   );
 }

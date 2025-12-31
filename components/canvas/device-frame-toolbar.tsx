@@ -25,12 +25,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { InputGroup, InputGroupAddon } from "../ui/input-group";
 import { Input } from "../ui/input";
 import { ButtonGroup } from "../ui/button-group";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 
 type PropsType = {
   title: string;
@@ -75,19 +70,15 @@ const DeviceFrameToolbar = ({
     trimmed.length === 0
       ? "Please enter a prompt"
       : trimmed.length < 10
-      ? "Enter at least 10 characters"
-      : "";
+        ? "Enter at least 10 characters"
+        : "";
   return (
     <div
       className={cn(
-        `absolute -mt-2 flex items-center justify-between gap-2 rounded-full z-50
-        `,
+        `absolute z-50 -mt-2 flex items-center justify-between gap-2 rounded-full`,
         isSelected
-          ? `left-1/2 -translate-x-1/2 border bg-card
-            dark:bg-muted pl-2 py-1 shadown-sm
-            min-w-[260px] h-[35px]
-          `
-          : "w-[150px h-auto] left-10 "
+          ? `bg-card dark:bg-muted shadown-sm left-1/2 h-[35px] min-w-[260px] -translate-x-1/2 border py-1 pl-2`
+          : "w-[150px h-auto] left-10"
       )}
       style={{
         top: isSelected ? "-70px" : "-38px",
@@ -97,16 +88,12 @@ const DeviceFrameToolbar = ({
     >
       <div
         role="button"
-        className="flex flex-1 cursor-grab items-center
-        justify-start gap-1.5 active:cursor-grabbing h-full
-        "
+        className="flex h-full flex-1 cursor-grab items-center justify-start gap-1.5 active:cursor-grabbing"
       >
-        <GripVertical className="size-4 text-muted-foreground" />
+        <GripVertical className="text-muted-foreground size-4" />
         <div
           className={cn(
-            `min-w-20 font-medium text-sm
-           mx-px truncate mt-0.5
-          `,
+            `mx-px mt-0.5 min-w-20 truncate text-sm font-medium`,
             isSelected && "w-[100px]"
           )}
         >
@@ -116,8 +103,8 @@ const DeviceFrameToolbar = ({
 
       {isSelected && (
         <>
-          <Separator orientation="vertical" className="h-5! bg-border" />
-          <ButtonGroup className="gap-px! justify-end pr-2! h-full ">
+          <Separator orientation="vertical" className="bg-border h-5!" />
+          <ButtonGroup className="h-full justify-end gap-px! pr-2!">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -128,7 +115,7 @@ const DeviceFrameToolbar = ({
                     className="rounded-full!"
                     onClick={onOpenHtmlDialog}
                   >
-                    <CodeIcon className="size-3.5! stroke-1.5! mt-px" />
+                    <CodeIcon className="stroke-1.5! mt-px size-3.5!" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>View HTML</TooltipContent>
@@ -145,7 +132,7 @@ const DeviceFrameToolbar = ({
                     className="rounded-full!"
                     onClick={onOpenReactDialog}
                   >
-                    <CodeIcon className="size-3.5! stroke-1.5! mt-px" />
+                    <CodeIcon className="stroke-1.5! mt-px size-3.5!" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>View React</TooltipContent>
@@ -165,7 +152,7 @@ const DeviceFrameToolbar = ({
                     {isDownloading ? (
                       <Spinner />
                     ) : (
-                      <DownloadIcon className="size-3.5! stroke-1.5!" />
+                      <DownloadIcon className="stroke-1.5! size-3.5!" />
                     )}
                   </Button>
                 </TooltipTrigger>
@@ -186,7 +173,7 @@ const DeviceFrameToolbar = ({
                         {isRegenerating ? (
                           <Spinner className="size-3.5!" />
                         ) : (
-                          <Wand2 className="size-3.5! stroke-1.5!" />
+                          <Wand2 className="stroke-1.5! size-3.5!" />
                         )}
                       </Button>
                     </PopoverTrigger>
@@ -194,9 +181,9 @@ const DeviceFrameToolbar = ({
                   <TooltipContent>AI Regenerate</TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-              <PopoverContent align="end" className="w-80 p-1! rounded-lg! xda-no-drag">
+              <PopoverContent align="end" className="xda-no-drag w-80 rounded-lg! p-1!">
                 <div className="space-y-2">
-                  <InputGroup className="bg-transparent! border-0! shadow-none! ring-0! px-0! xda-no-drag">
+                  <InputGroup className="xda-no-drag border-0! bg-transparent! px-0! shadow-none! ring-0!">
                     <InputGroupAddon>
                       <Wand2Icon />
                     </InputGroupAddon>
@@ -204,7 +191,7 @@ const DeviceFrameToolbar = ({
                       placeholder="Edit with AI..."
                       value={promptValue}
                       onChange={(e) => setPromptValue(e.target.value)}
-                      className="ring-0! border-0!  shadow-none! bg-transparent! xda-no-drag"
+                      className="xda-no-drag border-0! bg-transparent! shadow-none! ring-0!"
                       aria-invalid={!!invalidMsg}
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {
@@ -231,9 +218,7 @@ const DeviceFrameToolbar = ({
                     </InputGroupAddon>
                   </InputGroup>
                   {invalidMsg && (
-                    <div className="text-destructive text-xs font-medium px-1">
-                      {invalidMsg}
-                    </div>
+                    <div className="text-destructive px-1 text-xs font-medium">{invalidMsg}</div>
                   )}
                 </div>
               </PopoverContent>
@@ -244,12 +229,8 @@ const DeviceFrameToolbar = ({
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon-xs"
-                        className="rounded-full!"
-                      >
-                        <MoreHorizontalIcon className=" mb-px size-3.5! stroke-1.5!" />
+                      <Button variant="ghost" size="icon-xs" className="rounded-full!">
+                        <MoreHorizontalIcon className="stroke-1.5! mb-px size-3.5!" />
                       </Button>
                     </DropdownMenuTrigger>
                   </TooltipTrigger>

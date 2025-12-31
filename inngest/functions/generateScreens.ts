@@ -12,9 +12,7 @@ import { unsplashTool } from "../tool";
 const AnalysisSchema = z.object({
   theme: z
     .string()
-    .describe(
-      "The specific visual theme ID (e.g., 'midnight', 'ocean-breeze', 'neo-brutalism')."
-    ),
+    .describe("The specific visual theme ID (e.g., 'midnight', 'ocean-breeze', 'neo-brutalism')."),
   screens: z
     .array(
       z.object({
@@ -57,8 +55,7 @@ export const generateScreens = inngest.createFunction(
       theme: existingTheme,
     } = event.data;
     const preferences = (event.data as any).preferences || {};
-    const desiredTotal =
-      Math.max(1, Math.min(10, Number(preferences.totalScreens) || 0)) || 9;
+    const desiredTotal = Math.max(1, Math.min(10, Number(preferences.totalScreens) || 0)) || 9;
     const desiredOnboarding =
       Math.max(1, Math.min(5, Number(preferences.onboardingScreens) || 0)) || 1;
     const includePaywall = Boolean(preferences.includePaywall);
@@ -87,10 +84,7 @@ export const generateScreens = inngest.createFunction(
 
       const contextHTML = isExistingGeneration
         ? frames
-            .map(
-              (frame: FrameType) =>
-                `<!-- ${frame.title} -->\n${frame.htmlContent}`
-            )
+            .map((frame: FrameType) => `<!-- ${frame.title} -->\n${frame.htmlContent}`)
             .join("\n\n")
         : "";
 
@@ -162,45 +156,35 @@ export const generateScreens = inngest.createFunction(
         `.trim();
 
       const { object } = await generateObject({
-        model:
-          process.env.OPENROUTER_API_KEY
-            ? openrouter.chat("google/gemini-2.5-flash")
-            : ("google/gemini-3-pro-preview" as any),
+        model: process.env.OPENROUTER_API_KEY
+          ? openrouter.chat("google/gemini-2.5-flash")
+          : ("google/gemini-3-pro-preview" as any),
         schema: AnalysisSchema,
         system: ANALYSIS_PROMPT,
         prompt: analysisPrompt,
       });
 
-  const themeToUse = isExistingGeneration ? existingTheme : object.theme;
+      const themeToUse = isExistingGeneration ? existingTheme : object.theme;
 
-  if (!isExistingGeneration) {
+      if (!isExistingGeneration) {
         // Ensure onboarding and home screens exist and are ordered first
         const screens = Array.isArray(object.screens) ? [...object.screens] : [];
 
-        const hasOnboarding = screens.some(
-          (s) =>
-            /onboarding|welcome|splash|intro|getting-started/i.test(
-              `${s.id} ${s.name}`
-            )
+        const hasOnboarding = screens.some((s) =>
+          /onboarding|welcome|splash|intro|getting-started/i.test(`${s.id} ${s.name}`)
         );
-        const hasHome = screens.some(
-          (s) =>
-            /home|dashboard|main/i.test(`${s.id} ${s.name}`)
-        );
+        const hasHome = screens.some((s) => /home|dashboard|main/i.test(`${s.id} ${s.name}`));
 
         const onboardingPlan = hasOnboarding
           ? screens.find((s) =>
-              /onboarding|welcome|splash|intro|getting-started/i.test(
-                `${s.id} ${s.name}`
-              )
+              /onboarding|welcome|splash|intro|getting-started/i.test(`${s.id} ${s.name}`)
             )!
           : {
-            id: "onboarding-welcome",
-            name: "Welcome Onboarding",
-            purpose:
-              "Welcome new users with an engaging hero image, clear value proposition, and easy way to get started or skip ahead.",
-            visualDescription:
-              [
+              id: "onboarding-welcome",
+              name: "Welcome Onboarding",
+              purpose:
+                "Welcome new users with an engaging hero image, clear value proposition, and easy way to get started or skip ahead.",
+              visualDescription: [
                 "Root div: relative w-full min-h-screen bg-[var(--background)] flex flex-col items-center justify-center p-6",
                 "Hero image area: use searchUnsplash for 'abstract gradient mobile app onboarding' - display as rounded-3xl with shadow-2xl, max-w-md mx-auto mb-8",
                 "App logo: centered above hero, 64px size with drop shadow",
@@ -211,19 +195,18 @@ export const generateScreens = inngest.createFunction(
                 "Primary button: 'Get Started' - rounded-full px-8 py-4 bg-[var(--primary)] text-[var(--primary-foreground)] font-semibold shadow-xl text-lg",
                 "Secondary link: 'Skip' text button below - text-sm text-[var(--muted-foreground)] underline-offset-4 hover:underline",
                 "Footer links: Terms & Privacy in text-xs text-[var(--muted-foreground)] at bottom",
-                "NO bottom navigation bar on this screen"
+                "NO bottom navigation bar on this screen",
               ].join(" "),
-          };
+            };
 
         const homePlan = hasHome
           ? screens.find((s) => /home|dashboard|main/i.test(`${s.id} ${s.name}`))!
           : {
-            id: "home-dashboard",
-            name: "Home Dashboard",
-            purpose:
-              "Main landing screen showing personalized overview with key metrics, recent activity, quick actions, and navigation to other sections.",
-            visualDescription:
-              [
+              id: "home-dashboard",
+              name: "Home Dashboard",
+              purpose:
+                "Main landing screen showing personalized overview with key metrics, recent activity, quick actions, and navigation to other sections.",
+              visualDescription: [
                 "Root div: relative w-full min-h-screen bg-[var(--background)]",
                 "Inner scroll container: w-full pb-24 (space for bottom nav) [&::-webkit-scrollbar]:hidden overflow-y-auto",
                 "Sticky header: fixed top-0 w-full backdrop-blur-xl bg-[var(--background)]/80 border-b border-[var(--border)] px-6 py-4 z-10",
@@ -236,16 +219,14 @@ export const generateScreens = inngest.createFunction(
                 "Recent activity: space-y-3, each item is flex items-center gap-4 rounded-xl bg-[var(--card)] border border-[var(--border)] p-4 with icon, title, subtitle, timestamp",
                 "Bottom navigation: fixed bottom-0 w-full backdrop-blur-xl bg-[var(--background)]/90 border-t border-[var(--border)] px-6 py-3 z-20",
                 "Bottom nav items: flex justify-around items-center, 5 buttons each flex flex-col items-center gap-1 with lucide icon (24px) and label (text-xs)",
-                "Bottom nav icons: lucide:home (ACTIVE - has ring-2 ring-[var(--ring)] rounded-full p-2 bg-[var(--accent)] text-[var(--primary)]), lucide:bar-chart-2, lucide:zap, lucide:user, lucide:menu (all inactive in text-[var(--muted-foreground)])"
+                "Bottom nav icons: lucide:home (ACTIVE - has ring-2 ring-[var(--ring)] rounded-full p-2 bg-[var(--accent)] text-[var(--primary)]), lucide:bar-chart-2, lucide:zap, lucide:user, lucide:menu (all inactive in text-[var(--muted-foreground)])",
               ].join(" "),
-          };
+            };
 
         // Filter out any duplicates of the mandatory screens from the rest
         const rest = screens.filter(
           (s) =>
-            !/onboarding|welcome|splash|intro|getting-started/i.test(
-              `${s.id} ${s.name}`
-            ) &&
+            !/onboarding|welcome|splash|intro|getting-started/i.test(`${s.id} ${s.name}`) &&
             !/home|dashboard|main/i.test(`${s.id} ${s.name}`)
         );
 
@@ -254,7 +235,8 @@ export const generateScreens = inngest.createFunction(
           extraOnboardingPlans.push({
             id: "onboarding-features",
             name: "Onboarding Features",
-            purpose: "Highlight 3-4 key features with icons and descriptions to show users what they can do with the app.",
+            purpose:
+              "Highlight 3-4 key features with icons and descriptions to show users what they can do with the app.",
             visualDescription: [
               "Root: relative w-full min-h-screen bg-[var(--background)] flex flex-col p-6",
               "Header: flex justify-between items-center mb-8 - left has back button (lucide:arrow-left), right has 'Skip' text button in text-[var(--muted-foreground)]",
@@ -265,7 +247,7 @@ export const generateScreens = inngest.createFunction(
               "Example features: Analytics (lucide:bar-chart-3), Notifications (lucide:bell), Collaboration (lucide:users), Security (lucide:shield-check)",
               "Progress indicator: flex gap-2 justify-center mb-6 - 4 dots, second one is active (larger, glowing)",
               "Next button: w-full rounded-full px-8 py-4 bg-[var(--primary)] text-[var(--primary-foreground)] font-semibold shadow-xl",
-              "NO bottom navigation on this screen"
+              "NO bottom navigation on this screen",
             ].join(" "),
           });
         }
@@ -273,7 +255,8 @@ export const generateScreens = inngest.createFunction(
           extraOnboardingPlans.push({
             id: "onboarding-permissions",
             name: "Onboarding Permissions",
-            purpose: "Ask for optional permissions like notifications, location, camera with clear explanations of why they're helpful.",
+            purpose:
+              "Ask for optional permissions like notifications, location, camera with clear explanations of why they're helpful.",
             visualDescription: [
               "Root: relative w-full min-h-screen bg-[var(--background)] flex flex-col p-6",
               "Header area: text-2xl font-bold mb-2 'Personalize Experience' + subtitle explaining permissions are optional",
@@ -285,7 +268,7 @@ export const generateScreens = inngest.createFunction(
               "Progress dots: centered, 3rd dot active",
               "Continue button: w-full rounded-full bg-[var(--primary)] at bottom",
               "Skip link: text-center text-sm below button",
-              "NO bottom navigation on this screen"
+              "NO bottom navigation on this screen",
             ].join(" "),
           });
         }
@@ -308,7 +291,7 @@ export const generateScreens = inngest.createFunction(
                 "Primary CTA: w-full max-w-md mx-auto rounded-full px-10 py-5 bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] text-white font-bold text-lg shadow-2xl mb-3 'Start 7-Day Free Trial'",
                 "Secondary option: text-center text-[var(--muted-foreground)] underline 'Continue with Free Plan'",
                 "Fine print: text-xs text-center text-[var(--muted-foreground)] px-6 pb-6 about subscription terms",
-                "NO bottom navigation on this screen"
+                "NO bottom navigation on this screen",
               ].join(" "),
             }
           : null;
@@ -323,7 +306,8 @@ export const generateScreens = inngest.createFunction(
           {
             id: "analytics-overview",
             name: "Analytics Overview",
-            purpose: "Show comprehensive analytics with charts, KPIs, trends, and data insights for tracking performance metrics.",
+            purpose:
+              "Show comprehensive analytics with charts, KPIs, trends, and data insights for tracking performance metrics.",
             visualDescription: [
               "Root: relative w-full min-h-screen bg-[var(--background)]",
               "Scrollable content: pb-24 [&::-webkit-scrollbar]:hidden overflow-y-auto px-6",
@@ -333,13 +317,14 @@ export const generateScreens = inngest.createFunction(
               "Chart colors: use stroke-[var(--primary)] for line, fill gradient from var(--primary) to transparent",
               "Secondary charts row: grid grid-cols-2 gap-4 mb-6 - donut chart showing category breakdown + horizontal bar chart for comparisons",
               "Data table: rounded-xl bg-[var(--card)] border border-[var(--border)] p-4 - headers in text-xs font-semibold text-[var(--muted-foreground)] + rows with ranking number, label, value, progress bar",
-              "Bottom navigation: lucide:bar-chart-2 is ACTIVE (has ring, glow, accent bg)"
+              "Bottom navigation: lucide:bar-chart-2 is ACTIVE (has ring, glow, accent bg)",
             ].join(" "),
           },
           {
             id: "transactions-list",
             name: "Transactions",
-            purpose: "Display transaction history with search, category filters, and detailed information for each transaction.",
+            purpose:
+              "Display transaction history with search, category filters, and detailed information for each transaction.",
             visualDescription: [
               "Root: relative w-full min-h-screen bg-[var(--background)]",
               "Header: sticky top-0 backdrop-blur-xl bg-[var(--background)]/80 border-b border-[var(--border)] px-6 py-4 z-10",
@@ -352,13 +337,14 @@ export const generateScreens = inngest.createFunction(
               "Item structure: merchant icon/logo circle (48px bg with brand color or lucide fallback) + text column (merchant name font-semibold, category badge text-xs, timestamp text-sm text-muted) + amount on right (color coded: text-green-600 for income +$50.00, text-red-600 for expense -$30.50)",
               "Category badges: rounded-full px-2 py-0.5 bg-[var(--accent)] text-xs",
               "Empty state: centered lucide:inbox (64px) text-[var(--muted-foreground)] with 'No transactions found' message if filtered list is empty",
-              "Bottom navigation: lucide:list or lucide:receipt ACTIVE"
+              "Bottom navigation: lucide:list or lucide:receipt ACTIVE",
             ].join(" "),
           },
           {
             id: "messages-center",
             name: "Messages",
-            purpose: "Central inbox for all conversations, support messages, and notifications with search and filtering.",
+            purpose:
+              "Central inbox for all conversations, support messages, and notifications with search and filtering.",
             visualDescription: [
               "Root: relative w-full min-h-screen bg-[var(--background)]",
               "Header: fixed top-0 w-full backdrop-blur-xl bg-[var(--background)]/80 border-b border-[var(--border)] px-6 py-4 z-10 flex justify-between items-center",
@@ -370,13 +356,14 @@ export const generateScreens = inngest.createFunction(
               "Unread styling: unread threads have slightly bolder text, subtle bg tint, blue dot or count bubble",
               "Unread badge: rounded-full bg-[var(--primary)] text-white text-xs w-6 h-6 flex items-center justify-center",
               "Example threads: 'Support Team', 'John Doe', 'Team Update', 'Alice Chen'",
-              "Bottom navigation: lucide:message-circle or lucide:mail ACTIVE"
+              "Bottom navigation: lucide:message-circle or lucide:mail ACTIVE",
             ].join(" "),
           },
           {
             id: "profile",
             name: "Profile",
-            purpose: "User profile displaying personal information, stats, achievements, connected accounts, and settings access.",
+            purpose:
+              "User profile displaying personal information, stats, achievements, connected accounts, and settings access.",
             visualDescription: [
               "Root: relative w-full min-h-screen bg-[var(--background)]",
               "Scrollable: pb-24 [&::-webkit-scrollbar]:hidden overflow-y-auto",
@@ -395,13 +382,14 @@ export const generateScreens = inngest.createFunction(
               "Connected accounts: title + list of social/payment logos with status indicators and chevron-right for navigation",
               "Privacy toggles: title + list items with shield icons, toggle switches",
               "Action buttons at bottom: 'Sign Out' (rounded-xl border-2 border-[var(--destructive)] text-[var(--destructive)] py-3) + small 'Delete Account' text link",
-              "Bottom navigation: lucide:user ACTIVE"
+              "Bottom navigation: lucide:user ACTIVE",
             ].join(" "),
           },
           {
             id: "settings",
             name: "Settings",
-            purpose: "Comprehensive settings panel for app configuration including theme, notifications, privacy, and account preferences.",
+            purpose:
+              "Comprehensive settings panel for app configuration including theme, notifications, privacy, and account preferences.",
             visualDescription: [
               "Root: relative w-full min-h-screen bg-[var(--background)]",
               "Header: sticky top-0 bg-[var(--background)] border-b border-[var(--border)] px-6 py-4 flex items-center gap-3 - back button (lucide:arrow-left) + 'Settings' title (text-xl font-bold)",
@@ -415,13 +403,14 @@ export const generateScreens = inngest.createFunction(
               "Privacy section: list items with chevron-right indicating deeper navigation - 'Privacy Policy', 'Data Usage', 'Manage Permissions'",
               "About section: app version, help center link, social media icons, Terms & Privacy links",
               "List item style: p-4 flex items-center gap-3 - lucide icon (20px) + text column (title + optional subtitle text-sm text-muted) + chevron-right",
-              "Bottom navigation: lucide:settings or lucide:sliders ACTIVE"
+              "Bottom navigation: lucide:settings or lucide:sliders ACTIVE",
             ].join(" "),
           },
           {
             id: "notifications",
             name: "Notifications",
-            purpose: "Notification center showing all alerts, updates, and important messages in chronological order with status indicators.",
+            purpose:
+              "Notification center showing all alerts, updates, and important messages in chronological order with status indicators.",
             visualDescription: [
               "Root: relative w-full min-h-screen bg-[var(--background)]",
               "Header: sticky top-0 backdrop-blur-xl bg-[var(--background)]/90 border-b border-[var(--border)] px-6 py-4 flex justify-between items-center z-10",
@@ -436,13 +425,14 @@ export const generateScreens = inngest.createFunction(
               "Icon colors: Notifications (yellow bg), Success (green bg), Warnings (orange bg), Info (blue bg)",
               "Swipe actions: reveal background with archive/delete options on swipe",
               "Empty state: centered lucide:bell-off (64px) + 'You're all caught up!' message with checkmark",
-              "Bottom navigation: lucide:bell or lucide:zap ACTIVE"
+              "Bottom navigation: lucide:bell or lucide:zap ACTIVE",
             ].join(" "),
           },
           {
             id: "explore",
             name: "Explore",
-            purpose: "Content discovery page with curated recommendations, trending items, categories, and browsable grid of content.",
+            purpose:
+              "Content discovery page with curated recommendations, trending items, categories, and browsable grid of content.",
             visualDescription: [
               "Root: relative w-full min-h-screen bg-[var(--background)]",
               "Header: px-6 py-4 flex justify-between items-center border-b border-[var(--border)]",
@@ -455,13 +445,14 @@ export const generateScreens = inngest.createFunction(
               "Card metadata: below image p-3 - secondary info (views count with lucide:eye, likes with lucide:heart, date) in text-xs text-[var(--muted-foreground)] flex gap-3",
               "Loading state: skeleton cards with pulse animation",
               "Infinite scroll indicator: spinner or 'Loading more...' at bottom",
-              "Bottom navigation: lucide:compass or lucide:globe ACTIVE"
+              "Bottom navigation: lucide:compass or lucide:globe ACTIVE",
             ].join(" "),
           },
           {
             id: "search",
             name: "Search",
-            purpose: "Universal search with filters, recent searches, trending queries, and organized results across different content types.",
+            purpose:
+              "Universal search with filters, recent searches, trending queries, and organized results across different content types.",
             visualDescription: [
               "Root: relative w-full min-h-screen bg-[var(--background)]",
               "Search header: sticky top-0 bg-[var(--background)] border-b border-[var(--border)] px-6 py-4 z-10",
@@ -478,7 +469,7 @@ export const generateScreens = inngest.createFunction(
               "Match highlighting: searched terms in results have bg-yellow-200/30 highlight",
               "Loading skeleton: animated pulse placeholders while searching",
               "Empty state: lucide:search-x (64px) + 'No results found' + suggestions to try different terms",
-              "Bottom navigation: lucide:search ACTIVE"
+              "Bottom navigation: lucide:search ACTIVE",
             ].join(" "),
           },
         ];
@@ -490,11 +481,7 @@ export const generateScreens = inngest.createFunction(
 
         // desiredTotal counts non-onboarding screens including Home
         const allowedRestCount = Math.max(0, desiredTotal - 1);
-        const finalScreens = [
-          ...onboardingSequence,
-          homePlan,
-          ...rest.slice(0, allowedRestCount),
-        ];
+        const finalScreens = [...onboardingSequence, homePlan, ...rest.slice(0, allowedRestCount)];
         object.screens = finalScreens;
 
         await prisma.project.update({
@@ -522,15 +509,11 @@ export const generateScreens = inngest.createFunction(
     });
 
     // Actuall generation of each screens
-    const generatedFrames: typeof frames = isExistingGeneration
-      ? [...frames]
-      : [];
+    const generatedFrames: typeof frames = isExistingGeneration ? [...frames] : [];
 
     for (let i = 0; i < analysis.screens.length; i++) {
       const screenPlan = analysis.screens[i];
-      const selectedTheme = THEME_LIST.find(
-        (t) => t.id === analysis.themeToUse
-      );
+      const selectedTheme = THEME_LIST.find((t) => t.id === analysis.themeToUse);
 
       //Combine the Theme Styles + Base Variable
       const fullThemeCSS = `
@@ -546,10 +529,9 @@ export const generateScreens = inngest.createFunction(
 
       await step.run(`generated-screen-${i}`, async () => {
         const result = await generateText({
-          model:
-            process.env.OPENROUTER_API_KEY
-              ? openrouter.chat("google/gemini-2.5-flash")
-              : ("google/gemini-3-pro-preview" as any),
+          model: process.env.OPENROUTER_API_KEY
+            ? openrouter.chat("google/gemini-2.5-flash")
+            : ("google/gemini-3-pro-preview" as any),
           system: GENERATION_SYSTEM_PROMPT,
           tools: {
             searchUnsplash: unsplashTool,
@@ -566,7 +548,9 @@ SCREEN INFORMATION:
 DETAILED VISUAL SPECIFICATION:
 ${screenPlan.visualDescription}
 
-${previousFramesContext ? `
+${
+  previousFramesContext
+    ? `
 PREVIOUS SCREENS HTML CODE (CRITICAL - STUDY THIS CAREFULLY):
 ${previousFramesContext}
 
@@ -594,11 +578,13 @@ STEP 3 - MAINTAIN CONSISTENCY:
 - Typography hierarchy must match (same text-* sizes for similar elements)
 - Interactive states must match (same hover/active effects)
 - Layout rhythm must match (same spacing between sections)
-` : `
+`
+    : `
 NO PREVIOUS SCREENS - YOU ARE ESTABLISHING THE DESIGN FOUNDATION.
 
 Create a polished, modern mobile interface that will serve as the template for future screens.
-`}
+`
+}
 
 THEME CSS VARIABLES (available for use, already defined in parent scope):
 ${fullThemeCSS}

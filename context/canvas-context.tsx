@@ -3,21 +3,9 @@ import { useInngestSubscription } from "@inngest/realtime/hooks";
 import { fetchRealtimeSubscriptionToken } from "@/app/action/realtime";
 import { THEME_LIST, ThemeType } from "@/lib/themes";
 import { FrameType } from "@/types/project";
-import {
-  createContext,
-  ReactNode,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
 
-export type LoadingStatusType =
-  | "idle"
-  | "running"
-  | "analyzing"
-  | "generating"
-  | "completed";
+export type LoadingStatusType = "idle" | "running" | "analyzing" | "generating" | "completed";
 
 interface CanvasContextType {
   theme?: ThemeType;
@@ -52,16 +40,12 @@ export const CanvasProvider = ({
   hasInitialData: boolean;
   projectId: string | null;
 }) => {
-  const [themeId, setThemeId] = useState<string>(
-    initialThemeId || THEME_LIST[0].id
-  );
+  const [themeId, setThemeId] = useState<string>(initialThemeId || THEME_LIST[0].id);
 
   const [frames, setFrames] = useState<FrameType[]>(initialFrames);
   const [selectedFrameId, setSelectedFrameId] = useState<string | null>(null);
 
-  const [loadingStatus, setLoadingStatus] = useState<LoadingStatusType | null>(
-    null
-  );
+  const [loadingStatus, setLoadingStatus] = useState<LoadingStatusType | null>(null);
 
   const [prevProjectId, setPrevProjectId] = useState(projectId);
   if (projectId !== prevProjectId) {
@@ -141,9 +125,7 @@ export const CanvasProvider = ({
 
   const updateFrame = useCallback((id: string, data: Partial<FrameType>) => {
     setFrames((prev) => {
-      return prev.map((frame) =>
-        frame.id === id ? { ...frame, ...data } : frame
-      );
+      return prev.map((frame) => (frame.id === id ? { ...frame, ...data } : frame));
     });
   }, []);
 

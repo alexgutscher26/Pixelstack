@@ -29,14 +29,8 @@ const Canvas = ({
   isPending: boolean;
   projectName: string | null;
 }) => {
-  const {
-    theme,
-    frames,
-    selectedFrame,
-    setSelectedFrameId,
-    loadingStatus,
-    setLoadingStatus,
-  } = useCanvas();
+  const { theme, frames, selectedFrame, setSelectedFrameId, loadingStatus, setLoadingStatus } =
+    useCanvas();
   const [toolMode, setToolMode] = useState<ToolModeType>(TOOL_MODE_ENUM.SELECT);
   const [zoomPercent, setZoomPercent] = useState<number>(53);
   const [currentScale, setCurrentScale] = useState<number>(0.53);
@@ -157,17 +151,17 @@ const Canvas = ({
   const currentStatus = isSaving
     ? "finalizing"
     : isPending && (loadingStatus === null || loadingStatus === "idle")
-    ? "fetching"
-    : loadingStatus !== "idle" && loadingStatus !== "completed"
-    ? loadingStatus
-    : null;
+      ? "fetching"
+      : loadingStatus !== "idle" && loadingStatus !== "completed"
+        ? loadingStatus
+        : null;
 
   const { mutate: generateDesign, isPending: isGenerating } = useGenerateDesignById(projectId);
   const defaultPrompt =
     "Mobile app home dashboard: sticky header with avatar and greeting, KPI cards for steps/calories, weekly chart, recent activity list, and fixed bottom navigation with 5 icons. Modern polished style, rounded cards, glows, Tailwind + CSS variables.";
   return (
     <>
-      <div className="relative w-full h-full overflow-hidden">
+      <div className="relative h-full w-full overflow-hidden">
         <CanvasFloatingToolbar
           projectId={projectId}
           isScreenshotting={isScreenshotting}
@@ -176,12 +170,12 @@ const Canvas = ({
 
         {!currentStatus && (frames?.length ?? 0) === 0 && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="bg-card text-card-foreground border rounded-xl p-8 shadow-md max-w-md text-center">
-              <div className="w-16 h-16 rounded-full bg-primary/15 flex items-center justify-center text-primary mx-auto mb-4">
+            <div className="bg-card text-card-foreground max-w-md rounded-xl border p-8 text-center shadow-md">
+              <div className="bg-primary/15 text-primary mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
                 <Wand2 className="size-7" />
               </div>
               <h2 className="text-lg font-semibold tracking-tight">Design your first screens</h2>
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className="text-muted-foreground mt-1 text-sm">
                 Start with a prompt and we’ll generate 8–12 screens.
               </p>
               <div className="mt-4">
@@ -225,16 +219,13 @@ const Canvas = ({
               <div
                 ref={canvasRootRef}
                 className={cn(
-                  `absolute inset-0 w-full h-full bg-[#eee]
-                  dark:bg-[#242423] p-3
-              `,
+                  `absolute inset-0 h-full w-full bg-[#eee] p-3 dark:bg-[#242423]`,
                   toolMode === TOOL_MODE_ENUM.HAND
                     ? "cursor-grab active:cursor-grabbing"
                     : "cursor-default"
                 )}
                 style={{
-                  backgroundImage:
-                    "radial-gradient(circle, var(--primary) 1px, transparent 1px)",
+                  backgroundImage: "radial-gradient(circle, var(--primary) 1px, transparent 1px)",
                   backgroundSize: "20px 20px",
                 }}
               >
@@ -277,13 +268,13 @@ const Canvas = ({
                             x: baseX,
                             y,
                           }}
-                        toolMode={toolMode}
-                        theme_style={theme?.style}
-                        onOpenHtmlDialog={onOpenHtmlDialog}
-                        onOpenReactDialog={onOpenReactDialog}
-                      />
-                    );
-                  })}
+                          toolMode={toolMode}
+                          theme_style={theme?.style}
+                          onOpenHtmlDialog={onOpenHtmlDialog}
+                          onOpenReactDialog={onOpenReactDialog}
+                        />
+                      );
+                    })}
                   </div>
                   {/* <DeviceFrame
                     frameId="demo"
@@ -330,19 +321,11 @@ const Canvas = ({
   );
 };
 
-function CanvasLoader({
-  status,
-}: {
-  status?: LoadingStatusType | "fetching" | "finalizing";
-}) {
+function CanvasLoader({ status }: { status?: LoadingStatusType | "fetching" | "finalizing" }) {
   return (
     <div
       className={cn(
-        `absolute top-4 left-1/2 -translate-x-1/2 min-w-40
-      max-w-full px-4 pt-1.5 pb-2
-      rounded-br-xl rounded-bl-xl shadow-md
-      flex items-center space-x-2 z-20
-    `,
+        `absolute top-4 left-1/2 z-20 flex max-w-full min-w-40 -translate-x-1/2 items-center space-x-2 rounded-br-xl rounded-bl-xl px-4 pt-1.5 pb-2 shadow-md`,
         status === "fetching" && "bg-gray-500 text-white",
         status === "running" && "bg-amber-500 text-white",
         status === "analyzing" && "bg-blue-500 text-white",
@@ -350,7 +333,7 @@ function CanvasLoader({
         status === "finalizing" && "bg-purple-500 text-white"
       )}
     >
-      <Spinner className="w-4 h-4 stroke-3!" />
+      <Spinner className="h-4 w-4 stroke-3!" />
       <span className="text-sm font-semibold capitalize">
         {status === "fetching" ? "Loading Project" : status}
       </span>

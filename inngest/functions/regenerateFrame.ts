@@ -42,10 +42,9 @@ export const regenerateFrame = inngest.createFunction(
 
       const isPartial = !!targetOuterHTML;
       const result = await generateText({
-        model:
-          process.env.OPENROUTER_API_KEY
-            ? openrouter.chat("google/gemini-2.5-flash")
-            : ("google/gemini-3-pro-preview" as any),
+        model: process.env.OPENROUTER_API_KEY
+          ? openrouter.chat("google/gemini-2.5-flash")
+          : ("google/gemini-3-pro-preview" as any),
         system: GENERATION_SYSTEM_PROMPT,
         tools: {
           searchUnsplash: unsplashTool,
@@ -240,7 +239,7 @@ Generate the complete, updated HTML for this screen now. Remember: preserve ever
       });
 
       let output = result.text ?? "";
-      output = output.replace(/```/g,'');
+      output = output.replace(/```/g, "");
       if (isPartial) {
         const updated = output;
         const original = String(targetOuterHTML);

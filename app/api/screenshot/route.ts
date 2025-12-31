@@ -37,9 +37,7 @@ export async function POST(req: Request) {
 
   try {
     const { html, width = 800, height = 600, projectId } = await req.json();
-    const { getKindeServerSession } = await import(
-      "@kinde-oss/kinde-auth-nextjs/server"
-    );
+    const { getKindeServerSession } = await import("@kinde-oss/kinde-auth-nextjs/server");
     const session = await getKindeServerSession();
     const user = await session.getUser();
 

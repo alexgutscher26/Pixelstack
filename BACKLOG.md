@@ -61,7 +61,7 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 
 - [ ] **Model Selection**: Add a dropdown to choose between models (GPT-4o, Claude 3.5 Sonnet, Gemini 1.5 Pro).
 - [ ] **Prompt Enhancement**: Add a "Magic Enhance" button that rewrites simple prompts into detailed design specifications.
-- [ ] **Negative Prompts**: Allow users to specify what they *don't* want (e.g., "no red", "no rounded corners").
+- [ ] **Negative Prompts**: Allow users to specify what they _don't_ want (e.g., "no red", "no rounded corners").
 - [ ] **Design Style Presets**:
   - [ ] Minimalist
   - [ ] Brutalist
@@ -292,4 +292,4 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 
 ---
 
-*This backlog is a living document. Add new items as they are discovered.*
+_This backlog is a living document. Add new items as they are discovered._

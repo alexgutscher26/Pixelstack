@@ -5,9 +5,7 @@ import { inngest } from "@/inngest/client";
 
 export async function GET() {
   try {
-    const { getKindeServerSession } = await import(
-      "@kinde-oss/kinde-auth-nextjs/server"
-    );
+    const { getKindeServerSession } = await import("@kinde-oss/kinde-auth-nextjs/server");
     const session = await getKindeServerSession();
     const user = await session.getUser();
 
@@ -40,15 +38,8 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const {
-      prompt,
-      totalScreens,
-      onboardingScreens,
-      includePaywall,
-    } = await request.json();
-    const { getKindeServerSession } = await import(
-      "@kinde-oss/kinde-auth-nextjs/server"
-    );
+    const { prompt, totalScreens, onboardingScreens, includePaywall } = await request.json();
+    const { getKindeServerSession } = await import("@kinde-oss/kinde-auth-nextjs/server");
     const session = await getKindeServerSession();
     const user = await session.getUser();
 

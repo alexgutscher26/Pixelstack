@@ -35,20 +35,17 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="flex h-full w-full flex-col items-center justify-center gap-4 bg-muted/30 p-8 text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
-            <AlertTriangle className="h-6 w-6 text-destructive" />
+        <div className="bg-muted/30 flex h-full w-full flex-col items-center justify-center gap-4 p-8 text-center">
+          <div className="bg-destructive/10 flex h-12 w-12 items-center justify-center rounded-full">
+            <AlertTriangle className="text-destructive h-6 w-6" />
           </div>
           <div className="space-y-2">
             <h3 className="text-lg font-semibold">Something went wrong</h3>
-            <p className="text-sm text-muted-foreground max-w-[300px]">
+            <p className="text-muted-foreground max-w-[300px] text-sm">
               We encountered an error while rendering this component.
             </p>
           </div>
-          <Button
-            variant="outline"
-            onClick={() => this.setState({ hasError: false, error: null })}
-          >
+          <Button variant="outline" onClick={() => this.setState({ hasError: false, error: null })}>
             Try again
           </Button>
         </div>
