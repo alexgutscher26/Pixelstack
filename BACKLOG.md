@@ -24,7 +24,7 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 ### UI Hotfixes
 
 - [x] **Mobile Layout Blocker**: Add a "Please use Desktop" overlay for screens smaller than 768px (temporary fix until mobile support).
-- [ ] **Z-Index Wars**: Fix z-index issues where the dropdown menu gets hidden behind the canvas toolbar.
+- [x] **Z-Index Wars**: Fix z-index issues where the dropdown menu gets hidden behind the canvas toolbar.
 - [ ] **Scrollbar Jumping**: Fix layout shift caused by the scrollbar appearing/disappearing in the dashboard.
 - [ ] **Toast Overlap**: Ensure `Sonner` toasts do not overlap with critical action buttons.
 
