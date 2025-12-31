@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FallbackImage } from "@/components/ui/fallback-image";
 import { Input } from "@/components/ui/input";
+import NoProjectsIllustration from "@/components/illustrations/no-projects-illustration";
 
 const LandingSection = () => {
   const { user } = useKindeBrowserClient();
@@ -287,64 +288,7 @@ const LandingSection = () => {
                 ) : (
                   <div className="bg-card text-card-foreground mt-3 flex flex-col items-center gap-4 rounded-xl border p-8">
                     <div className="flex items-center justify-center">
-                      <svg
-                        width="160"
-                        height="160"
-                        viewBox="0 0 160 160"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-28 w-28 text-primary"
-                        aria-hidden="true"
-                      >
-                        <circle cx="80" cy="80" r="64" fill="currentColor" opacity="0.08" />
-                        <rect
-                          x="36"
-                          y="72"
-                          width="88"
-                          height="54"
-                          rx="10"
-                          fill="none"
-                          stroke="var(--muted-foreground)"
-                          strokeWidth="2"
-                        />
-                        <rect
-                          x="36"
-                          y="56"
-                          width="48"
-                          height="22"
-                          rx="6"
-                          fill="none"
-                          stroke="var(--muted-foreground)"
-                          strokeWidth="2"
-                        />
-                        <path
-                          d="M54 80h20"
-                          stroke="var(--muted-foreground)"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          opacity="0.7"
-                        />
-                        <path
-                          d="M44 92h64"
-                          stroke="var(--muted-foreground)"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeDasharray="6 6"
-                          opacity="0.6"
-                        />
-                        <path
-                          d="M116 50v10M111 55h10"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                        />
-                        <path
-                          d="M50 112v8M46 116h8"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          opacity="0.8"
-                        />
-                      </svg>
+                      <NoProjectsIllustration className="h-28 w-28 text-primary" />
                     </div>
                     <div className="space-y-1 text-center">
                       <h2 className="text-lg font-semibold tracking-tight">No projects yet</h2>

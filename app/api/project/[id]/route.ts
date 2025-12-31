@@ -110,18 +110,23 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    if (!themeId && !name) {
+    const trimmedName =
+      typeof name === "string" ? name.trim() : undefined;
+    const hasValidName = !!trimmedName && trimmedName.length > 0;
+    const hasTheme = themeId !== undefined;
+    if (!hasValidName && !hasTheme) {
       return NextResponse.json({ error: "Nothing to update" }, { status: 400 });
     }
 
     const userId = user.id;
 
+    const data: Record<string, unknown> = {};
+    if (hasTheme) data.theme = themeId;
+    if (hasValidName) data.name = trimmedName;
+
     const project = await prisma.project.update({
       where: { id, userId },
-      data: {
-        ...(themeId ? { theme: themeId } : {}),
-        ...(typeof name === "string" && name.trim().length > 0 ? { name: name.trim() } : {}),
-      },
+      data,
     });
 
     return NextResponse.json({

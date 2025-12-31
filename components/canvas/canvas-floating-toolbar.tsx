@@ -42,8 +42,15 @@ const CanvasFloatingToolbar = ({
   };
 
   const handleUpdate = () => {
-    if (onSave) onSave();
     if (!currentTheme) return;
+    if (onSave) {
+      try {
+        onSave();
+      } catch (error) {
+        console.error("Error in onSave callback:", error);
+        // Optionally show a toast notification
+      }
+    }
     update.mutate({ themeId: currentTheme.id });
   };
 
