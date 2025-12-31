@@ -102,7 +102,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const { themeId } = await request.json();
+    const { themeId, name } = await request.json();
     const { getKindeServerSession } = await import("@kinde-oss/kinde-auth-nextjs/server");
     const session = await getKindeServerSession();
     const user = await session.getUser();
@@ -110,14 +110,17 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    if (!themeId) throw new Error("Missing Theme");
+    if (!themeId && !name) {
+      return NextResponse.json({ error: "Nothing to update" }, { status: 400 });
+    }
 
     const userId = user.id;
 
     const project = await prisma.project.update({
       where: { id, userId },
       data: {
-        theme: themeId,
+        ...(themeId ? { theme: themeId } : {}),
+        ...(typeof name === "string" && name.trim().length > 0 ? { name: name.trim() } : {}),
       },
     });
 
@@ -130,6 +133,37 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     return NextResponse.json(
       {
         error: "Failed to update project",
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const { id } = await params;
+    const { getKindeServerSession } = await import("@kinde-oss/kinde-auth-nextjs/server");
+    const session = await getKindeServerSession();
+    const user = await session.getUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const userId = user.id;
+    const project = await prisma.project.findFirst({
+      where: { id, userId },
+      select: { id: true },
+    });
+    if (!project) {
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    }
+    await prisma.frame.deleteMany({ where: { projectId: id } });
+    await prisma.project.delete({ where: { id, userId } });
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.log("Error occured ", error);
+    return NextResponse.json(
+      {
+        error: "Failed to delete project",
       },
       { status: 500 }
     );

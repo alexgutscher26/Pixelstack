@@ -74,6 +74,10 @@ const Canvas = ({
     }
   }, [loadingStatus, projectId, saveThumbnailToProject]);
 
+  const handleSaveProject = useCallback(() => {
+    saveThumbnailToProject(projectId);
+  }, [projectId, saveThumbnailToProject]);
+
   const onOpenHtmlDialog = () => {
     setOpenHtmlDialog(true);
   };
@@ -166,6 +170,7 @@ const Canvas = ({
           projectId={projectId}
           isScreenshotting={isScreenshotting}
           onScreenshot={handleCanvasScreenshot}
+          onSave={handleSaveProject}
         />
 
         {!currentStatus && (frames?.length ?? 0) === 0 && (

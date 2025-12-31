@@ -34,10 +34,10 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 ### Dashboard Experience
 
 - [x] **Project Search**: Add a search bar to filter projects by name.
-- [ ] **Project Thumbnails**: Generate and store actual screenshots of project canvases as thumbnails instead of generic icons.
-- [ ] **Empty State Illustration**: Add a high-quality SVG illustration for the "No Projects" state.
-- [ ] **Rename Project**: Add "Rename" option in the project dropdown menu.
-- [ ] **Delete Confirmation**: Add a "Type 'DELETE' to confirm" modal for project deletion to prevent accidents.
+- [x] **Project Thumbnails**: Generate and store actual screenshots of project canvases as thumbnails instead of generic icons.
+- [x] **Empty State Illustration**: Add a high-quality SVG illustration for the "No Projects" state.
+- [x] **Rename Project**: Add "Rename" option in the project dropdown menu.
+- [x] **Delete Confirmation**: Add a "Type 'DELETE' to confirm" modal for project deletion to prevent accidents.
 
 ### Editor UI Improvements
 

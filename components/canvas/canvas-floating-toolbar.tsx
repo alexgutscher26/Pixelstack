@@ -20,10 +20,12 @@ const CanvasFloatingToolbar = ({
   projectId,
   isScreenshotting,
   onScreenshot,
+  onSave,
 }: {
   projectId: string;
   isScreenshotting: boolean;
   onScreenshot: () => void;
+  onSave?: () => void;
 }) => {
   const { themes, theme: currentTheme, setTheme, selectedFrame, frames } = useCanvas();
   const [promptText, setPromptText] = useState<string>("");
@@ -40,8 +42,9 @@ const CanvasFloatingToolbar = ({
   };
 
   const handleUpdate = () => {
+    if (onSave) onSave();
     if (!currentTheme) return;
-    update.mutate(currentTheme.id);
+    update.mutate({ themeId: currentTheme.id });
   };
 
   const exportWidth = 420;

@@ -8,10 +8,10 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
       new QueryClient({
         defaultOptions: {
           queries: {
-            // exponential backoff for retries
-            retry: (failureCount, error: any) => {
-              // Don't retry on 404s or 401s (if desired, but typically we want to retry network errors)
-              if (error?.response?.status === 404 || error?.response?.status === 401) {
+            retry: (failureCount, error: unknown) => {
+              const status =
+                (error as { response?: { status?: number } })?.response?.status ?? undefined;
+              if (status === 404 || status === 401) {
                 return false;
               }
               return failureCount < 3;
