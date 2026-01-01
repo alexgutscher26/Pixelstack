@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Component, ErrorInfo, ReactNode } from "react";
+import { Component, ErrorInfo, ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle } from "lucide-react";
 
@@ -41,7 +41,7 @@ export class ErrorBoundary extends Component<Props, State> {
           </div>
           <div className="space-y-2">
             <h3 className="text-lg font-semibold">Something went wrong</h3>
-            <p className="text-muted-foreground max-w-[300px] text-sm">
+            <p className="text-muted-foreground max-w-75 text-sm">
               We encountered an error while rendering this component.
             </p>
           </div>

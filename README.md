@@ -1,58 +1,90 @@
-# 🎨 XDesign AI – AI Mobile Design Agent
+# Flowkit — AI Mobile Design Agent
 
-> This code, whether in parts or whole, is licensed for commercial use **only with a license**. It is **free for personal use**.
-> 👉 [Get a Commercial License](https://techwithemma.gumroad.com/l/ogphz) **with the ENV** and 👉 [here to learn more](https://github.com/TechWithEmmaYT/XDesign-Mobile-Agent-SaaS/blob/main/TECHWITHEMMA-LICENSE.md)
+Flowkit is an AI-powered mobile design agent that helps you generate polished app screens, apply themes, and export assets fast. It uses Next.js, Tailwind CSS, Prisma, Inngest, and OpenRouter AI to streamline ideation → mockups.
 
----
+## Features
 
-## ❤️ Support the Channel
+- Generate 8–12 screens from a prompt
+- Canvas with zoom, hand tool, and background presets (Dots, Grid, Solid)
+- Theme selector with CSS variables
+- Export: Canvas PNG, per-frame PNG/HTML, batch export
+- Real-time status updates via Inngest
+- Project management: create, update theme/name, delete
 
-If this project helps you, you can support my work by:
+## Tech Stack
 
-- ☕ [Buy Me a Coffee](https://dub.sh/buy-me-coffee)
-- 🎥 [Subscribe on YouTube](https://dub.sh/subcribe-to-channel)
-- 🌟 Starring this repository
+- Next.js 16 (App Router, Turbopack)
+- React 19
+- Tailwind CSS v4
+- Prisma (database)
+- @tanstack/react-query
+- Radix UI
+- Inngest (functions + realtime)
+- OpenRouter AI SDK
+- Puppeteer Core + Sparticuz Chromium (server-side screenshots)
 
----
+## Getting Started
 
-## Watch the Full Build on YouTube
+1. Prerequisites
+   - Node.js 18+
+   - A compatible database (e.g., PostgreSQL) reachable via `DATABASE_URL`
+   - API keys for required services
 
-> In this video, you’ll build an AI-powered mobile design agent from scratch, covering architecture, AI workflows, canvas rendering, Png exports, and deployment.
+2. Install
+   - `npm install`
+   - `npm run postinstall` (or `npx prisma generate` if needed)
 
-👉 [Watch the Course](https://www.youtube.com/watch?v=o3IqOrXtxm8)
+3. Environment
+   Create a `.env` (or `.env.local`) with:
+   - `NEXT_PUBLIC_SITE_URL=http://localhost:3000`
+   - `DATABASE_URL=postgresql://USER:PASS@HOST:PORT/DB?schema=public`
+   - `OPENROUTER_API_KEY=...`
+   - Kinde Auth (example)
+     - `KINDE_CLIENT_ID=...`
+     - `KINDE_CLIENT_SECRET=...`
+     - `KINDE_ISSUER_URL=...`
+     - `KINDE_REDIRECT_URL=http://localhost:3000/api/auth/callback`
+     - `KINDE_LOGOUT_REDIRECT_URL=http://localhost:3000/`
 
----
+4. Dev
+   - `npm run dev`
+   - Turbopack will start on port 3000 (or fallback to 3001 if busy)
 
-## 🗝️ Key Features 👇
+## Scripts
 
-- 🔐 Authentication with **Kinde**
-- 🤖 AI-powered mobile UI design agent
-- ✍️ Generate clean mobile designs from simple prompts
-- 🖼️ Draggable mobile frame on canvas
-- 🎨 Customizable themes
-- 🔁 Regenerate designs instantly
-- 📸 Export designs as PNG
-- 🌄 Unsplash integration for real images
-- ⚡ Real-time design updates
-- 🪝 Background workflows with Inngest
-- 🌐 Built with Next.js, MongoDB, Prisma
-- 🎨 Styled with **Tailwind CSS**
-- 🚀 Production-ready architecture
+- `npm run dev` — Start local dev server
+- `npm run build` — Build production bundle
+- `npm run start` — Start production server
+- `npm run lint` — Lint with ESLint
+- `npm run format` — Format with Prettier
+- `postinstall` — Prisma generate
 
----
+## Key Paths
 
-## License Information
+- App layout and metadata: `app/layout.tsx`
+- Landing and project listing: `app/(routes)/_common/landing-section.tsx`
+- Project canvas: `components/canvas/index.tsx`
+- Canvas toolbar: `components/canvas/canvas-floating-toolbar.tsx`
+- Canvas controls: `components/canvas/canvas-controls.tsx`
+- Canvas state: `context/canvas-context.tsx`
+- Themes: `lib/themes.ts`
+- Inngest route: `app/api/inngest/route.ts`
+- Project API: `app/api/project/[id]/route.ts`
+- Frame export wrapper: `lib/frame-wrapper.ts`
 
-Commercial use requires a paid license.
-👉 [Get a Commercial License](https://techwithemma.gumroad.com/l/ogphz)
+## Development Notes
 
-For more details about license, please refer to the [TECHWITHEMMA-LICENSE.md](https://github.com/TechWithEmmaYT/XDesign-Mobile-Agent-SaaS/blob/main/TECHWITHEMMA-LICENSE.md).
+- The canvas background selector supports Dots/Grid/Solid, with a color picker. Screenshots and exports include the chosen background.
+- Export flows use server-side screenshots via Puppeteer Core + Sparticuz Chromium.
+- Inngest powers generation and realtime topic updates (e.g., analysis.start, generation.complete).
+- Auth is handled with Kinde; middleware protects routes, with some public paths configured for development.
 
----
+## Troubleshooting
 
-## 📺 Subscribe for More Projects
+- Port conflicts: If 3000 is in use, dev server will switch to 3001.
+- TypeScript route errors: Ensure API handlers use `NextRequest` and the correct `params` signature.
+- CSS import typing: Declared in `types/css.d.ts` for global CSS imports.
 
-I build real-world SaaS, AI agents, and production-grade systems.
+## License
 
-🔔 Subscribe here:
-👉 [https://dub.sh/subcribe-to-channel](https://dub.sh/subcribe-to-channel)
+Proprietary. All rights reserved.

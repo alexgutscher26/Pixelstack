@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import { inngest } from "@/inngest/client";
 
-export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const { getKindeServerSession } = await import("@kinde-oss/kinde-auth-nextjs/server");
@@ -44,7 +44,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   }
 }
 
-export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const { prompt } = await request.json();
@@ -99,7 +99,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   }
 }
 
-export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const { themeId, name } = await request.json();
@@ -110,8 +110,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const trimmedName =
-      typeof name === "string" ? name.trim() : undefined;
+    const trimmedName = typeof name === "string" ? name.trim() : undefined;
     const hasValidName = !!trimmedName && trimmedName.length > 0;
     const hasTheme = themeId !== undefined;
     if (!hasValidName && !hasTheme) {
@@ -144,7 +143,10 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const { id } = await params;
     const { getKindeServerSession } = await import("@kinde-oss/kinde-auth-nextjs/server");

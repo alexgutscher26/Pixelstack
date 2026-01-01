@@ -26,12 +26,12 @@ export function FallbackImage({
         {fallbackType === "folder" ? (
           <div className="flex flex-col items-center gap-2">
             <FolderOpenDotIcon className="text-muted-foreground h-10 w-10" />
-            <span className="text-xs text-muted-foreground">Folder</span>
+            <span className="text-muted-foreground text-xs">Folder</span>
           </div>
         ) : (
           <div className="flex flex-col items-center gap-2">
             <ImageIcon className="text-muted-foreground h-10 w-10" />
-            <span className="text-xs text-muted-foreground">Image</span>
+            <span className="text-muted-foreground text-xs">Image</span>
           </div>
         )}
       </div>

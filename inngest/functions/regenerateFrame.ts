@@ -101,7 +101,7 @@ ${fullThemeCSS}
 
 **EXAMPLE:**
 If target is a button, and user says "make it red", return:
-<button class="px-6 py-3 bg-[var(--destructive)] text-white rounded-xl font-semibold">Click Me</button>
+<button class="px-6 py-3 bg-destructive text-white rounded-xl font-semibold">Click Me</button>
 
 NOT an explanation, NOT the entire screen, just the updated element.
 
@@ -151,7 +151,7 @@ ${fullThemeCSS}
    **Root Container:**
    - Single root <div> that controls the entire layout
    - NO overflow classes on root (overflow-hidden, overflow-y-auto, etc.)
-   - Use: \`<div class="relative w-full min-h-screen bg-[var(--background)]">\`
+   - Use: \`<div class="relative w-full min-h-screen bg-background">\`
 
    **Scrollable Content:**
    - Apply overflow-y-auto to INNER content containers, not root
@@ -206,7 +206,7 @@ ${fullThemeCSS}
 
 **10. OUTPUT FORMAT:**
    - Return ONLY raw HTML
-   - Start directly with: \`<div class="relative w-full min-h-screen bg-[var(--background)]">\`
+   - Start directly with: \`<div class="relative w-full min-h-screen bg-background">\`
    - NO markdown code blocks (\`\`\`html)
    - NO comments (<!-- -->)
    - NO explanations or surrounding text

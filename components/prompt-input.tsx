@@ -17,6 +17,7 @@ interface PropsType {
   className?: string;
   hideSubmitBtn?: boolean;
   onSubmit?: () => void;
+  placeholder?: string;
 }
 const PromptInput = ({
   promptText,
@@ -25,6 +26,7 @@ const PromptInput = ({
   className,
   hideSubmitBtn = false,
   onSubmit,
+  placeholder,
 }: PropsType) => {
   const trimmed = promptText.trim();
   const invalidMsg =
@@ -35,10 +37,10 @@ const PromptInput = ({
         : "";
   return (
     <div className="bg-background">
-      <InputGroup className={cn("bg-background min-h-[172px] rounded-3xl", className && className)}>
+      <InputGroup className={cn("bg-background min-h-43 rounded-3xl", className && className)}>
         <InputGroupTextarea
           className="py-2.5! text-base!"
-          placeholder="I want to design an app that..."
+          placeholder={placeholder ?? "I want to design an app that..."}
           value={promptText}
           aria-invalid={!!invalidMsg}
           onChange={(e) => {

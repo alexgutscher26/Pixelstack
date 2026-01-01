@@ -90,7 +90,7 @@ const DeviceFrame = ({
     };
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
-  }, [frameId]);
+  }, [frameId, setSelectedFrameId, title]);
 
   useEffect(() => {
     if (!(window as any).exportPerf) {
@@ -284,7 +284,7 @@ const DeviceFrame = ({
           </div>
         </div>
         {isSelected && selectedOuterHTML && (
-          <div className="dark:bg-muted xda-no-drag absolute top-4 right-4 z-20 w-[360px] max-w-[85%] rounded-xl border bg-white p-2 shadow-lg">
+          <div className="dark:bg-muted xda-no-drag absolute top-4 right-4 z-20 w-90 max-w-[85%] rounded-xl border bg-white p-2 shadow-lg">
             <div className="mb-1 text-xs font-medium">Edit selected part with AI</div>
             <InputGroup className="border-0! bg-transparent! px-0! shadow-none! ring-0!">
               <InputGroupAddon>

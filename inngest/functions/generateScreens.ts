@@ -609,8 +609,8 @@ GENERATION RULES - FOLLOW EXACTLY
 
 📐 LAYOUT STRUCTURE:
 1. Root div options:
-   - Standard content: <div class="relative w-full min-h-screen bg-[var(--background)]">
-   - Full screen overlay/modal: <div class="relative w-full h-screen bg-[var(--background)]">
+   - Standard content: <div class="relative w-full min-h-screen bg-background">
+   - Full screen overlay/modal: <div class="relative w-full h-screen bg-background">
    
 2. Scrollable content:
    - NEVER put overflow classes on root div
@@ -640,13 +640,13 @@ GENERATION RULES - FOLLOW EXACTLY
 
 🔍 BOTTOM NAVIGATION (if screen needs it):
 Structure:
-<div class="fixed bottom-0 left-0 right-0 backdrop-blur-xl bg-[var(--background)]/90 border-t border-[var(--border)] px-6 py-3 z-20">
+<div class="fixed bottom-0 left-0 right-0 backdrop-blur-xl bg-(--background)/90 border-t border-border px-6 py-3 z-20">
   <div class="flex justify-around items-center max-w-md mx-auto">
     <button class="flex flex-col items-center gap-1 group">
-      <div class="p-2 rounded-full group-hover:bg-[var(--accent)] transition">
-        <i class="lucide:home w-6 h-6 text-[var(--muted-foreground)] group-hover:text-[var(--primary)]"></i>
+      <div class="p-2 rounded-full group-hover:bg-accent transition">
+        <i class="lucide:home w-6 h-6 text-muted-foreground group-hover:text-primary"></i>
       </div>
-      <span class="text-xs text-[var(--muted-foreground)]">Home</span>
+      <span class="text-xs text-muted-foreground">Home</span>
     </button>
     <!-- repeat for other nav items -->
   </div>
@@ -654,10 +654,10 @@ Structure:
 
 Active state (one icon should have this if it's the current screen):
 <button class="flex flex-col items-center gap-1">
-  <div class="p-2 rounded-full bg-[var(--accent)] ring-2 ring-[var(--ring)]">
-    <i class="lucide:home w-6 h-6 text-[var(--primary)]"></i>
+  <div class="p-2 rounded-full bg-accent ring-2 ring-ring">
+    <i class="lucide:home w-6 h-6 text-primary"></i>
   </div>
-  <span class="text-xs font-semibold text-[var(--primary)]">Home</span>
+  <span class="text-xs font-semibold text-primary">Home</span>
 </button>
 
 📊 CHARTS & DATA VISUALIZATION:

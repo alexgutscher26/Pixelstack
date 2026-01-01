@@ -262,7 +262,7 @@ Apply to scrollable containers:
 ❌ Explanatory text before or after HTML
 ❌ JavaScript (<script> tags or inline handlers)
 ❌ Canvas elements
-❌ Placeholder images (use pravatar.cc or searchUnsplash)
+❌ Placeholder images (use gravatar.cc or search Unsplash)
 ❌ Generic data ("Amount", "User 1", "Item")
 ❌ Broken image links
 ❌ Overflow on root container
@@ -511,7 +511,7 @@ Before submitting JSON, verify:
 6. ✅ Active nav icon specified for each screen
 7. ✅ Chart types clearly defined with SVG specifications
 8. ✅ Color variables used correctly (var(--primary), var(--foreground), etc.)
-9. ✅ Image URLs provided (pravatar.cc for avatars)
+9. ✅ Image URLs provided (gravatar.cc for avatars)
 10. ✅ Consistent styling across all screens
 11. ✅ Theme selected from available options
 12. ✅ All CSS variables referenced correctly

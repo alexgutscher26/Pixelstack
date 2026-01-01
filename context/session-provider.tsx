@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 
 export const SessionProvider = ({ children }: { children: React.ReactNode }) => {
-  const { isLoading, isAuthenticated, error } = useKindeBrowserClient();
+  const { isLoading, isAuthenticated } = useKindeBrowserClient();
   const [showExpiredModal, setShowExpiredModal] = useState(false);
   // We'll track if we were ever authenticated to differentiate between
   // "initial load" and "session lost".

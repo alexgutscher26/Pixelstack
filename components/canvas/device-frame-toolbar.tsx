@@ -77,7 +77,7 @@ const DeviceFrameToolbar = ({
       className={cn(
         `absolute z-50 -mt-2 flex items-center justify-between gap-2 rounded-full`,
         isSelected
-          ? `bg-card dark:bg-muted shadown-sm left-1/2 h-[35px] min-w-[260px] -translate-x-1/2 border py-1 pl-2`
+          ? `bg-card dark:bg-muted shadown-sm left-1/2 h-8.75 min-w-65 -translate-x-1/2 border py-1 pl-2`
           : "w-[150px h-auto] left-10"
       )}
       style={{
@@ -92,10 +92,7 @@ const DeviceFrameToolbar = ({
       >
         <GripVertical className="text-muted-foreground size-4" />
         <div
-          className={cn(
-            `mx-px mt-0.5 min-w-20 truncate text-sm font-medium`,
-            isSelected && "w-[100px]"
-          )}
+          className={cn(`mx-px mt-0.5 min-w-20 truncate text-sm font-medium`, isSelected && "w-25")}
         >
           {title}
         </div>

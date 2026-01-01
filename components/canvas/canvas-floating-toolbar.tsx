@@ -221,7 +221,7 @@ const CanvasFloatingToolbar = ({
       <TooltipProvider delayDuration={150} skipDelayDuration={500}>
         <div className="bg-background w-full max-w-2xl rounded-full border shadow-xl dark:bg-gray-950">
           <div className="flex flex-row items-center gap-2 px-3">
-          <Popover>
+            <Popover>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <PopoverTrigger asChild>
@@ -236,24 +236,24 @@ const CanvasFloatingToolbar = ({
                 </TooltipTrigger>
                 <TooltipContent>AI Design</TooltipContent>
               </Tooltip>
-            <PopoverContent className="mt-1 w-80 rounded-xl! border p-2! shadow-lg">
-              <PromptInput
-                promptText={promptText}
-                setPromptText={setPromptText}
-                className="border-muted min-h-[150px] rounded-xl! shadow-none ring-1! ring-purple-500!"
-                hideSubmitBtn={true}
-              />
-              <Button
-                disabled={isPending}
-                className="mt-2 w-full cursor-pointer rounded-2xl bg-linear-to-r from-purple-500 to-indigo-600 text-white shadow-lg shadow-purple-200/50"
-                onClick={handleAIGenerate}
-              >
-                {isPending ? <Spinner /> : <>Design</>}
-              </Button>
-            </PopoverContent>
-          </Popover>
+              <PopoverContent className="mt-1 w-80 rounded-xl! border p-2! shadow-lg">
+                <PromptInput
+                  promptText={promptText}
+                  setPromptText={setPromptText}
+                  className="border-muted min-h-37.5 rounded-xl! shadow-none ring-1! ring-purple-500!"
+                  hideSubmitBtn={true}
+                />
+                <Button
+                  disabled={isPending}
+                  className="mt-2 w-full cursor-pointer rounded-2xl bg-linear-to-r from-purple-500 to-indigo-600 text-white shadow-lg shadow-purple-200/50"
+                  onClick={handleAIGenerate}
+                >
+                  {isPending ? <Spinner /> : <>Design</>}
+                </Button>
+              </PopoverContent>
+            </Popover>
 
-          <Popover>
+            <Popover>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <PopoverTrigger asChild>
@@ -290,12 +290,12 @@ const CanvasFloatingToolbar = ({
                 </TooltipTrigger>
                 <TooltipContent>Theme</TooltipContent>
               </Tooltip>
-            <PopoverContent className="rounded-xl border px-0 shadow">
-              <ThemeSelector />
-            </PopoverContent>
-          </Popover>
+              <PopoverContent className="rounded-xl border px-0 shadow">
+                <ThemeSelector />
+              </PopoverContent>
+            </Popover>
 
-          <Popover>
+            <Popover>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <PopoverTrigger asChild>
@@ -307,55 +307,55 @@ const CanvasFloatingToolbar = ({
                 </TooltipTrigger>
                 <TooltipContent>Canvas Background</TooltipContent>
               </Tooltip>
-            <PopoverContent className="mt-1 w-80 rounded-xl! border p-3! shadow-lg">
-              <div className="space-y-4">
-                <div className="text-sm font-medium">Background Options</div>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant={backgroundType === "dots" ? "default" : "outline"}
-                    size="sm"
-                    className="cursor-pointer rounded-2xl flex-1"
-                    onClick={() => setBackgroundType("dots")}
-                  >
-                    Dots
-                  </Button>
-                  <Button
-                    variant={backgroundType === "grid" ? "default" : "outline"}
-                    size="sm"
-                    className="cursor-pointer rounded-2xl flex-1"
-                    onClick={() => setBackgroundType("grid")}
-                  >
-                    Grid
-                  </Button>
-                  <Button
-                    variant={backgroundType === "solid" ? "default" : "outline"}
-                    size="sm"
-                    className="cursor-pointer rounded-2xl flex-1"
-                    onClick={() => setBackgroundType("solid")}
-                  >
-                    Solid
-                  </Button>
+              <PopoverContent className="mt-1 w-80 rounded-xl! border p-3! shadow-lg">
+                <div className="space-y-4">
+                  <div className="text-sm font-medium">Background Options</div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant={backgroundType === "dots" ? "default" : "outline"}
+                      size="sm"
+                      className="flex-1 cursor-pointer rounded-2xl"
+                      onClick={() => setBackgroundType("dots")}
+                    >
+                      Dots
+                    </Button>
+                    <Button
+                      variant={backgroundType === "grid" ? "default" : "outline"}
+                      size="sm"
+                      className="flex-1 cursor-pointer rounded-2xl"
+                      onClick={() => setBackgroundType("grid")}
+                    >
+                      Grid
+                    </Button>
+                    <Button
+                      variant={backgroundType === "solid" ? "default" : "outline"}
+                      size="sm"
+                      className="flex-1 cursor-pointer rounded-2xl"
+                      onClick={() => setBackgroundType("solid")}
+                    >
+                      Solid
+                    </Button>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="text-sm">Color</div>
+                    <Input
+                      type="color"
+                      value={backgroundColor}
+                      onChange={(e) => setBackgroundColor(e.target.value)}
+                      className="h-8 w-12 p-0"
+                    />
+                    <div
+                      className="bg-background/50 ring-border h-8 w-8 rounded-md ring-1"
+                      style={{ background: backgroundColor }}
+                    />
+                  </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="text-sm">Color</div>
-                  <Input
-                    type="color"
-                    value={backgroundColor}
-                    onChange={(e) => setBackgroundColor(e.target.value)}
-                    className="h-8 w-12 p-0"
-                  />
-                  <div
-                    className="bg-background/50 ring-1 ring-border h-8 w-8 rounded-md"
-                    style={{ background: backgroundColor }}
-                  />
-                </div>
-              </div>
-            </PopoverContent>
-          </Popover>
+              </PopoverContent>
+            </Popover>
 
-          <Separator orientation="vertical" className="h-4!" />
+            <Separator orientation="vertical" className="h-4!" />
 
-          <Popover>
+            <Popover>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <PopoverTrigger asChild>
@@ -368,62 +368,62 @@ const CanvasFloatingToolbar = ({
                 </TooltipTrigger>
                 <TooltipContent>Export</TooltipContent>
               </Tooltip>
-            <PopoverContent className="w-[300px]">
-              <div className="space-y-3">
-                <div className="text-sm font-medium">Export Options</div>
-                <Button
-                  variant="default"
-                  size="sm"
-                  className="w-full"
-                  onClick={onScreenshot}
-                  disabled={isScreenshotting}
-                >
-                  {isScreenshotting ? <Spinner /> : <>Canvas (PNG)</>}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full"
-                  onClick={handleExportSelectedPng}
-                  disabled={!hasSelected || isExportingSelected}
-                >
-                  {isExportingSelected ? <Spinner /> : <>Selected Frame (PNG)</>}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full"
-                  onClick={handleDownloadSelectedHtml}
-                  disabled={!hasSelected}
-                >
-                  Selected Frame (HTML)
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  className="w-full"
-                  onClick={handleExportAllPng}
-                  disabled={isExportingAll || frames.length === 0}
-                >
-                  {isExportingAll ? <Spinner /> : <>All Frames (PNG)</>}
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  className="w-full"
-                  onClick={handleDownloadAllHtml}
-                  disabled={isExportingAll || frames.length === 0}
-                >
-                  All Frames (HTML)
-                </Button>
-                <p className="text-muted-foreground text-xs">
-                  PNGs work with Figma and similar tools. HTML downloads preserve theme variables.
-                </p>
-              </div>
-            </PopoverContent>
-          </Popover>
+              <PopoverContent className="w-75">
+                <div className="space-y-3">
+                  <div className="text-sm font-medium">Export Options</div>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="w-full"
+                    onClick={onScreenshot}
+                    disabled={isScreenshotting}
+                  >
+                    {isScreenshotting ? <Spinner /> : <>Canvas (PNG)</>}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full"
+                    onClick={handleExportSelectedPng}
+                    disabled={!hasSelected || isExportingSelected}
+                  >
+                    {isExportingSelected ? <Spinner /> : <>Selected Frame (PNG)</>}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full"
+                    onClick={handleDownloadSelectedHtml}
+                    disabled={!hasSelected}
+                  >
+                    Selected Frame (HTML)
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="w-full"
+                    onClick={handleExportAllPng}
+                    disabled={isExportingAll || frames.length === 0}
+                  >
+                    {isExportingAll ? <Spinner /> : <>All Frames (PNG)</>}
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="w-full"
+                    onClick={handleDownloadAllHtml}
+                    disabled={isExportingAll || frames.length === 0}
+                  >
+                    All Frames (HTML)
+                  </Button>
+                  <p className="text-muted-foreground text-xs">
+                    PNGs work with Figma and similar tools. HTML downloads preserve theme variables.
+                  </p>
+                </div>
+              </PopoverContent>
+            </Popover>
 
-          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
@@ -459,7 +459,7 @@ const CanvasFloatingToolbar = ({
                 </TooltipTrigger>
                 <TooltipContent>Save</TooltipContent>
               </Tooltip>
-          </div>
+            </div>
           </div>
         </div>
       </TooltipProvider>

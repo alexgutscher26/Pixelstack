@@ -1,5 +1,6 @@
 import { useTheme } from "next-themes";
 import { useParams, useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,26 +27,90 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
 import { useDeleteProject, useUpdateProject } from "@/features/use-project-id";
 
-const Header = ({ projectName }: { projectName?: string }) => {
+interface HeaderProps {
+  projectName?: string;
+}
+
+const Header = ({ projectName = "Untitled Project" }: HeaderProps) => {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const isDark = theme === "dark";
   const params = useParams();
   const projectId = (params?.id as string) || "";
-  const update = useUpdateProject(projectId);
-  const del = useDeleteProject(projectId);
+
+  const { mutate: updateProject, isPending: isUpdating } = useUpdateProject(projectId);
+  const { mutate: deleteProject, isPending: isDeleting } = useDeleteProject(projectId);
+
+  // Rename dialog state
   const [isRenameOpen, setIsRenameOpen] = useState(false);
-  const [nextName, setNextName] = useState(projectName ?? "");
-  const isValid = nextName.trim().length > 0 && nextName.trim() !== (projectName ?? "").trim();
+  const [nextName, setNextName] = useState("");
+
+  // Delete dialog state
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [deleteText, setDeleteText] = useState("");
-  const canDelete = deleteText.trim().toUpperCase() === "DELETE";
+
+  // Sync nextName when projectName changes or dialog opens
+  useEffect(() => {
+    if (isRenameOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setNextName(projectName);
+    }
+  }, [isRenameOpen, projectName]);
+
+  // Validation
+  const isRenameValid = nextName.trim().length > 0 && nextName.trim() !== projectName.trim();
+  const isDeleteValid = deleteText.trim().toUpperCase() === "DELETE";
+
+  // Handlers
+  const handleRename = () => {
+    if (!isRenameValid) return;
+
+    updateProject(
+      { name: nextName.trim() },
+      {
+        onSuccess: () => {
+          setIsRenameOpen(false);
+          setNextName("");
+        },
+      }
+    );
+  };
+
+  const handleDelete = () => {
+    if (!isDeleteValid) return;
+
+    deleteProject(undefined, {
+      onSuccess: () => {
+        setIsDeleteOpen(false);
+        router.push("/");
+      },
+    });
+  };
+
+  const handleRenameKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && isRenameValid && !isUpdating) {
+      handleRename();
+    }
+  };
+
+  const handleDeleteKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && isDeleteValid && !isDeleting) {
+      handleDelete();
+    }
+  };
+
+  const toggleTheme = () => {
+    setTheme(isDark ? "light" : "dark");
+  };
+
+  const handleBackClick = () => {
+    router.push("/");
+  };
 
   return (
-    <div className="sticky top-0">
+    <div className="sticky top-0 z-50">
       <header className="border-border/40 bg-card/50 border-b backdrop-blur-sm">
         <div className="flex items-center justify-between px-4 py-2">
           <div className="flex items-center gap-4">
@@ -53,56 +118,58 @@ const Header = ({ projectName }: { projectName?: string }) => {
             <Button
               size="icon-sm"
               variant="ghost"
-              className="bg-muted! rounded-full"
-              onClick={() => router.push("/")}
+              className="bg-muted rounded-full"
+              onClick={handleBackClick}
+              aria-label="Go back to projects"
             >
               <ArrowLeftIcon className="size-4" />
             </Button>
-            <p className="max-w-[200px] truncate font-medium">
-              {projectName || "Untitled Project"}
-            </p>
+            <h1 className="max-w-50 truncate text-sm font-medium md:max-w-100">{projectName}</h1>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <Button
               variant="outline"
               size="icon"
               className="relative h-8 w-8 rounded-full"
-              onClick={() => setTheme(isDark ? "light" : "dark")}
+              onClick={toggleTheme}
+              aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
             >
               <SunIcon
-                className={cn("absolute h-5 w-5 transition", isDark ? "scale-100" : "scale-0")}
+                className={cn(
+                  "absolute h-5 w-5 transition-transform",
+                  isDark ? "scale-100 rotate-0" : "scale-0 rotate-90"
+                )}
               />
               <MoonIcon
-                className={cn("absolute h-5 w-5 transition", isDark ? "scale-0" : "scale-100")}
+                className={cn(
+                  "absolute h-5 w-5 transition-transform",
+                  isDark ? "scale-0 -rotate-90" : "scale-100 rotate-0"
+                )}
               />
             </Button>
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon" className="h-8 w-8 rounded-full">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-8 w-8 rounded-full"
+                  aria-label="Project options"
+                >
                   <MoreHorizontalIcon className="size-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-40">
-                <DropdownMenuItem
-                  className="cursor-pointer"
-                  onClick={() => {
-                    setNextName(projectName ?? "");
-                    setIsRenameOpen(true);
-                  }}
-                >
-                  <PencilIcon className="size-4" />
+                <DropdownMenuItem className="cursor-pointer" onClick={() => setIsRenameOpen(true)}>
+                  <PencilIcon className="mr-2 size-4" />
                   Rename
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  className="cursor-pointer"
-                  onClick={() => {
-                    setDeleteText("");
-                    setIsDeleteOpen(true);
-                  }}
-                  data-variant="destructive"
+                  className="text-destructive focus:text-destructive cursor-pointer"
+                  onClick={() => setIsDeleteOpen(true)}
                 >
-                  <Trash2Icon className="size-4" />
+                  <Trash2Icon className="mr-2 size-4" />
                   Delete
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -110,69 +177,67 @@ const Header = ({ projectName }: { projectName?: string }) => {
           </div>
         </div>
       </header>
+
+      {/* Rename Dialog */}
       <Dialog open={isRenameOpen} onOpenChange={setIsRenameOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Rename Project</DialogTitle>
             <DialogDescription>Choose a clear, concise name for your project.</DialogDescription>
           </DialogHeader>
+
           <Input
             autoFocus
             value={nextName}
             onChange={(e) => setNextName(e.target.value)}
+            onKeyDown={handleRenameKeyDown}
             placeholder="Enter project name"
+            disabled={isUpdating}
+            maxLength={100}
           />
+
           <DialogFooter>
-            <Button
-              variant="ghost"
-              onClick={() => setIsRenameOpen(false)}
-              disabled={update.isPending}
-            >
+            <Button variant="ghost" onClick={() => setIsRenameOpen(false)} disabled={isUpdating}>
               Cancel
             </Button>
-            <Button
-              onClick={() => {
-                if (!isValid) return;
-                update.mutate({ name: nextName.trim() }, { onSuccess: () => setIsRenameOpen(false) });
-              }}
-              disabled={!isValid || update.isPending}
-            >
-              Save
+            <Button onClick={handleRename} disabled={!isRenameValid || isUpdating}>
+              {isUpdating ? "Saving..." : "Save"}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Dialog */}
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Delete Project</DialogTitle>
             <DialogDescription>
-              Type DELETE to confirm. This action permanently removes the project and its frames.
+              This action cannot be undone. Type <span className="font-semibold">DELETE</span> to
+              confirm deletion of <span className="font-semibold">{projectName}</span> and all its
+              frames.
             </DialogDescription>
           </DialogHeader>
+
           <Input
+            autoFocus
             placeholder="Type DELETE to confirm"
             value={deleteText}
             onChange={(e) => setDeleteText(e.target.value)}
+            onKeyDown={handleDeleteKeyDown}
+            disabled={isDeleting}
           />
+
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setIsDeleteOpen(false)} disabled={del.isPending}>
+            <Button variant="ghost" onClick={() => setIsDeleteOpen(false)} disabled={isDeleting}>
               Cancel
             </Button>
             <Button
               variant="destructive"
-              disabled={!canDelete || del.isPending}
-              onClick={() => {
-                if (!canDelete) return;
-                del.mutate(undefined, {
-                  onSuccess: () => {
-                    setIsDeleteOpen(false);
-                    router.push("/");
-                  },
-                });
-              }}
+              disabled={!isDeleteValid || isDeleting}
+              onClick={handleDelete}
             >
-              Delete
+              {isDeleting ? "Deleting..." : "Delete"}
             </Button>
           </DialogFooter>
         </DialogContent>

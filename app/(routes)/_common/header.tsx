@@ -4,7 +4,7 @@ import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
-import { LogOutIcon, MoonIcon, SunIcon, MonitorIcon, CheckIcon } from "lucide-react";
+import { LogOutIcon, MoonIcon, SunIcon, CheckIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import {

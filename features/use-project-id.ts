@@ -35,9 +35,7 @@ export const useUpdateProject = (projectId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: { themeId?: string; name?: string }) =>
-      await axios
-        .patch(`/api/project/${projectId}`, payload)
-        .then((res) => res.data),
+      await axios.patch(`/api/project/${projectId}`, payload).then((res) => res.data),
     onSuccess: () => {
       toast.success("Project updated");
       queryClient.invalidateQueries({ queryKey: ["project", projectId] });

@@ -24,7 +24,7 @@ const CanvasControls = ({ zoomIn, zoomOut, zoomPercent, toolMode, setToolMode }:
                 variant="ghost"
                 className={cn(
                   "cursor-pointer rounded-full text-white! hover:bg-white/25!",
-                  toolMode === TOOL_MODE_ENUM.SELECT && "bg-white/30 ring-2 ring-white/70 shadow"
+                  toolMode === TOOL_MODE_ENUM.SELECT && "bg-white/30 shadow ring-2 ring-white/70"
                 )}
                 onClick={() => setToolMode(TOOL_MODE_ENUM.SELECT)}
                 aria-pressed={toolMode === TOOL_MODE_ENUM.SELECT}
@@ -45,7 +45,7 @@ const CanvasControls = ({ zoomIn, zoomOut, zoomPercent, toolMode, setToolMode }:
                 variant="ghost"
                 className={cn(
                   "cursor-pointer rounded-full text-white! hover:bg-white/25!",
-                  toolMode === TOOL_MODE_ENUM.HAND && "bg-white/30 ring-2 ring-white/70 shadow"
+                  toolMode === TOOL_MODE_ENUM.HAND && "bg-white/30 shadow ring-2 ring-white/70"
                 )}
                 onClick={() => setToolMode(TOOL_MODE_ENUM.HAND)}
                 aria-pressed={toolMode === TOOL_MODE_ENUM.HAND}
