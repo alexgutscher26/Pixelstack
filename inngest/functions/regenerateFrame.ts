@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { generateText, stepCountIs } from "ai";
 import { inngest } from "../client";
-import { openrouter } from "@/lib/openrouter";
+//import { openrouter } from "@/lib/openrouter";
 import { GENERATION_SYSTEM_PROMPT } from "@/lib/prompt";
 import prisma from "@/lib/prisma";
 import { BASE_VARIABLES, THEME_LIST } from "@/lib/themes";
@@ -31,6 +30,7 @@ export const regenerateFrame = inngest.createFunction(
       },
     });
 
+    // Generate new frame with the user's prompt
     await step.run("regenerate-screen", async () => {
       const selectedTheme = THEME_LIST.find((t) => t.id === themeId);
 
@@ -40,236 +40,201 @@ export const regenerateFrame = inngest.createFunction(
         ${selectedTheme?.style || ""}
       `;
 
-      const isPartial = !!targetOuterHTML;
+
       const result = await generateText({
-        model: process.env.OPENROUTER_API_KEY
-          ? openrouter.chat("google/gemini-2.5-flash")
-          : ("google/gemini-3-pro-preview" as any),
+        model: "google/gemini-3-pro-preview",
         system: GENERATION_SYSTEM_PROMPT,
         tools: {
           searchUnsplash: unsplashTool,
         },
         stopWhen: stepCountIs(5),
-        prompt: isPartial
-          ? `
-# PARTIAL ELEMENT UPDATE REQUEST
+        prompt: `
+        USER REQUEST: ${prompt}
 
-**USER REQUEST:** ${prompt}
+        ORIGINAL SCREEN TITLE: ${frame.title}
+        ORIGINAL SCREEN HTML: ${frame.htmlContent}
 
-**TARGET ELEMENT TO UPDATE:**
-\`\`\`html
-${String(targetOuterHTML)}
-\`\`\`
+        THEME VARIABLES (Reference ONLY - already defined in parent, do NOT redeclare these): ${fullThemeCSS}
 
-**SCREEN CONTEXT:**
-- Original Screen: "${frame.title}"
-- Theme Variables (Reference ONLY — already defined in parent scope, DO NOT redeclare):
-${fullThemeCSS}
+        TARGET ELEMENT MODE:
+        ${targetOuterHTML ? "Yes" : "No"}
+        ${targetOuterHTML ? `ORIGINAL TARGET OUTER HTML: ${targetOuterHTML}` : ""}
 
-# CRITICAL INSTRUCTIONS FOR PARTIAL UPDATE
+        CRITICAL REQUIREMENTS A MUST - READ CAREFULLY:
+        1. **If TARGET ELEMENT MODE = Yes: ONLY redesign the provided target element**
+          - Keep the rest of the screen unchanged
+          - Output the UPDATED OUTER HTML of the target element only
+          - Start with the same root tag and preserve existing id/data-* attributes
+          - Preserve existing classes unless requested to change
+        1b. **If TARGET ELEMENT MODE = No: PRESERVE overall screen structure; only modify what the user requested**
+          - Keep all existing components, styling, and layout that are NOT mentioned in the user request
+          - Only change the specific elements the user asked for
+          - Do not add or remove sections unless requested
+          - Maintain the exact same HTML structure and CSS classes except for requested changes
 
-**1. SCOPE - Update Target Element ONLY:**
-   - Return ONLY the updated HTML for the target element shown above
-   - Start with the EXACT same root tag as the target element (e.g., if target is <div class="...">...</div>, your output must start with <div>)
-   - Preserve the element's position and role in the overall layout
-
-**2. PRESERVATION - Keep What Works:**
-   - Maintain all existing CSS classes unless explicitly changing styling
-   - Preserve all data-* attributes (critical for functionality)
-   - Keep existing structure and child elements unless specifically modifying them
-   - Maintain z-index, positioning, and layout properties unless requested to change
-
-**3. MODIFICATION - Change Only What's Requested:**
-   - Apply ONLY the changes the user explicitly requested
-   - Do NOT refactor, reorganize, or "improve" unrequested aspects
-   - If changing text, keep the same formatting/styling
-   - If changing colors, use theme variables: bg-[var(--primary)], text-[var(--foreground)]
-   - If adding elements, match the existing style and structure
-
-**4. STYLING RULES:**
-   - Use Tailwind CSS utility classes for all styling
-   - Colors: Always use CSS variables (var(--background), var(--primary), etc.)
-   - Maintain consistent spacing and sizing with the original
-   - Keep the same level of visual polish (shadows, borders, rounded corners)
-
-**5. OUTPUT FORMAT:**
-   - Return ONLY the updated HTML element
-   - NO markdown code blocks (\`\`\`)
-   - NO comments or explanations
-   - NO surrounding text
-   - Start directly with the opening tag
-
-**EXAMPLE:**
-If target is a button, and user says "make it red", return:
-<button class="px-6 py-3 bg-destructive text-white rounded-xl font-semibold">Click Me</button>
-
-NOT an explanation, NOT the entire screen, just the updated element.
-
-Generate the updated element now:
-        `.trim()
-          : `
-# FULL SCREEN REGENERATION REQUEST
-
-**USER REQUEST:** ${prompt}
-
-**CURRENT SCREEN:**
-- Title: "${frame.title}"
-- Current HTML:
-\`\`\`html
-${frame.htmlContent}
-\`\`\`
-
-**THEME VARIABLES (Reference ONLY — already defined in parent scope, DO NOT redeclare):**
-${fullThemeCSS}
-
-# CRITICAL INSTRUCTIONS FOR SCREEN REGENERATION
-
-**1. SURGICAL MODIFICATIONS - Preserve What's Not Mentioned:**
-   - The current screen is WORKING and STYLED correctly
-   - Change ONLY what the user explicitly requested
-   - Keep ALL other components, sections, and styling exactly as they are
-   - This is a modification, NOT a redesign
-
-**2. PRESERVATION CHECKLIST:**
-   ✅ Bottom navigation: Keep structure, icons, styling, and active states identical
-   ✅ Header/top bar: Maintain layout, elements, and styling unless specifically requested
-   ✅ Existing cards/components: Preserve structure and styling of unrequested elements
-   ✅ Layout structure: Keep same grid, flex, spacing patterns
-   ✅ Z-index hierarchy: Maintain layering unless specifically changing
-   ✅ Color scheme: Use same CSS variables and theme colors
-   ✅ Typography: Keep font sizes, weights, and styles consistent
-   ✅ Icons: Use same icon library and sizes (iconify-icon with lucide icons)
-
-**3. MODIFICATION SCOPE:**
-   - If user requests "change the chart" → modify only the chart section
-   - If user requests "update colors" → change color values but keep structure
-   - If user requests "add a section" → insert it logically without disrupting others
-   - If user requests "remove X" → remove only X, adjust spacing/layout as needed
-
-**4. HTML STRUCTURE REQUIREMENTS:**
-
-   **Root Container:**
-   - Single root <div> that controls the entire layout
-   - NO overflow classes on root (overflow-hidden, overflow-y-auto, etc.)
-   - Use: \`<div class="relative w-full min-h-screen bg-background">\`
-
-   **Scrollable Content:**
-   - Apply overflow-y-auto to INNER content containers, not root
-   - Hide scrollbars: \`[&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]\`
-   - Add bottom padding for fixed navigation: \`pb-24\` or \`pb-32\`
-
-   **Height Strategy:**
-   - Root: \`min-h-screen\` (NOT h-screen unless overlay/modal)
-   - Content: Let height grow naturally with content
-   - For overlays/modals only: \`relative w-full h-screen\`
-   - Never use h-screen on regular scrollable content
-
-**5. IFRAME COMPATIBILITY (CRITICAL):**
-   - Content must define its own height through natural flow
-   - All elements contribute to scrollHeight for proper iframe resizing
-   - No fixed heights that cut off content
-   - Ensure all content is visible and accessible
-
-**6. CSS & STYLING:**
-
-   **Colors (MANDATORY):**
-   - Background: \`bg-[var(--background)]\`
-   - Foreground/Text: \`text-[var(--foreground)]\`
-   - Cards: \`bg-[var(--card)]\`
-   - Borders: \`border-[var(--border)]\`
-   - Primary accent: \`text-[var(--primary)]\` or \`bg-[var(--primary)]\`
-   - Muted text: \`text-[var(--muted-foreground)]\`
-   - NEVER hardcode hex colors unless absolutely necessary
-
-   **Tailwind Utilities:**
-   - Spacing: Use consistent gaps (gap-4, gap-6), padding (p-4, p-6, p-8)
-   - Rounding: rounded-2xl or rounded-3xl for modern look
-   - Shadows: shadow-lg, shadow-xl for depth
-   - Effects: backdrop-blur-md, drop-shadow-[0_0_8px_var(--primary)]
-
-**7. CHARTS & DATA VISUALIZATION:**
-   - ALWAYS use SVG elements for charts (never div-based fake charts)
-   - Circular progress: SVG circle with stroke-dasharray
-   - Line/area charts: SVG path with smooth curves
-   - Bar charts: CSS height manipulation on divs is acceptable
-   - All charts should have glow effects: \`drop-shadow-[0_0_8px_var(--primary)]\`
-
-**8. ICONS:**
-   - Use iconify-icon: \`<iconify-icon icon="lucide:home" class="text-2xl"></iconify-icon>\`
-   - Common icons: home, compass, zap, heart, user, settings, bell, search
-   - Size: text-xl (nav), text-2xl (features), text-4xl (hero)
-
-**9. REALISTIC DATA:**
-   - Use real-looking numbers: "8,432 steps", "$1,248.50", "7h 20m"
-   - Proper formatting: dates, times, currencies
-   - NO generic placeholders like "User 1", "Amount", "Item"
-
-**10. OUTPUT FORMAT:**
-   - Return ONLY raw HTML
-   - Start directly with: \`<div class="relative w-full min-h-screen bg-background">\`
-   - NO markdown code blocks (\`\`\`html)
-   - NO comments (<!-- -->)
-   - NO explanations or surrounding text
-   - NO <html>, <body>, or <head> tags
-   - End with the final closing </div>
-
-**11. Z-INDEX HIERARCHY:**
-   - Background elements: z-0
-   - Main content: z-10
-   - Floating cards: z-20
-   - Bottom navigation: z-30
-   - Modals/overlays: z-40
-   - Fixed header: z-50
-
-**PRE-OUTPUT CHECKLIST:**
-Before generating, verify:
-□ Am I changing ONLY what the user requested?
-□ Am I preserving the bottom navigation exactly as is?
-□ Am I keeping the header/top bar unless specifically asked to change it?
-□ Am I using CSS variables for all colors?
-□ Is my root div structured correctly (no overflow)?
-□ Are scrollbars hidden on scrollable containers?
-□ Will this render correctly in an iframe?
-□ Am I using SVG for any charts?
-□ Is all data realistic and properly formatted?
-□ Does my output start with <div and end with </div> (no markdown)?
-
-Generate the complete, updated HTML for this screen now. Remember: preserve everything except what was explicitly requested to change.
+        2. **Generate ONLY raw HTML markup for this mobile app screen using Tailwind CSS.**
+          Use Tailwind classes for layout, spacing, typography, shadows, etc.
+          Use theme CSS variables ONLY for color-related properties (bg-[var(--background)], text-[var(--foreground)], border-[var(--border)], ring-[var(--ring)], etc.)
+        3. **If TARGET ELEMENT MODE = No: All content must be inside a single root <div> that controls the layout.**
+          - No overflow classes on the root.
+          - All scrollable content must be in inner containers with hidden scrollbars: [&::-webkit-scrollbar]:hidden scrollbar-none
+        4. **For absolute overlays (maps, bottom sheets, modals, etc.):**
+          - Use \`relative w-full h-screen\` on the top div of the overlay.
+        5. **For regular content:**
+          - Use \`w-full h-full min-h-screen\` on the top div.
+        6. **Do not use h-screen on inner content unless absolutely required.**
+          - Height must grow with content; content must be fully visible inside an iframe.
+        7. **For z-index layering:**
+          - Ensure absolute elements do not block other content unnecessarily.
+        8. **Output raw HTML only.**
+          - If TARGET ELEMENT MODE = Yes: output only the updated target element outer HTML
+          - If TARGET ELEMENT MODE = No: start with <div and output the full screen HTML
+          - Do not include markdown, comments, <html>, <body>, or <head>
+        9. **Ensure iframe-friendly rendering:**
+            - All elements must contribute to the final scrollHeight so your parent iframe can correctly resize.
+        10. **Paywall rule:**
+            - Do not introduce any paywall or gating UI unless the user's request explicitly asks for a paywall.
+        Generate the complete, production-ready HTML for this screen now
         `.trim(),
       });
 
-      let output = result.text ?? "";
-      output = output.replace(/```/g, "");
-      if (isPartial) {
-        const updated = output;
-        const original = String(targetOuterHTML);
-        const replaced = frame.htmlContent.replace(original, updated);
-        const updatedFrame = await prisma.frame.update({
-          where: { id: frameId },
-          data: { htmlContent: replaced },
-        });
-        await publish({
-          channel: CHANNEL,
-          topic: "frame.created",
-          data: {
-            frame: updatedFrame,
-            screenId: frameId,
-            projectId: projectId,
-          },
-        });
-        return { success: true, frame: updatedFrame };
+      const isElementMode = !!targetOuterHTML;
+      let finalHtml = result.text ?? "";
+      if (isElementMode) {
+        finalHtml = finalHtml.replace(/```/g, "").trim();
+      } else {
+        const match = finalHtml.match(/<div[\s\S]*<\/div>/);
+        finalHtml = (match ? match[0] : finalHtml).replace(/```/g, "");
       }
-      let finalHtml = output;
-      const match = finalHtml.match(/<div[\s\S]*<\/div>/);
-      finalHtml = match ? match[0] : finalHtml;
 
-      // Update the frame
+      const normalize = (s: string) =>
+        s.replace(/\s+/g, " ").replace(/>\s+</g, "><").trim();
+      const escapeReg = (s: string) =>
+        s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const findRangeByTagAndId = (
+        html: string,
+        tag: string,
+        id: string
+      ): [number, number] | undefined => {
+        const openRe = new RegExp(
+          `<${tag}\\b[^>]*id="${escapeReg(id)}"[^>]*>`,
+          "i"
+        );
+        const openMatch = openRe.exec(html);
+        if (!openMatch) return undefined;
+        const start = openMatch.index;
+        let cursor = start + openMatch[0].length;
+        let depth = 1;
+        while (depth > 0 && cursor < html.length) {
+          const nextOpen = html.indexOf(`<${tag}`, cursor);
+          const nextClose = html.indexOf(`</${tag}>`, cursor);
+          if (nextClose === -1) return undefined;
+          if (nextOpen !== -1 && nextOpen < nextClose) {
+            depth++;
+            cursor = nextOpen + 1;
+          } else {
+            depth--;
+            cursor = nextClose + (`</${tag}>`).length;
+          }
+        }
+        if (depth !== 0) return undefined;
+        return [start, cursor];
+      };
+      const findRangeByTagAndClasses = (
+        html: string,
+        tag: string,
+        classes: string[]
+      ): [number, number] | undefined => {
+        if (classes.length === 0) return undefined;
+        const openRe = new RegExp(`<${tag}\\b[^>]*class="[^"]*"[^>]*>`, "ig");
+        let match: RegExpExecArray | null;
+        while ((match = openRe.exec(html))) {
+          const openStr = match[0];
+          const hasAll = classes.every((c) =>
+            new RegExp(`\\b${escapeReg(c)}\\b`).test(openStr)
+          );
+          if (!hasAll) continue;
+          const start = match.index;
+          let cursor = start + match[0].length;
+          let depth = 1;
+          while (depth > 0 && cursor < html.length) {
+            const nextOpen = html.indexOf(`<${tag}`, cursor);
+            const nextClose = html.indexOf(`</${tag}>`, cursor);
+            if (nextClose === -1) return undefined;
+            if (nextOpen !== -1 && nextOpen < nextClose) {
+              depth++;
+              cursor = nextOpen + 1;
+            } else {
+              depth--;
+              cursor = nextClose + (`</${tag}>`).length;
+            }
+          }
+          if (depth === 0) return [start, cursor];
+        }
+        return undefined;
+      };
+      const replaceOuterHtml = (
+        html: string,
+        target: string,
+        replacement: string
+      ): string | undefined => {
+        const normalizedHtml = normalize(html);
+        const normalizedTarget = normalize(target);
+        if (normalizedHtml.includes(normalizedTarget)) {
+          const originalIndex = html.indexOf(target);
+          if (originalIndex !== -1) {
+            return (
+              html.slice(0, originalIndex) +
+              replacement +
+              html.slice(originalIndex + target.length)
+            );
+          }
+          const idx = normalizedHtml.indexOf(normalizedTarget);
+          if (idx !== -1) {
+            return html.replace(
+              new RegExp(escapeReg(target), "g"),
+              replacement
+            );
+          }
+        }
+        const tagMatch = target.match(/^<([a-zA-Z0-9-]+)\b/);
+        const tag = tagMatch ? tagMatch[1] : "div";
+        const idMatch = target.match(/\bid="([^"]+)"/);
+        if (idMatch) {
+          const id = idMatch[1];
+          const range = findRangeByTagAndId(html, tag, id);
+          if (range) {
+            return html.slice(0, range[0]) + replacement + html.slice(range[1]);
+          }
+        }
+        const classMatch = target.match(/\bclass="([^"]+)"/);
+        if (classMatch) {
+          const classes = classMatch[1]
+            .split(" ")
+            .map((c) => c.trim())
+            .filter(Boolean);
+          const range = findRangeByTagAndClasses(html, tag, classes);
+          if (range) {
+            return html.slice(0, range[0]) + replacement + html.slice(range[1]);
+          }
+        }
+        return undefined;
+      };
+
+      let newHtmlContent = frame.htmlContent;
+      if (isElementMode && targetOuterHTML) {
+        const replaced = replaceOuterHtml(frame.htmlContent, targetOuterHTML, finalHtml);
+        newHtmlContent = replaced ?? frame.htmlContent;
+      } else {
+        newHtmlContent = finalHtml;
+      }
+
       const updatedFrame = await prisma.frame.update({
         where: {
           id: frameId,
         },
         data: {
-          htmlContent: finalHtml,
+          htmlContent: newHtmlContent,
         },
       });
 
