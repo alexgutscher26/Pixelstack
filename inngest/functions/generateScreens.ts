@@ -70,9 +70,14 @@ export const generateScreens = inngest.createFunction(
       preferences.totalScreens <= 15
         ? preferences.totalScreens
         : undefined;
+    // Ensure onboardingCount doesn't exceed totalCount
+    const effectiveOnboardingCount =
+      onboardingCount !== undefined && totalCount !== undefined
+        ? Math.min(onboardingCount, totalCount - 1)
+        : onboardingCount;
     const nonOnboardingCount =
-      totalCount !== undefined && onboardingCount !== undefined
-        ? Math.max(1, Math.min(10, totalCount - onboardingCount))
+      totalCount !== undefined && effectiveOnboardingCount !== undefined
+        ? Math.max(1, Math.min(10, totalCount - effectiveOnboardingCount))
         : undefined;
     const includePaywall =
       typeof preferences?.includePaywall === "boolean"

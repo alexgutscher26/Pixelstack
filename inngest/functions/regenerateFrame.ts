@@ -1,6 +1,6 @@
 import { generateText, stepCountIs } from "ai";
 import { inngest } from "../client";
-//import { openrouter } from "@/lib/openrouter";
+import { openrouter } from "@/lib/openrouter";
 import { GENERATION_SYSTEM_PROMPT } from "@/lib/prompt";
 import prisma from "@/lib/prisma";
 import { BASE_VARIABLES, THEME_LIST } from "@/lib/themes";
@@ -42,7 +42,7 @@ export const regenerateFrame = inngest.createFunction(
 
 
       const result = await generateText({
-        model: "google/gemini-3-pro-preview",
+        model: openrouter("google/gemini-3-pro-preview"),
         system: GENERATION_SYSTEM_PROMPT,
         tools: {
           searchUnsplash: unsplashTool,
@@ -101,10 +101,13 @@ export const regenerateFrame = inngest.createFunction(
       const isElementMode = !!targetOuterHTML;
       let finalHtml = result.text ?? "";
       if (isElementMode) {
-        finalHtml = finalHtml.replace(/```/g, "").trim();
+        finalHtml = finalHtml.replace(/```[a-z]*\n?/gi, "").replace(/```/g, "").trim();
       } else {
         const match = finalHtml.match(/<div[\s\S]*<\/div>/);
-        finalHtml = (match ? match[0] : finalHtml).replace(/```/g, "");
+        finalHtml = (match ? match[0] : finalHtml)
+          .replace(/```[a-z]*\n?/gi, "")
+          .replace(/```/g, "")
+          .trim();
       }
 
       const normalize = (s: string) =>
@@ -224,7 +227,12 @@ export const regenerateFrame = inngest.createFunction(
       let newHtmlContent = frame.htmlContent;
       if (isElementMode && targetOuterHTML) {
         const replaced = replaceOuterHtml(frame.htmlContent, targetOuterHTML, finalHtml);
-        newHtmlContent = replaced ?? frame.htmlContent;
+        if (replaced) {
+          newHtmlContent = replaced;
+        } else {
+          console.warn(`[regenerateFrame] Could not locate target element for replacement in frame ${frameId}`);
+          // Optionally: throw or return a partial success status
+        }
       } else {
         newHtmlContent = finalHtml;
       }
