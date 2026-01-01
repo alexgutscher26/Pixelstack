@@ -49,9 +49,9 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 
 ### Feedback Systems
 
-- [ ] **Generation Progress Bar**: Replace the simple spinner with a multi-step progress bar (e.g., "Analyzing prompt..." -> "Generating Layout..." -> "Rendering...").
-- [ ] **Success Celebrations**: Add subtle confetti or sound effect (optional) when a generation completes successfully.
-- [ ] **Feedback Widget**: Add a "Send Feedback" button in the help menu for users to report bugs directly.
+- [x] **Generation Progress Bar**: Replace the simple spinner with a multi-step progress bar (e.g., "Analyzing prompt..." -> "Generating Layout..." -> "Rendering...").
+- [x] **Success Celebrations**: Add subtle confetti or sound effect (optional) when a generation completes successfully.
+- [x] **Feedback Widget**: Add a "Send Feedback" button in the help menu for users to report bugs directly.
 
 ---
 

@@ -1,6 +1,8 @@
 import { useTheme } from "next-themes";
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import axios from "axios";
+import { toast } from "sonner";
 import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,6 +29,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { useDeleteProject, useUpdateProject } from "@/features/use-project-id";
 
 interface HeaderProps {
@@ -50,6 +53,8 @@ const Header = ({ projectName = "Untitled Project" }: HeaderProps) => {
   // Delete dialog state
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [deleteText, setDeleteText] = useState("");
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+  const [feedbackText, setFeedbackText] = useState("");
 
   // Sync nextName when projectName changes or dialog opens
   useEffect(() => {
@@ -87,6 +92,22 @@ const Header = ({ projectName = "Untitled Project" }: HeaderProps) => {
         router.push("/");
       },
     });
+  };
+
+  const isFeedbackValid = feedbackText.trim().length >= 10;
+  const handleSendFeedback = async () => {
+    if (!isFeedbackValid) return;
+    try {
+      await axios.post("/api/feedback", {
+        projectId,
+        message: feedbackText.trim(),
+      });
+      toast.success("Feedback sent");
+      setIsFeedbackOpen(false);
+      setFeedbackText("");
+    } catch {
+      toast.error("Failed to send feedback");
+    }
   };
 
   const handleRenameKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -166,6 +187,13 @@ const Header = ({ projectName = "Untitled Project" }: HeaderProps) => {
                   Rename
                 </DropdownMenuItem>
                 <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={() => setIsFeedbackOpen(true)}
+                >
+                  <MoreHorizontalIcon className="mr-2 size-4" />
+                  Send Feedback
+                </DropdownMenuItem>
+                <DropdownMenuItem
                   className="text-destructive focus:text-destructive cursor-pointer"
                   onClick={() => setIsDeleteOpen(true)}
                 >
@@ -238,6 +266,37 @@ const Header = ({ projectName = "Untitled Project" }: HeaderProps) => {
               onClick={handleDelete}
             >
               {isDeleting ? "Deleting..." : "Delete"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isFeedbackOpen} onOpenChange={setIsFeedbackOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Send Feedback</DialogTitle>
+            <DialogDescription>Report a bug or share an improvement idea.</DialogDescription>
+          </DialogHeader>
+          <Input
+            placeholder="Subject (optional)"
+            maxLength={120}
+          />
+          <div className="space-y-2">
+            <span className="text-xs text-muted-foreground">Describe the issue</span>
+            <Textarea
+              value={feedbackText}
+              onChange={(e) => setFeedbackText(e.target.value)}
+              placeholder="What went wrong? Steps to reproduce? Expected behavior?"
+              maxLength={2000}
+              className="min-h-28"
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setIsFeedbackOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSendFeedback} disabled={!isFeedbackValid}>
+              Send
             </Button>
           </DialogFooter>
         </DialogContent>

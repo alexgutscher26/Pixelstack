@@ -48,8 +48,13 @@ const CanvasFloatingToolbar = ({
 
   const update = useUpdateProject(projectId);
 
-  const handleAIGenerate = () => {
+  const handleAIGenerate = async () => {
     if (!promptText) return;
+    try {
+      if (currentTheme?.id) {
+        await update.mutateAsync({ themeId: currentTheme.id });
+      }
+    } catch {}
     mutate(promptText);
   };
 

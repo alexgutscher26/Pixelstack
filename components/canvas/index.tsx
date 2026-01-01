@@ -13,7 +13,7 @@ import HtmlDialog from "./html-dialog";
 import ReactDialog from "./react-dialog";
 import { toast } from "sonner";
 import { Wand2 } from "lucide-react";
-import { useGenerateDesignById } from "@/features/use-project-id";
+import { useGenerateDesignById, useUpdateProject } from "@/features/use-project-id";
 
 const Canvas = ({
   projectId,
@@ -40,6 +40,8 @@ const Canvas = ({
   const [openReactDialog, setOpenReactDialog] = useState(false);
   const [isScreenshotting, setIsScreenshotting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isCelebrating, setIsCelebrating] = useState(false);
+  const hasCelebratedRef = useRef<boolean>(false);
 
   const canvasRootRef = useRef<HTMLDivElement>(null);
 
@@ -71,8 +73,36 @@ const Canvas = ({
 
   useEffect(() => {
     if (!projectId) return;
-    if (loadingStatus === "completed") {
+    if (loadingStatus === "running") {
+      hasCelebratedRef.current = false;
+    }
+    if (loadingStatus === "completed" && !hasCelebratedRef.current) {
+      hasCelebratedRef.current = true;
       saveThumbnailToProject(projectId);
+      setIsCelebrating(true);
+      try {
+        const AC =
+          (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext ||
+          window.AudioContext;
+        const ctx = AC ? new AC() : null;
+        if (ctx) {
+          const gain = ctx.createGain();
+          gain.gain.value = 0.1;
+          gain.connect(ctx.destination);
+          const osc1 = ctx.createOscillator();
+          osc1.type = "sine";
+          osc1.frequency.value = 880;
+          osc1.connect(gain);
+          osc1.start();
+          osc1.stop(ctx.currentTime + 0.25);
+          const osc2 = ctx.createOscillator();
+          osc2.type = "sine";
+          osc2.frequency.value = 1320;
+          osc2.connect(gain);
+          osc2.start(ctx.currentTime + 0.18);
+          osc2.stop(ctx.currentTime + 0.55);
+        }
+      } catch {}
     }
   }, [loadingStatus, projectId, saveThumbnailToProject]);
 
@@ -163,11 +193,17 @@ const Canvas = ({
         : null;
 
   const { mutate: generateDesign, isPending: isGenerating } = useGenerateDesignById(projectId);
+  const updateProjectTheme = useUpdateProject(projectId);
   const defaultPrompt =
     "Mobile app home dashboard: sticky header with avatar and greeting, KPI cards for steps/calories, weekly chart, recent activity list, and fixed bottom navigation with 5 icons. Modern polished style, rounded cards, glows, Tailwind + CSS variables.";
   return (
     <>
       <div className="relative h-full w-full overflow-hidden">
+        {isCelebrating && (
+          <ConfettiOverlay
+            onDone={() => setIsCelebrating(false)}
+          />
+        )}
         <CanvasFloatingToolbar
           projectId={projectId}
           isScreenshotting={isScreenshotting}
@@ -187,7 +223,14 @@ const Canvas = ({
               </p>
               <div className="mt-4">
                 <Button
-                  onClick={() => generateDesign(defaultPrompt)}
+                  onClick={async () => {
+                    try {
+                      if (theme?.id) {
+                        await updateProjectTheme.mutateAsync({ themeId: theme.id });
+                      }
+                    } catch {}
+                    generateDesign(defaultPrompt);
+                  }}
                   disabled={isGenerating}
                   className="px-6"
                 >
@@ -340,22 +383,140 @@ const Canvas = ({
   );
 };
 
+function ConfettiOverlay({ onDone }: { onDone?: () => void }) {
+  const ref = useRef<HTMLCanvasElement | null>(null);
+  useEffect(() => {
+    const canvas = ref.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const resize = () => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    resize();
+    const colors = ["#ffffff", "#c4b5fd", "#a78bfa", "#818cf8", "#22c55e", "#f472b6", "#60a5fa"];
+    const particles = Array.from({ length: 160 }).map(() => {
+      const x = Math.random() * window.innerWidth;
+      const y = -20 - Math.random() * 80;
+      const size = 6 + Math.random() * 8;
+      const vx = -1 + Math.random() * 2;
+      const vy = 1.2 + Math.random() * 2.8;
+      const rot = Math.random() * Math.PI;
+      const vr = (-0.05 + Math.random() * 0.1);
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      return { x, y, size, vx, vy, rot, vr, color };
+    });
+    let raf = 0;
+    const start = performance.now();
+    const draw = (t: number) => {
+      const elapsed = t - start;
+      const fadeStart = 6000;
+      const fadeDur = 2500;
+      const alpha =
+        elapsed < fadeStart ? 1 : Math.max(0, 1 - (elapsed - fadeStart) / fadeDur);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.globalAlpha = alpha;
+      particles.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.vr;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+        ctx.restore();
+      });
+      raf = requestAnimationFrame(draw);
+      if (elapsed > fadeStart + fadeDur) {
+        cancelAnimationFrame(raf);
+        if (onDone) onDone();
+      }
+    };
+    raf = requestAnimationFrame(draw);
+    const onResize = () => resize();
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      cancelAnimationFrame(raf);
+    };
+  }, [onDone]);
+  return (
+    <canvas
+      ref={ref}
+      className="fixed inset-0 z-50 pointer-events-none"
+    />
+  );
+}
+
 function CanvasLoader({ status }: { status?: LoadingStatusType | "fetching" | "finalizing" }) {
+  const steps = ["Analyzing prompt...", "Generating Layout...", "Rendering..."];
+  const stepIndex =
+    status === "analyzing"
+      ? 0
+      : status === "generating"
+        ? 1
+        : status === "finalizing"
+          ? 2
+          : status === "running"
+            ? 0
+            : -1;
+
   return (
     <div
       className={cn(
-        `absolute top-4 left-1/2 z-20 flex max-w-full min-w-40 -translate-x-1/2 items-center space-x-2 rounded-br-xl rounded-bl-xl px-4 pt-1.5 pb-2 shadow-md`,
-        status === "fetching" && "bg-gray-500 text-white",
-        status === "running" && "bg-amber-500 text-white",
-        status === "analyzing" && "bg-blue-500 text-white",
-        status === "generating" && "bg-purple-500 text-white",
-        status === "finalizing" && "bg-purple-500 text-white"
+        `fixed top-20 left-1/2 z-60 -translate-x-1/2 rounded-full px-5 py-2 shadow-lg`,
+        "text-white",
+        status === "fetching" && "bg-gray-500",
+        status === "running" && "bg-amber-500",
+        status === "analyzing" && "bg-blue-500",
+        status === "generating" && "bg-purple-500",
+        status === "finalizing" && "bg-purple-600"
       )}
     >
-      <Spinner className="h-4 w-4 stroke-3!" />
-      <span className="text-sm font-semibold capitalize">
-        {status === "fetching" ? "Loading Project" : status}
-      </span>
+      {stepIndex === -1 ? (
+        <div className="flex items-center space-x-2">
+          <span className="text-sm font-semibold">Loading Project</span>
+        </div>
+      ) : (
+        <div className="flex items-center">
+          {steps.map((label, i) => (
+            <div key={label} className="flex items-center">
+              <div className="flex items-center space-x-2">
+                <div
+                  className={cn(
+                    "h-2 w-2 rounded-full",
+                    i <= stepIndex ? "bg-white" : "bg-white/50"
+                  )}
+                />
+                <span
+                  className={cn(
+                    "text-xs font-medium",
+                    i <= stepIndex ? "opacity-100" : "opacity-70"
+                  )}
+                >
+                  {label}
+                </span>
+              </div>
+              {i < steps.length - 1 && (
+                <div
+                  className={cn(
+                    "mx-3 h-px w-8",
+                    i < stepIndex ? "bg-white" : "bg-white/40"
+                  )}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

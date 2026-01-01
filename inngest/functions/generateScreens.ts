@@ -194,9 +194,8 @@ export const generateScreens = inngest.createFunction(
     });
 
     // Actuall generation of each screens
-    const generatedFrames: typeof frames = isExistingGeneration
-      ? [...frames]
-      : [];
+    const generatedFrames: typeof frames = isExistingGeneration ? [...frames] : [];
+    const existingCount = isExistingGeneration ? frames.length : 0;
 
     for (let i = 0; i < analysis.screens.length; i++) {
       const screenPlan = analysis.screens[i];
@@ -211,7 +210,7 @@ export const generateScreens = inngest.createFunction(
       `;
 
       // Get all previous existing or generated frames
-      const allPreviousFrames = generatedFrames.slice(0, i);
+      const allPreviousFrames = generatedFrames.slice(0, existingCount + i);
       const previousFramesContext = allPreviousFrames
         .map((f: FrameType) => `<!-- ${f.title} -->\n${f.htmlContent}`)
         .join("\n\n");
