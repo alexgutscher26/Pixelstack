@@ -51,7 +51,7 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 
 - [x] **Generation Progress Bar**: Replace the simple spinner with a multi-step progress bar (e.g., "Analyzing prompt..." -> "Generating Layout..." -> "Rendering...").
 - [x] **Success Celebrations**: Add subtle confetti or sound effect (optional) when a generation completes successfully.
-- [x] **Feedback Widget**: Add a "Send Feedback" button in the help menu for users to report bugs directly.
+- [ ] **Feedback Widget**: Add a "Send Feedback" button in the help menu for users to report bugs directly. need to store in db
 
 ---
 
@@ -59,8 +59,7 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 
 ### Prompt Engineering & Control
 
-- [ ] **Model Selection**: Add a dropdown to choose between models (GPT-4o, Claude 3.5 Sonnet, Gemini 1.5 Pro).
-- [ ] **Prompt Enhancement**: Add a "Magic Enhance" button that rewrites simple prompts into detailed design specifications.
+- [x] **Prompt Enhancement**: Add a "Magic Enhance" button that rewrites simple prompts into detailed design specifications.
 - [ ] **Negative Prompts**: Allow users to specify what they _don't_ want (e.g., "no red", "no rounded corners").
 - [ ] **Design Style Presets**:
   - [ ] Minimalist
