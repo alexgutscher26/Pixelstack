@@ -61,13 +61,13 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 
 - [x] **Prompt Enhancement**: Add a "Magic Enhance" button that rewrites simple prompts into detailed design specifications.
 - [x] **Negative Prompts**: Allow users to specify what they _don't_ want (e.g., "no red", "no rounded corners").
-- [ ] **Design Style Presets**:
-  - [ ] Minimalist
-  - [ ] Brutalist
-  - [ ] Corporate / Enterprise
-  - [ ] Playful / Gamified
-  - [ ] Dark Mode Native
-- [ ] **Reference Image Upload**: Allow users to upload a screenshot and ask the AI to "copy this style".
+- [x] **Design Style Presets**:
+  - [x] Minimalist
+  - [x] Brutalist
+  - [x] Corporate / Enterprise
+  - [x] Playful / Gamified
+  - [x] Dark Mode Native
+- [x] **Reference Image Upload**: Allow users to upload a screenshot and ask the AI to "copy this style".
 
 ### Specialized Generation Modes
 

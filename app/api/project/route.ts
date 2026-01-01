@@ -38,7 +38,14 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const { prompt, totalScreens, onboardingScreens, includePaywall, negativePrompts } =
+    const {
+      prompt,
+      totalScreens,
+      onboardingScreens,
+      includePaywall,
+      negativePrompts,
+      stylePreset,
+    } =
       await request.json();
     const { getKindeServerSession } = await import("@kinde-oss/kinde-auth-nextjs/server");
     const session = await getKindeServerSession();
@@ -81,6 +88,10 @@ export async function POST(request: Request) {
                       .map((s) => s.trim())
                       .filter(Boolean)
                   : undefined,
+            stylePreset:
+              typeof stylePreset === "string" && stylePreset.trim().length > 0
+                ? stylePreset.trim()
+                : undefined,
           },
         },
       });

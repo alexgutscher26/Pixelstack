@@ -12,6 +12,7 @@ export const useCreateProject = () => {
       onboardingScreens?: number;
       includePaywall?: boolean;
       negativePrompts?: string | string[];
+      stylePreset?: string;
     }) =>
       await axios
         .post("/api/project", {

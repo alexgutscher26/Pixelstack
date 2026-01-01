@@ -90,6 +90,8 @@ export const generateScreens = inngest.createFunction(
         : typeof negativeListRaw === "string"
           ? negativeListRaw.split(/[,\n]/).map((s) => s.trim()).filter(Boolean)
           : [];
+    const stylePreset =
+      typeof preferences?.stylePreset === "string" ? preferences.stylePreset : undefined;
 
     await publish({
       channel: CHANNEL,
@@ -144,6 +146,9 @@ export const generateScreens = inngest.createFunction(
         constraintLines.push(
           `- Negative prompts (strictly avoid): ${negativePrompts.join("; ")}`
         );
+      }
+      if (stylePreset) {
+        constraintLines.push(`- Design style preset: ${stylePreset}`);
       }
 
       const analysisPrompt = isExistingGeneration
@@ -257,6 +262,20 @@ export const generateScreens = inngest.createFunction(
         - **Strictly follow NEGATIVE PROMPTS: ${negativePrompts.length > 0 ? negativePrompts.join("; ") : "None"}
           - If a negative prompt conflicts with a default style rule, the negative prompt must win.
           - Replace prohibited colors/components with appropriate alternatives consistent with theme variables.
+        - **Style preset rules: ${stylePreset || "None"}
+          ${
+            stylePreset === "Minimalist"
+              ? `Use ample whitespace, thin borders, minimal shadows, subtle color accents, restrained radius (rounded-md), no gradients.`
+              : stylePreset === "Brutalist"
+                ? `Use thick borders, hard drop shadows, bold solid colors, blocky geometry, minimal radius (rounded-none/rounded-sm), visible outlines.`
+                : stylePreset === "Corporate / Enterprise"
+                  ? `Use neutral palette, accessible contrast, clear hierarchy, restrained accents, professional tone, moderate radius, minimal playful elements.`
+                  : stylePreset === "Playful / Gamified"
+                    ? `Use vibrant accents, badges/chips, rounded-2xl/3xl, soft glows on interactive elements, lively micro-interactions, friendly typography.`
+                    : stylePreset === "Dark Mode Native"
+                      ? `Use deep dark backgrounds, OLED-friendly, high-contrast text, subtle glows, avoid pure white surfaces; ensure consistent dark variants.`
+                      : `Follow general premium mobile style.`
+          }
 
         1. **Generate ONLY raw HTML markup for this mobile app screen using Tailwind CSS.**
           Use Tailwind classes for layout, spacing, typography, shadows, etc.

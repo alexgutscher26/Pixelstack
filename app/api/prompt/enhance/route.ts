@@ -18,6 +18,10 @@ export async function POST(request: Request) {
         : typeof negativePromptsRaw === "string"
           ? negativePromptsRaw.split(/[,\n]/).map((s: string) => s.trim()).filter(Boolean)
           : [];
+    const stylePreset =
+      typeof body?.stylePreset === "string" && body.stylePreset.trim().length > 0
+        ? body.stylePreset.trim()
+        : undefined;
 
     if (!prompt) {
       return NextResponse.json({ error: "Missing prompt" }, { status: 400 });
@@ -35,6 +39,9 @@ export async function POST(request: Request) {
     }
     if (negatives.length > 0) {
       constraints.push(`Negative prompts (strictly avoid): ${negatives.join("; ")}`);
+    }
+    if (stylePreset) {
+      constraints.push(`Design style preset: ${stylePreset}`);
     }
     const constraintsText =
       constraints.length > 0

@@ -87,6 +87,14 @@ const LandingSection = () => {
   const [onboardingScreens, setOnboardingScreens] = useState<number>(1);
   const [includePaywall, setIncludePaywall] = useState<boolean>(false);
   const [negativeText, setNegativeText] = useState<string>("");
+  const STYLE_PRESETS = [
+    "Minimalist",
+    "Brutalist",
+    "Corporate / Enterprise",
+    "Playful / Gamified",
+    "Dark Mode Native",
+  ] as const;
+  const [stylePreset, setStylePreset] = useState<(typeof STYLE_PRESETS)[number] | undefined>();
   const userId = user?.id;
 
   const { data: projects, isLoading, isError } = useGetProjects(userId);
@@ -116,8 +124,9 @@ const LandingSection = () => {
       onboardingScreens,
       includePaywall,
       negativePrompts: negativeText,
+      stylePreset,
     });
-  }, [promptText, totalScreens, onboardingScreens, includePaywall, negativeText, mutate]);
+  }, [promptText, totalScreens, onboardingScreens, includePaywall, negativeText, stylePreset, mutate]);
 
   const [isEnhancing, setIsEnhancing] = useState<boolean>(false);
   const handleEnhance = useCallback(async () => {
@@ -134,6 +143,7 @@ const LandingSection = () => {
           onboardingScreens,
           includePaywall,
           negativePrompts: negativeText,
+          stylePreset,
         }),
       });
       const data = await res.json();
@@ -142,7 +152,7 @@ const LandingSection = () => {
       }
     } catch {}
     setIsEnhancing(false);
-  }, [promptText, totalScreens, onboardingScreens, includePaywall, negativeText]);
+  }, [promptText, totalScreens, onboardingScreens, includePaywall, negativeText, stylePreset]);
 
   const handleScroll = useCallback((direction: "left" | "right") => {
     const viewport = carouselRef.current?.querySelector(
@@ -287,6 +297,29 @@ const LandingSection = () => {
                   />
                   <span className="text-muted-foreground text-xs">
                     Comma or newline separated. We will strictly avoid these in the design.
+                  </span>
+                </div>
+              </div>
+
+              <div className="w-full px-5">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-sm font-medium">Design style presets</label>
+                  <div className="flex flex-wrap gap-2">
+                    {STYLE_PRESETS.map((p) => (
+                      <Button
+                        key={p}
+                        type="button"
+                        variant={stylePreset === p ? "default" : "outline"}
+                        size="sm"
+                        className="rounded-full"
+                        onClick={() => setStylePreset(stylePreset === p ? undefined : p)}
+                      >
+                        {p}
+                      </Button>
+                    ))}
+                  </div>
+                  <span className="text-muted-foreground text-xs">
+                    Choose one preset to guide visual style. Optional.
                   </span>
                 </div>
               </div>
