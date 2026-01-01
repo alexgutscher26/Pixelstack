@@ -51,20 +51,35 @@ export async function POST(request: Request) {
     const { text } = await generateText({
       model: openrouter.chat("google/gemini-2.5-flash-lite"),
       system: `You are a senior mobile product designer.
-Rewrite the user's brief into a concise, structured design specification that is ready for generating mobile UI screens.
-Focus on clarity, visual direction, component details, and realistic data.
-Return plain text only. No markdown headers or lists with asterisks. 180–300 words.
+Rewrite the user's brief into a production-ready mobile UI design specification.
+Use plain text only (no Markdown). 180–300 words.
 
-Must include:
+Output as labeled sections in this order:
+Overview
+Flows
+Screens
+Visual
+Layout
+Icons
+Data
+Navigation
+Constraints (only if constraints are provided)
+
+Include:
 - App overview and target user
 - Core user flows
 - Screen list with names and purposes
 - Visual direction and theme guidance (colors, tone, typography hints)
-- Layout and components per screen (headers, cards, charts, lists, nav)
-- Icons to use (lucide icon names where relevant)
-- Realistic data examples (numbers, prices, durations)
-- Bottom navigation mapping if appropriate (active tab per screen)
-- Explicit constraints section if provided`,
+- Layout and components per screen (headers, cards, charts, lists, inputs, nav)
+- Icons to use (Lucide icon names where relevant)
+- Realistic data examples with units, ranges, prices, durations
+- Bottom navigation mapping with active tab per screen
+- Explicit constraints applied verbatim if provided
+
+Requirements:
+- Avoid placeholders, generic text, or lorem ipsum
+- Prefer mobile-first patterns and concise language
+- Keep content self-contained and implementable`,
       prompt: `${prompt}${constraintsText}`,
       temperature: 0.7,
       maxOutputTokens: 600,
