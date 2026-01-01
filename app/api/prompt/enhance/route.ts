@@ -11,6 +11,13 @@ export async function POST(request: Request) {
       typeof body?.onboardingScreens === "number" ? body.onboardingScreens : undefined;
     const includePaywall =
       typeof body?.includePaywall === "boolean" ? body.includePaywall : undefined;
+    const negativePromptsRaw = body?.negativePrompts;
+    const negatives: string[] =
+      Array.isArray(negativePromptsRaw)
+        ? negativePromptsRaw.map((s: unknown) => String(s).trim()).filter(Boolean)
+        : typeof negativePromptsRaw === "string"
+          ? negativePromptsRaw.split(/[,\n]/).map((s: string) => s.trim()).filter(Boolean)
+          : [];
 
     if (!prompt) {
       return NextResponse.json({ error: "Missing prompt" }, { status: 400 });
@@ -25,6 +32,9 @@ export async function POST(request: Request) {
     }
     if (typeof includePaywall === "boolean") {
       constraints.push(`Include paywall: ${includePaywall ? "Yes" : "No"}`);
+    }
+    if (negatives.length > 0) {
+      constraints.push(`Negative prompts (strictly avoid): ${negatives.join("; ")}`);
     }
     const constraintsText =
       constraints.length > 0
@@ -63,4 +73,3 @@ Must include:
     return NextResponse.json({ error: "Failed to enhance prompt" }, { status: 500 });
   }
 }
-

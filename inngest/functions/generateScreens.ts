@@ -83,6 +83,13 @@ export const generateScreens = inngest.createFunction(
       typeof preferences?.includePaywall === "boolean"
         ? preferences.includePaywall
         : false;
+    const negativeListRaw = preferences?.negativePrompts;
+    const negativePrompts: string[] =
+      Array.isArray(negativeListRaw)
+        ? negativeListRaw
+        : typeof negativeListRaw === "string"
+          ? negativeListRaw.split(/[,\n]/).map((s) => s.trim()).filter(Boolean)
+          : [];
 
     await publish({
       channel: CHANNEL,
@@ -133,6 +140,11 @@ export const generateScreens = inngest.createFunction(
       constraintLines.push(
         `- Include paywall: ${includePaywall ? "Yes" : "No"}`
       );
+      if (negativePrompts.length > 0) {
+        constraintLines.push(
+          `- Negative prompts (strictly avoid): ${negativePrompts.join("; ")}`
+        );
+      }
 
       const analysisPrompt = isExistingGeneration
         ? `
@@ -242,6 +254,9 @@ export const generateScreens = inngest.createFunction(
         - **Extract common components (cards, buttons, headers) and reuse their styling
         - **Maintain the exact same visual hierarchy, spacing, and color scheme
         - **This screen should look like it belongs in the same app as the previous screens
+        - **Strictly follow NEGATIVE PROMPTS: ${negativePrompts.length > 0 ? negativePrompts.join("; ") : "None"}
+          - If a negative prompt conflicts with a default style rule, the negative prompt must win.
+          - Replace prohibited colors/components with appropriate alternatives consistent with theme variables.
 
         1. **Generate ONLY raw HTML markup for this mobile app screen using Tailwind CSS.**
           Use Tailwind classes for layout, spacing, typography, shadows, etc.

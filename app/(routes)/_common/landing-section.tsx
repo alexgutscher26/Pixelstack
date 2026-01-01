@@ -86,6 +86,7 @@ const LandingSection = () => {
   const [totalScreens, setTotalScreens] = useState<number>(9);
   const [onboardingScreens, setOnboardingScreens] = useState<number>(1);
   const [includePaywall, setIncludePaywall] = useState<boolean>(false);
+  const [negativeText, setNegativeText] = useState<string>("");
   const userId = user?.id;
 
   const { data: projects, isLoading, isError } = useGetProjects(userId);
@@ -114,8 +115,9 @@ const LandingSection = () => {
       totalScreens,
       onboardingScreens,
       includePaywall,
+      negativePrompts: negativeText,
     });
-  }, [promptText, totalScreens, onboardingScreens, includePaywall, mutate]);
+  }, [promptText, totalScreens, onboardingScreens, includePaywall, negativeText, mutate]);
 
   const [isEnhancing, setIsEnhancing] = useState<boolean>(false);
   const handleEnhance = useCallback(async () => {
@@ -131,6 +133,7 @@ const LandingSection = () => {
           totalScreens,
           onboardingScreens,
           includePaywall,
+          negativePrompts: negativeText,
         }),
       });
       const data = await res.json();
@@ -139,7 +142,7 @@ const LandingSection = () => {
       }
     } catch {}
     setIsEnhancing(false);
-  }, [promptText, totalScreens, onboardingScreens, includePaywall]);
+  }, [promptText, totalScreens, onboardingScreens, includePaywall, negativeText]);
 
   const handleScroll = useCallback((direction: "left" | "right") => {
     const viewport = carouselRef.current?.querySelector(
@@ -266,6 +269,25 @@ const LandingSection = () => {
                       {includePaywall ? "Yes" : "No"}
                     </button>
                   </div>
+                </div>
+              </div>
+              
+              <div className="w-full px-5">
+                <div className="flex flex-col gap-1.5">
+                  <label htmlFor="negative-prompts" className="text-sm font-medium">
+                    Negative prompts
+                  </label>
+                  <textarea
+                    id="negative-prompts"
+                    placeholder={`Examples: no red, no rounded corners, no gradients`}
+                    value={negativeText}
+                    onChange={(e) => setNegativeText(e.target.value)}
+                    className="bg-background focus:ring-primary min-h-20 rounded-lg border px-3 py-2 focus:ring-2 focus:outline-none"
+                    aria-label="Negative prompts"
+                  />
+                  <span className="text-muted-foreground text-xs">
+                    Comma or newline separated. We will strictly avoid these in the design.
+                  </span>
                 </div>
               </div>
 

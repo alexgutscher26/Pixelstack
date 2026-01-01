@@ -60,7 +60,7 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 ### Prompt Engineering & Control
 
 - [x] **Prompt Enhancement**: Add a "Magic Enhance" button that rewrites simple prompts into detailed design specifications.
-- [ ] **Negative Prompts**: Allow users to specify what they _don't_ want (e.g., "no red", "no rounded corners").
+- [x] **Negative Prompts**: Allow users to specify what they _don't_ want (e.g., "no red", "no rounded corners").
 - [ ] **Design Style Presets**:
   - [ ] Minimalist
   - [ ] Brutalist

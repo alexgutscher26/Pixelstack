@@ -11,6 +11,7 @@ export const useCreateProject = () => {
       totalScreens?: number;
       onboardingScreens?: number;
       includePaywall?: boolean;
+      negativePrompts?: string | string[];
     }) =>
       await axios
         .post("/api/project", {
