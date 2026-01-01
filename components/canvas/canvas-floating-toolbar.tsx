@@ -39,6 +39,8 @@ const CanvasFloatingToolbar = ({
     setBackgroundType,
     backgroundColor,
     setBackgroundColor,
+    wireframeMode,
+    setWireframeMode,
   } = useCanvas();
   const [promptText, setPromptText] = useState<string>("");
   const [isExportingSelected, setIsExportingSelected] = useState(false);
@@ -114,7 +116,8 @@ const CanvasFloatingToolbar = ({
         selectedFrame.htmlContent,
         selectedFrame.title,
         currentTheme?.style,
-        fid
+        fid,
+        wireframeMode
       );
       const h = await measureHeight(fullHtml, fid);
       const response = await axios.post(
@@ -141,14 +144,16 @@ const CanvasFloatingToolbar = ({
     } finally {
       setIsExportingSelected(false);
     }
-  }, [selectedFrame, isExportingSelected, currentTheme?.style, measureHeight]);
+  }, [selectedFrame, isExportingSelected, currentTheme?.style, measureHeight, wireframeMode]);
 
   const handleDownloadSelectedHtml = useCallback(() => {
     if (!selectedFrame || isExportingSelected) return;
     const fullHtml = getHTMLWrapper(
       selectedFrame.htmlContent,
       selectedFrame.title,
-      currentTheme?.style
+      currentTheme?.style,
+      undefined,
+      wireframeMode
     );
     const blob = new Blob([fullHtml], { type: "text/html" });
     const url = URL.createObjectURL(blob);
@@ -158,7 +163,7 @@ const CanvasFloatingToolbar = ({
     link.click();
     URL.revokeObjectURL(url);
     toast.success("Selected frame HTML downloaded");
-  }, [selectedFrame, currentTheme?.style, isExportingSelected]);
+  }, [selectedFrame, currentTheme?.style, isExportingSelected, wireframeMode]);
 
   const handleExportAllPng = useCallback(async () => {
     if (isExportingAll || frames.length === 0) return;
@@ -166,7 +171,7 @@ const CanvasFloatingToolbar = ({
     try {
       for (const f of frames) {
         const fid = `all-${Math.random().toString(36).slice(2)}`;
-        const fullHtml = getHTMLWrapper(f.htmlContent, f.title, currentTheme?.style, fid);
+        const fullHtml = getHTMLWrapper(f.htmlContent, f.title, currentTheme?.style, fid, wireframeMode);
         const h = await measureHeight(fullHtml, fid);
         const response = await axios.post(
           "/api/screenshot",
@@ -194,14 +199,14 @@ const CanvasFloatingToolbar = ({
     } finally {
       setIsExportingAll(false);
     }
-  }, [frames, currentTheme?.style, isExportingAll, measureHeight]);
+  }, [frames, currentTheme?.style, isExportingAll, measureHeight, wireframeMode]);
 
   const handleDownloadAllHtml = useCallback(async () => {
     if (isExportingAll || frames.length === 0) return;
     setIsExportingAll(true);
     try {
       for (const f of frames) {
-        const fullHtml = getHTMLWrapper(f.htmlContent, f.title, currentTheme?.style);
+        const fullHtml = getHTMLWrapper(f.htmlContent, f.title, currentTheme?.style, undefined, wireframeMode);
         const blob = new Blob([fullHtml], { type: "text/html" });
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
@@ -217,14 +222,14 @@ const CanvasFloatingToolbar = ({
     } finally {
       setIsExportingAll(false);
     }
-  }, [frames, currentTheme?.style, isExportingAll]);
+  }, [frames, currentTheme?.style, isExportingAll, wireframeMode]);
 
   const hasSelected = useMemo(() => !!selectedFrame, [selectedFrame]);
 
   return (
     <div className="fixed top-6 left-1/2 z-50 -translate-x-1/2">
       <TooltipProvider delayDuration={150} skipDelayDuration={500}>
-        <div className="bg-background w-full max-w-2xl rounded-full border shadow-xl dark:bg-gray-950">
+        <div className="bg-background w-auto max-w-none rounded-full border shadow-xl dark:bg-gray-950">
           <div className="flex flex-row items-center gap-2 px-3">
             <Popover>
               <Tooltip>
@@ -359,6 +364,25 @@ const CanvasFloatingToolbar = ({
             </Popover>
 
             <Separator orientation="vertical" className="h-4!" />
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className={cn(
+                    "cursor-pointer rounded-full text-white! hover:bg-white/25! px-3",
+                    wireframeMode && "bg-white/30 shadow ring-2 ring-white/70"
+                  )}
+                  onClick={() => setWireframeMode(!wireframeMode)}
+                  aria-pressed={wireframeMode}
+                  data-active={wireframeMode || undefined}
+                >
+                  Wireframe
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Wireframe Mode</TooltipContent>
+            </Tooltip>
 
             <Popover>
               <Tooltip>

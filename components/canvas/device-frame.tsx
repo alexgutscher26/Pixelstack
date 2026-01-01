@@ -46,7 +46,7 @@ const DeviceFrame = ({
   onOpenHtmlDialog,
   onOpenReactDialog,
 }: PropsType) => {
-  const { selectedFrameId, setSelectedFrameId, updateFrame } = useCanvas();
+  const { selectedFrameId, setSelectedFrameId, updateFrame, wireframeMode } = useCanvas();
   const [frameSize, setFrameSize] = useState({
     width,
     height: minHeight,
@@ -58,7 +58,7 @@ const DeviceFrame = ({
 
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const isSelected = selectedFrameId === frameId;
-  const fullHtml = getHTMLWrapper(html, title, theme_style, frameId);
+  const fullHtml = getHTMLWrapper(html, title, theme_style, frameId, wireframeMode);
   const [selectedOuterHTML, setSelectedOuterHTML] = useState<string | null>(null);
   const [partialPrompt, setPartialPrompt] = useState<string>("");
 
@@ -254,7 +254,12 @@ const DeviceFrame = ({
             isSelected && toolMode !== TOOL_MODE_ENUM.HAND && "rounded-none"
           )}
         >
-          <div className="dark:bg-background relative overflow-hidden bg-white">
+          <div
+            className={cn(
+              "relative overflow-hidden",
+              wireframeMode ? "bg-white" : "dark:bg-background bg-white"
+            )}
+          >
             {isLoading ? (
               <DeviceFrameSkeleton
                 style={{

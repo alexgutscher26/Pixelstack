@@ -4,7 +4,8 @@ export function getHTMLWrapper(
   html: string,
   title = "Untitled",
   theme_style?: string,
-  frameId?: string
+  frameId?: string,
+  wireframe?: boolean
 ) {
   const finalTheme = theme_style || OCEAN_BREEZE_THEME;
 
@@ -70,9 +71,44 @@ export function getHTMLWrapper(
     .quality-low .glassmorphic { backdrop-filter: none !important; }
     .quality-low section, .quality-low main { content-visibility: auto; contain-intrinsic-size: 800px; }
     .quality-low img { image-rendering: -webkit-optimize-contrast; }
+    /* Wireframe mode */
+    .wireframe {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif !important;
+      --background: #ffffff;
+      --foreground: #000000;
+      --card: #ffffff;
+      --card-foreground: #000000;
+      --popover: #ffffff;
+      --popover-foreground: #000000;
+      --primary: #000000;
+      --primary-rgb: 0,0,0;
+      --primary-foreground: #ffffff;
+      --secondary: #ffffff;
+      --secondary-foreground: #000000;
+      --accent: #000000;
+      --accent-foreground: #ffffff;
+      --muted: #ffffff;
+      --muted-foreground: #000000;
+      --destructive: #000000;
+      --border: #111111;
+      --input: #111111;
+      --ring: #111111;
+      --radius: 0px;
+    }
+    .wireframe *, .wireframe *::before, .wireframe *::after { transition: none !important; box-shadow: none !important; filter: grayscale(100%) saturate(0) !important; }
+    .wireframe img, .wireframe video, .wireframe canvas { filter: grayscale(100%) contrast(120%) !important; opacity: 0.8 !important; }
+    .wireframe [class*="rounded"], .wireframe * { border-radius: 0 !important; }
+    .wireframe section, .wireframe header, .wireframe footer, .wireframe main, .wireframe aside, .wireframe article, .wireframe div, .wireframe nav { border: 2px solid var(--border) !important; background: #ffffff !important; }
+    .wireframe button, .wireframe input, .wireframe textarea, .wireframe select { background: #ffffff !important; color: #000000 !important; border: 2px solid var(--border) !important; }
+    .wireframe [class*="bg-"], .wireframe [class*="from-"], .wireframe [class*="to-"], .wireframe [class*="via-"] { background: #ffffff !important; }
+    .wireframe [class*="text-"] { color: #000000 !important; }
+    .wireframe [class*="ring-"], .wireframe [class*="border-"] { border-color: var(--border) !important; }
+    .wireframe [class*="shadow"] { box-shadow: none !important; }
+    .wireframe iconify-icon { color: #000 !important; }
+    .wireframe a { color: #000000 !important; text-decoration: underline dotted; }
   </style>
 </head>
-<body>
+<body class="${wireframe ? "wireframe" : ""}">
   <div id="root">
   <div class="relative">
     ${html}

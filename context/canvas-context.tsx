@@ -28,6 +28,8 @@ interface CanvasContextType {
   setBackgroundType: (type: "dots" | "grid" | "solid") => void;
   backgroundColor: string;
   setBackgroundColor: (color: string) => void;
+  wireframeMode: boolean;
+  setWireframeMode: (enabled: boolean) => void;
 }
 
 const CanvasContext = createContext<CanvasContextType | undefined>(undefined);
@@ -54,6 +56,7 @@ export const CanvasProvider = ({
 
   const [backgroundType, setBackgroundType] = useState<"dots" | "grid" | "solid">("dots");
   const [backgroundColor, setBackgroundColor] = useState<string>("#7c5cff");
+  const [wireframeMode, setWireframeMode] = useState<boolean>(false);
 
   const [prevProjectId, setPrevProjectId] = useState(projectId);
   if (projectId !== prevProjectId) {
@@ -64,6 +67,7 @@ export const CanvasProvider = ({
     setSelectedFrameId(null);
     setBackgroundType("dots");
     setBackgroundColor("#7c5cff");
+    setWireframeMode(false);
   }
 
   const theme = THEME_LIST.find((t) => t.id === themeId);
@@ -158,6 +162,8 @@ export const CanvasProvider = ({
         setBackgroundType,
         backgroundColor,
         setBackgroundColor,
+        wireframeMode,
+        setWireframeMode,
       }}
     >
       {children}

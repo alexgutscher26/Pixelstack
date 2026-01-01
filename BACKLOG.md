@@ -72,7 +72,7 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 ### Specialized Generation Modes
 
 - [ ] **Component Generator**: "Generate a pricing table", "Generate a navbar", "Generate a credit card form".
-- [ ] **Wireframe Mode**: Generate low-fidelity wireframes (black & white, blocky) before committing to high-fidelity.
+- [x] **Wireframe Mode**: Generate low-fidelity wireframes (black & white, blocky) before committing to high-fidelity.
 - [ ] **Copywriting AI**: "Rewrite all text in this frame to be more professional".
 - [ ] **Icon Generation**: Integrate an icon generation API to create custom SVG icons on the fly.
 
