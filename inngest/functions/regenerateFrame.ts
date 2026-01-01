@@ -33,6 +33,20 @@ export const regenerateFrame = inngest.createFunction(
     // Generate new frame with the user's prompt
     await step.run("regenerate-screen", async () => {
       const selectedTheme = THEME_LIST.find((t) => t.id === themeId);
+      const priorFrames = await prisma.frame.findMany({
+        where: {
+          projectId,
+          NOT: { id: frameId },
+        },
+        orderBy: { createdAt: "asc" },
+        take: 6,
+      });
+      const priorContext =
+        priorFrames.length > 0
+          ? priorFrames
+              .map((pf) => `<!-- ${pf.title} -->\n${pf.htmlContent}`)
+              .join("\n\n")
+          : "";
 
       //Combine the Theme Styles + Base Variable
       const fullThemeCSS = `
@@ -55,6 +69,15 @@ export const regenerateFrame = inngest.createFunction(
         ORIGINAL SCREEN HTML: ${frame.htmlContent}
 
         THEME VARIABLES (Reference ONLY - already defined in parent, do NOT redeclare these): ${fullThemeCSS}
+
+        PROJECT CONTEXT (use for consistency across screens):
+        ${priorContext || "No prior frames"}
+
+        CONSISTENCY REQUIREMENTS:
+        - Maintain the exact same typography scale and families as prior screens
+        - Preserve color usage via CSS variables; do not introduce new brand colors
+        - Reuse common components (headers, cards, bottom nav) from prior screens when applicable
+        - Keep spacing rhythm and radii consistent with prior screens
 
         TARGET ELEMENT MODE:
         ${targetOuterHTML ? "Yes" : "No"}

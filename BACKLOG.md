@@ -78,7 +78,7 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 
 ### Context Awareness
 
-- [ ] **Project-wide Context**: Pass the context of Frame 1 when generating Frame 2 (consistency in colors/fonts).
+- [x] **Project-wide Context**: Pass the context of Frame 1 when generating Frame 2 (consistency in colors/fonts).
 - [ ] **Brand Kit**: Allow users to define a "Brand Kit" (Logo, Primary Color, Font) that the AI must strictly follow.
 
 ---
