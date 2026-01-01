@@ -117,6 +117,30 @@ const LandingSection = () => {
     });
   }, [promptText, totalScreens, onboardingScreens, includePaywall, mutate]);
 
+  const [isEnhancing, setIsEnhancing] = useState<boolean>(false);
+  const handleEnhance = useCallback(async () => {
+    const p = promptText.trim();
+    if (!p) return;
+    setIsEnhancing(true);
+    try {
+      const res = await fetch("/api/prompt/enhance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt: p,
+          totalScreens,
+          onboardingScreens,
+          includePaywall,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && typeof data?.enhancedPrompt === "string") {
+        setPromptText(data.enhancedPrompt);
+      }
+    } catch {}
+    setIsEnhancing(false);
+  }, [promptText, totalScreens, onboardingScreens, includePaywall]);
+
   const handleScroll = useCallback((direction: "left" | "right") => {
     const viewport = carouselRef.current?.querySelector(
       '[data-slot="scroll-area-viewport"]'
@@ -168,6 +192,8 @@ const LandingSection = () => {
                   isLoading={isPending}
                   onSubmit={handleSubmit}
                   placeholder="Describe your app idea..."
+                  onEnhance={handleEnhance}
+                  isEnhancing={isEnhancing}
                 />
               </div>
 

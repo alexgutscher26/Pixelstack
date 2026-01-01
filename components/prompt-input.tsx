@@ -7,7 +7,7 @@ import {
   InputGroupButton,
   InputGroupTextarea,
 } from "./ui/input-group";
-import { CornerDownLeftIcon } from "lucide-react";
+import { CornerDownLeftIcon, Wand2 } from "lucide-react";
 import { Spinner } from "./ui/spinner";
 
 interface PropsType {
@@ -18,6 +18,8 @@ interface PropsType {
   hideSubmitBtn?: boolean;
   onSubmit?: () => void;
   placeholder?: string;
+  onEnhance?: () => void;
+  isEnhancing?: boolean;
 }
 const PromptInput = ({
   promptText,
@@ -27,6 +29,8 @@ const PromptInput = ({
   hideSubmitBtn = false,
   onSubmit,
   placeholder,
+  onEnhance,
+  isEnhancing,
 }: PropsType) => {
   const trimmed = promptText.trim();
   const invalidMsg =
@@ -49,6 +53,24 @@ const PromptInput = ({
         />
 
         <InputGroupAddon align="block-end" className="flex items-center justify-end">
+          {onEnhance && (
+            <InputGroupButton
+              variant="outline"
+              className=""
+              size="sm"
+              disabled={isEnhancing || trimmed.length === 0}
+              onClick={() => onEnhance?.()}
+            >
+              {isEnhancing ? (
+                <Spinner />
+              ) : (
+                <>
+                  Magic Enhance
+                  <Wand2 className="size-4" />
+                </>
+              )}
+            </InputGroupButton>
+          )}
           {!hideSubmitBtn && (
             <InputGroupButton
               variant="default"
