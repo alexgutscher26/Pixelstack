@@ -283,8 +283,8 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 
 ## 🧹 Technical Debt & Refactoring Tasks
 
-- [ ] **Refactor `page.tsx`**: The main project page is likely too large. Split into `Canvas.tsx`, `Sidebar.tsx`, `Toolbar.tsx`.
-- [ ] **Optimize Inngest Functions**: Ensure functions are idempotent.
+- [x] **Refactor `page.tsx`**: The main project page is likely too large. Split into `Canvas.tsx`, `Sidebar.tsx`, `Toolbar.tsx`.
+- [x] **Optimize Inngest Functions**: Ensure functions are idempotent.
 - [x] **Prisma Schema Review**: Check if `Project` and `Frame` relations need cascading deletes.
 - [x] **Hardcoded Strings**: Move all UI strings to a `messages.json` or constant file for future i18n.
 - [x] **Theme System**: Ensure the theme provider handles system preference changes correctly.

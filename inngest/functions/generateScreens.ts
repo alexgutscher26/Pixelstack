@@ -307,14 +307,24 @@ export const generateScreens = inngest.createFunction(
         finalHtml = match ? match[0] : finalHtml;
         finalHtml = finalHtml.replace(/```/g, "");
 
-        //Create the frame
-        const frame = await prisma.frame.create({
-          data: {
+        const existing = await prisma.frame.findFirst({
+          where: {
             projectId,
             title: screenPlan.name,
-            htmlContent: finalHtml,
           },
         });
+        const frame = existing
+          ? await prisma.frame.update({
+              where: { id: existing.id },
+              data: { htmlContent: finalHtml },
+            })
+          : await prisma.frame.create({
+              data: {
+                projectId,
+                title: screenPlan.name,
+                htmlContent: finalHtml,
+              },
+            });
 
         // Add to generatedFrames for next iteration's context
         generatedFrames.push(frame);
