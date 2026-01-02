@@ -13,7 +13,7 @@
   "dependencies": {
     "@inngest/realtime": "^0.4.5",
     "@kinde-oss/kinde-auth-nextjs": "^2.11.0",
-    "@openrouter/ai-sdk-provider": "^1.5.3",
+    "@openrouter/ai-sdk-provider": "^1.5.4",
     "@prisma/client": "^6.19.0",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-dialog": "^1.1.15",
