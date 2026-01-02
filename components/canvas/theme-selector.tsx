@@ -3,6 +3,7 @@
 import { useCanvas } from "@/context/canvas-context";
 import { parseThemeColors, ThemeType } from "@/lib/themes";
 import { cn } from "@/lib/utils";
+import { messages } from "@/constant/messages";
 import { CheckIcon } from "lucide-react";
 
 const ThemeSelector = () => {
@@ -11,7 +12,7 @@ const ThemeSelector = () => {
   return (
     <div className="flex max-h-96 flex-col">
       <div className="flex-1 overflow-y-auto px-3 pb-2">
-        <h3 className="mb-2 text-sm font-semibold">Choose a theme</h3>
+        <h3 className="mb-2 text-sm font-semibold">{messages.canvas.chooseTheme}</h3>
         <div className="space-y-3 py-2">
           {themes?.map((theme) => (
             <ThemeItem

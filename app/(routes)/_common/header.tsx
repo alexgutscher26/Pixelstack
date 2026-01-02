@@ -3,6 +3,7 @@ import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { messages } from "@/constant/messages";
 import { LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { LogOutIcon, MoonIcon, SunIcon, CheckIcon } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -33,10 +34,10 @@ const Header = () => {
 
           <div className="hidden flex-1 items-center justify-center gap-8 md:flex">
             <Link href="/" className="text-foreground-muted text-sm">
-              Home
+              {messages.common.home}
             </Link>
             <Link href="/" className="text-foreground-muted text-sm">
-              Pricing
+              {messages.common.pricing}
             </Link>
           </div>
 
@@ -53,18 +54,18 @@ const Header = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-40">
-                <DropdownMenuLabel>Theme</DropdownMenuLabel>
+                <DropdownMenuLabel>{messages.common.theme}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => setTheme("system")} className="justify-between">
-                  System
+                  {messages.common.system}
                   {theme === "system" && <CheckIcon className="size-4" />}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setTheme("light")} className="justify-between">
-                  Light
+                  {messages.common.light}
                   {resolvedTheme === "light" && <CheckIcon className="size-4" />}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setTheme("dark")} className="justify-between">
-                  Dark
+                  {messages.common.dark}
                   {resolvedTheme === "dark" && <CheckIcon className="size-4" />}
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -86,14 +87,14 @@ const Header = () => {
                   <DropdownMenuItem>
                     <LogoutLink className="flex w-full items-center">
                       <LogOutIcon className="size-4" />
-                      Logout
+                      {messages.common.logout}
                     </LogoutLink>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
               <LoginLink postLoginRedirectURL={redirectURL}>
-                <Button>Sign in</Button>
+                <Button>{messages.common.signIn}</Button>
               </LoginLink>
             )}
           </div>

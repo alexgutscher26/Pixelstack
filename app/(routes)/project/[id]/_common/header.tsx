@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import Logo from "@/components/logo";
+import { messages } from "@/constant/messages";
 import { Button } from "@/components/ui/button";
 import {
   ArrowLeftIcon,
@@ -141,7 +142,7 @@ const Header = ({ projectName = "Untitled Project" }: HeaderProps) => {
               variant="ghost"
               className="bg-muted rounded-full"
               onClick={handleBackClick}
-              aria-label="Go back to projects"
+              aria-label={messages.header.goBackToProjects}
             >
               <ArrowLeftIcon className="size-4" />
             </Button>
@@ -154,7 +155,7 @@ const Header = ({ projectName = "Untitled Project" }: HeaderProps) => {
               size="icon"
               className="relative h-8 w-8 rounded-full"
               onClick={toggleTheme}
-              aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
+              aria-label={`${messages.header.ariaSwitchToPrefix}${isDark ? messages.common.light : messages.common.dark}${messages.header.ariaModeSuffix}`}
             >
               <SunIcon
                 className={cn(
@@ -176,7 +177,7 @@ const Header = ({ projectName = "Untitled Project" }: HeaderProps) => {
                   variant="outline"
                   size="icon"
                   className="h-8 w-8 rounded-full"
-                  aria-label="Project options"
+                  aria-label={messages.header.projectOptionsAria}
                 >
                   <MoreHorizontalIcon className="size-4" />
                 </Button>
@@ -184,21 +185,21 @@ const Header = ({ projectName = "Untitled Project" }: HeaderProps) => {
               <DropdownMenuContent align="end" className="w-40">
                 <DropdownMenuItem className="cursor-pointer" onClick={() => setIsRenameOpen(true)}>
                   <PencilIcon className="mr-2 size-4" />
-                  Rename
+                  {messages.common.rename}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className="cursor-pointer"
                   onClick={() => setIsFeedbackOpen(true)}
                 >
                   <MoreHorizontalIcon className="mr-2 size-4" />
-                  Send Feedback
+                  {messages.header.sendFeedback}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className="text-destructive focus:text-destructive cursor-pointer"
                   onClick={() => setIsDeleteOpen(true)}
                 >
                   <Trash2Icon className="mr-2 size-4" />
-                  Delete
+                  {messages.common.delete}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -210,8 +211,8 @@ const Header = ({ projectName = "Untitled Project" }: HeaderProps) => {
       <Dialog open={isRenameOpen} onOpenChange={setIsRenameOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Rename Project</DialogTitle>
-            <DialogDescription>Choose a clear, concise name for your project.</DialogDescription>
+            <DialogTitle>{messages.header.renameProjectTitle}</DialogTitle>
+            <DialogDescription>{messages.header.renameProjectDescription}</DialogDescription>
           </DialogHeader>
 
           <Input
@@ -219,17 +220,17 @@ const Header = ({ projectName = "Untitled Project" }: HeaderProps) => {
             value={nextName}
             onChange={(e) => setNextName(e.target.value)}
             onKeyDown={handleRenameKeyDown}
-            placeholder="Enter project name"
+            placeholder={messages.header.renameDialogPlaceholder}
             disabled={isUpdating}
             maxLength={100}
           />
 
           <DialogFooter>
             <Button variant="ghost" onClick={() => setIsRenameOpen(false)} disabled={isUpdating}>
-              Cancel
+              {messages.common.cancel}
             </Button>
             <Button onClick={handleRename} disabled={!isRenameValid || isUpdating}>
-              {isUpdating ? "Saving..." : "Save"}
+              {isUpdating ? messages.common.saving : messages.common.save}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -239,17 +240,19 @@ const Header = ({ projectName = "Untitled Project" }: HeaderProps) => {
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Project</DialogTitle>
+            <DialogTitle>{messages.header.deleteProjectTitle}</DialogTitle>
             <DialogDescription>
-              This action cannot be undone. Type <span className="font-semibold">DELETE</span> to
-              confirm deletion of <span className="font-semibold">{projectName}</span> and all its
-              frames.
+              {messages.header.deleteProjectDescriptionPrefix}
+              <span className="font-semibold">{messages.header.deleteConfirmWord}</span>
+              {messages.header.deleteProjectDescriptionSuffix}
+              <span className="font-semibold">{projectName}</span>
+              {" and all its frames."}
             </DialogDescription>
           </DialogHeader>
 
           <Input
             autoFocus
-            placeholder="Type DELETE to confirm"
+            placeholder={messages.header.deleteConfirmPlaceholder}
             value={deleteText}
             onChange={(e) => setDeleteText(e.target.value)}
             onKeyDown={handleDeleteKeyDown}
@@ -258,14 +261,14 @@ const Header = ({ projectName = "Untitled Project" }: HeaderProps) => {
 
           <DialogFooter>
             <Button variant="ghost" onClick={() => setIsDeleteOpen(false)} disabled={isDeleting}>
-              Cancel
+              {messages.common.cancel}
             </Button>
             <Button
               variant="destructive"
               disabled={!isDeleteValid || isDeleting}
               onClick={handleDelete}
             >
-              {isDeleting ? "Deleting..." : "Delete"}
+              {isDeleting ? messages.common.deleting : messages.common.delete}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -274,29 +277,29 @@ const Header = ({ projectName = "Untitled Project" }: HeaderProps) => {
       <Dialog open={isFeedbackOpen} onOpenChange={setIsFeedbackOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Send Feedback</DialogTitle>
-            <DialogDescription>Report a bug or share an improvement idea.</DialogDescription>
+            <DialogTitle>{messages.header.feedbackDialogTitle}</DialogTitle>
+            <DialogDescription>{messages.header.feedbackDialogDescription}</DialogDescription>
           </DialogHeader>
           <Input
-            placeholder="Subject (optional)"
+            placeholder={messages.header.feedbackSubjectPlaceholder}
             maxLength={120}
           />
           <div className="space-y-2">
-            <span className="text-xs text-muted-foreground">Describe the issue</span>
+            <span className="text-xs text-muted-foreground">{messages.header.feedbackDescribeIssueLabel}</span>
             <Textarea
               value={feedbackText}
               onChange={(e) => setFeedbackText(e.target.value)}
-              placeholder="What went wrong? Steps to reproduce? Expected behavior?"
+              placeholder={messages.header.feedbackTextareaPlaceholder}
               maxLength={2000}
               className="min-h-28"
             />
           </div>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setIsFeedbackOpen(false)}>
-              Cancel
+              {messages.common.cancel}
             </Button>
             <Button onClick={handleSendFeedback} disabled={!isFeedbackValid}>
-              Send
+              {messages.common.send}
             </Button>
           </DialogFooter>
         </DialogContent>

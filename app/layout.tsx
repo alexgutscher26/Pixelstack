@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { MobileBlocker } from "@/components/mobile-blocker";
 import { QueryProvider } from "@/context/query-provider";
 import { SessionProvider } from "@/context/session-provider";
+import { messages } from "@/constant/messages";
 
 const jostSans = Jost({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -15,11 +16,11 @@ const jostSans = Jost({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: {
-    default: "Flowkit – AI Mobile Design Agent",
-    template: "%s | Flowkit",
+    default: messages.layout.defaultTitle,
+    template: messages.layout.titleTemplate,
   },
   description:
-    "Design beautiful mobile app screens in minutes. Generate, theme, and export PNG/HTML with an AI design agent.",
+    messages.layout.description,
   applicationName: "Flowkit",
   keywords: ["AI design", "mobile UI", "mockups", "Tailwind CSS", "Next.js", "design agent"],
   authors: [{ name: "Flowkit" }],
