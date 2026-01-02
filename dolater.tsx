@@ -218,7 +218,13 @@ export const generateScreens = inngest.createFunction(
             ? (() => {
                 const hex = String(brandKit.primaryColor);
                 const clean = hex.replace(/^#/, "");
-                const full = clean.length === 3 ? clean.split("").map((c) => c + c).join("") : clean;
+                const full =
+                  clean.length === 3
+                    ? clean
+                        .split("")
+                        .map((c) => c + c)
+                        .join("")
+                    : clean;
                 const num = Number.parseInt(full, 16);
                 const r = (num >> 16) & 255;
                 const g = (num >> 8) & 255;
@@ -291,11 +297,11 @@ export const generateScreens = inngest.createFunction(
                 ? `Use thick borders, hard drop shadows, bold solid colors, blocky geometry, minimal radius (rounded-none/rounded-sm), visible outlines.`
                 : stylePreset === "Corporate / Enterprise"
                   ? `Use neutral palette, accessible contrast, clear hierarchy, restrained accents, professional tone, moderate radius, minimal playful elements.`
-                : stylePreset === "Playful / Gamified"
-                  ? `Use vibrant accents, badges/chips, rounded-2xl/3xl, soft glows on interactive elements, lively micro-interactions, friendly typography.`
-                : stylePreset === "Dark Mode Native"
-                  ? `Use deep dark backgrounds, OLED-friendly, high-contrast text, subtle glows, avoid pure white surfaces; ensure consistent dark variants.`
-                  : `Follow general premium mobile style.`
+                  : stylePreset === "Playful / Gamified"
+                    ? `Use vibrant accents, badges/chips, rounded-2xl/3xl, soft glows on interactive elements, lively micro-interactions, friendly typography.`
+                    : stylePreset === "Dark Mode Native"
+                      ? `Use deep dark backgrounds, OLED-friendly, high-contrast text, subtle glows, avoid pure white surfaces; ensure consistent dark variants.`
+                      : `Follow general premium mobile style.`
           }
 
         1. **Generate ONLY raw HTML markup for this mobile app screen using Tailwind CSS.**
