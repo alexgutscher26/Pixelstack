@@ -11,9 +11,7 @@ import { unsplashTool } from "../tool";
 const AnalysisSchema = z.object({
   theme: z
     .string()
-    .describe(
-      "The specific visual theme ID (e.g., 'midnight', 'ocean-breeze', 'neo-brutalism')."
-    ),
+    .describe("The specific visual theme ID (e.g., 'midnight', 'ocean-breeze', 'neo-brutalism')."),
   screens: z
     .array(
       z.object({
@@ -80,16 +78,16 @@ export const generateScreens = inngest.createFunction(
         ? Math.max(1, Math.min(10, totalCount - effectiveOnboardingCount))
         : undefined;
     const includePaywall =
-      typeof preferences?.includePaywall === "boolean"
-        ? preferences.includePaywall
-        : false;
+      typeof preferences?.includePaywall === "boolean" ? preferences.includePaywall : false;
     const negativeListRaw = preferences?.negativePrompts;
-    const negativePrompts: string[] =
-      Array.isArray(negativeListRaw)
+    const negativePrompts: string[] = Array.isArray(negativeListRaw)
+      ? negativeListRaw
+      : typeof negativeListRaw === "string"
         ? negativeListRaw
-        : typeof negativeListRaw === "string"
-          ? negativeListRaw.split(/[,\n]/).map((s) => s.trim()).filter(Boolean)
-          : [];
+            .split(/[,\n]/)
+            .map((s) => s.trim())
+            .filter(Boolean)
+        : [];
     const stylePreset =
       typeof preferences?.stylePreset === "string" ? preferences.stylePreset : undefined;
 
@@ -115,37 +113,24 @@ export const generateScreens = inngest.createFunction(
 
       const contextHTML = isExistingGeneration
         ? frames
-            .map(
-              (frame: FrameType) =>
-                `<!-- ${frame.title} -->\n${frame.htmlContent}`
-            )
+            .map((frame: FrameType) => `<!-- ${frame.title} -->\n${frame.htmlContent}`)
             .join("\n\n")
         : "";
 
       const constraintLines: string[] = [];
       if (onboardingCount !== undefined) {
-        constraintLines.push(
-          `- Onboarding screens: ${onboardingCount} (range 1–5)`
-        );
+        constraintLines.push(`- Onboarding screens: ${onboardingCount} (range 1–5)`);
       } else {
         constraintLines.push(`- Onboarding screens: 1–5 (designer to choose)`);
       }
       if (nonOnboardingCount !== undefined) {
-        constraintLines.push(
-          `- Non-onboarding screens: ${nonOnboardingCount} (range 1–10)`
-        );
+        constraintLines.push(`- Non-onboarding screens: ${nonOnboardingCount} (range 1–10)`);
       } else {
-        constraintLines.push(
-          `- Non-onboarding screens: 1–10 (designer to choose)`
-        );
+        constraintLines.push(`- Non-onboarding screens: 1–10 (designer to choose)`);
       }
-      constraintLines.push(
-        `- Include paywall: ${includePaywall ? "Yes" : "No"}`
-      );
+      constraintLines.push(`- Include paywall: ${includePaywall ? "Yes" : "No"}`);
       if (negativePrompts.length > 0) {
-        constraintLines.push(
-          `- Negative prompts (strictly avoid): ${negativePrompts.join("; ")}`
-        );
+        constraintLines.push(`- Negative prompts (strictly avoid): ${negativePrompts.join("; ")}`);
       }
       if (stylePreset) {
         constraintLines.push(`- Design style preset: ${stylePreset}`);
@@ -216,9 +201,7 @@ export const generateScreens = inngest.createFunction(
 
     for (let i = 0; i < analysis.screens.length; i++) {
       const screenPlan = analysis.screens[i];
-      const selectedTheme = THEME_LIST.find(
-        (t) => t.id === analysis.themeToUse
-      );
+      const selectedTheme = THEME_LIST.find((t) => t.id === analysis.themeToUse);
 
       //Combine the Theme Styles + Base Variable
       const fullThemeCSS = `

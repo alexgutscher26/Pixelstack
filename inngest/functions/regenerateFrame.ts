@@ -43,9 +43,7 @@ export const regenerateFrame = inngest.createFunction(
       });
       const priorContext =
         priorFrames.length > 0
-          ? priorFrames
-              .map((pf) => `<!-- ${pf.title} -->\n${pf.htmlContent}`)
-              .join("\n\n")
+          ? priorFrames.map((pf) => `<!-- ${pf.title} -->\n${pf.htmlContent}`).join("\n\n")
           : "";
 
       //Combine the Theme Styles + Base Variable
@@ -53,7 +51,6 @@ export const regenerateFrame = inngest.createFunction(
         ${BASE_VARIABLES}
         ${selectedTheme?.style || ""}
       `;
-
 
       const result = await generateText({
         model: openrouter("google/gemini-3-pro-preview"),
@@ -124,7 +121,10 @@ export const regenerateFrame = inngest.createFunction(
       const isElementMode = !!targetOuterHTML;
       let finalHtml = result.text ?? "";
       if (isElementMode) {
-        finalHtml = finalHtml.replace(/```[a-z]*\n?/gi, "").replace(/```/g, "").trim();
+        finalHtml = finalHtml
+          .replace(/```[a-z]*\n?/gi, "")
+          .replace(/```/g, "")
+          .trim();
       } else {
         const match = finalHtml.match(/<div[\s\S]*<\/div>/);
         finalHtml = (match ? match[0] : finalHtml)
@@ -133,19 +133,14 @@ export const regenerateFrame = inngest.createFunction(
           .trim();
       }
 
-      const normalize = (s: string) =>
-        s.replace(/\s+/g, " ").replace(/>\s+</g, "><").trim();
-      const escapeReg = (s: string) =>
-        s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const normalize = (s: string) => s.replace(/\s+/g, " ").replace(/>\s+</g, "><").trim();
+      const escapeReg = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       const findRangeByTagAndId = (
         html: string,
         tag: string,
         id: string
       ): [number, number] | undefined => {
-        const openRe = new RegExp(
-          `<${tag}\\b[^>]*id="${escapeReg(id)}"[^>]*>`,
-          "i"
-        );
+        const openRe = new RegExp(`<${tag}\\b[^>]*id="${escapeReg(id)}"[^>]*>`, "i");
         const openMatch = openRe.exec(html);
         if (!openMatch) return undefined;
         const start = openMatch.index;
@@ -160,7 +155,7 @@ export const regenerateFrame = inngest.createFunction(
             cursor = nextOpen + 1;
           } else {
             depth--;
-            cursor = nextClose + (`</${tag}>`).length;
+            cursor = nextClose + `</${tag}>`.length;
           }
         }
         if (depth !== 0) return undefined;
@@ -176,9 +171,7 @@ export const regenerateFrame = inngest.createFunction(
         let match: RegExpExecArray | null;
         while ((match = openRe.exec(html))) {
           const openStr = match[0];
-          const hasAll = classes.every((c) =>
-            new RegExp(`\\b${escapeReg(c)}\\b`).test(openStr)
-          );
+          const hasAll = classes.every((c) => new RegExp(`\\b${escapeReg(c)}\\b`).test(openStr));
           if (!hasAll) continue;
           const start = match.index;
           let cursor = start + match[0].length;
@@ -192,7 +185,7 @@ export const regenerateFrame = inngest.createFunction(
               cursor = nextOpen + 1;
             } else {
               depth--;
-              cursor = nextClose + (`</${tag}>`).length;
+              cursor = nextClose + `</${tag}>`.length;
             }
           }
           if (depth === 0) return [start, cursor];
@@ -210,17 +203,12 @@ export const regenerateFrame = inngest.createFunction(
           const originalIndex = html.indexOf(target);
           if (originalIndex !== -1) {
             return (
-              html.slice(0, originalIndex) +
-              replacement +
-              html.slice(originalIndex + target.length)
+              html.slice(0, originalIndex) + replacement + html.slice(originalIndex + target.length)
             );
           }
           const idx = normalizedHtml.indexOf(normalizedTarget);
           if (idx !== -1) {
-            return html.replace(
-              new RegExp(escapeReg(target), "g"),
-              replacement
-            );
+            return html.replace(new RegExp(escapeReg(target), "g"), replacement);
           }
         }
         const tagMatch = target.match(/^<([a-zA-Z0-9-]+)\b/);
@@ -253,7 +241,9 @@ export const regenerateFrame = inngest.createFunction(
         if (replaced) {
           newHtmlContent = replaced;
         } else {
-          console.warn(`[regenerateFrame] Could not locate target element for replacement in frame ${frameId}`);
+          console.warn(
+            `[regenerateFrame] Could not locate target element for replacement in frame ${frameId}`
+          );
           // Optionally: throw or return a partial success status
         }
       } else {

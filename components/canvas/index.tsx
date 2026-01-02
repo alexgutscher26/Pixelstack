@@ -199,11 +199,7 @@ const Canvas = ({
   return (
     <>
       <div className="relative h-full w-full overflow-hidden">
-        {isCelebrating && (
-          <ConfettiOverlay
-            onDone={() => setIsCelebrating(false)}
-          />
-        )}
+        {isCelebrating && <ConfettiOverlay onDone={() => setIsCelebrating(false)} />}
         <CanvasFloatingToolbar
           projectId={projectId}
           isScreenshotting={isScreenshotting}
@@ -409,7 +405,7 @@ function ConfettiOverlay({ onDone }: { onDone?: () => void }) {
       const vx = -1 + Math.random() * 2;
       const vy = 1.2 + Math.random() * 2.8;
       const rot = Math.random() * Math.PI;
-      const vr = (-0.05 + Math.random() * 0.1);
+      const vr = -0.05 + Math.random() * 0.1;
       const color = colors[Math.floor(Math.random() * colors.length)];
       return { x, y, size, vx, vy, rot, vr, color };
     });
@@ -419,8 +415,7 @@ function ConfettiOverlay({ onDone }: { onDone?: () => void }) {
       const elapsed = t - start;
       const fadeStart = 6000;
       const fadeDur = 2500;
-      const alpha =
-        elapsed < fadeStart ? 1 : Math.max(0, 1 - (elapsed - fadeStart) / fadeDur);
+      const alpha = elapsed < fadeStart ? 1 : Math.max(0, 1 - (elapsed - fadeStart) / fadeDur);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.globalAlpha = alpha;
       particles.forEach((p) => {
@@ -448,12 +443,7 @@ function ConfettiOverlay({ onDone }: { onDone?: () => void }) {
       cancelAnimationFrame(raf);
     };
   }, [onDone]);
-  return (
-    <canvas
-      ref={ref}
-      className="fixed inset-0 z-50 pointer-events-none"
-    />
-  );
+  return <canvas ref={ref} className="pointer-events-none fixed inset-0 z-50" />;
 }
 
 function CanvasLoader({ status }: { status?: LoadingStatusType | "fetching" | "finalizing" }) {
@@ -506,12 +496,7 @@ function CanvasLoader({ status }: { status?: LoadingStatusType | "fetching" | "f
                 </span>
               </div>
               {i < steps.length - 1 && (
-                <div
-                  className={cn(
-                    "mx-3 h-px w-8",
-                    i < stepIndex ? "bg-white" : "bg-white/40"
-                  )}
-                />
+                <div className={cn("mx-3 h-px w-8", i < stepIndex ? "bg-white" : "bg-white/40")} />
               )}
             </div>
           ))}

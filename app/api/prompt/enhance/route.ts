@@ -13,12 +13,14 @@ export async function POST(request: Request) {
     const includePaywall =
       typeof body?.includePaywall === "boolean" ? body.includePaywall : undefined;
     const negativePromptsRaw = body?.negativePrompts;
-    const negatives: string[] =
-      Array.isArray(negativePromptsRaw)
-        ? negativePromptsRaw.map((s: unknown) => String(s).trim()).filter(Boolean)
-        : typeof negativePromptsRaw === "string"
-          ? negativePromptsRaw.split(/[,\n]/).map((s: string) => s.trim()).filter(Boolean)
-          : [];
+    const negatives: string[] = Array.isArray(negativePromptsRaw)
+      ? negativePromptsRaw.map((s: unknown) => String(s).trim()).filter(Boolean)
+      : typeof negativePromptsRaw === "string"
+        ? negativePromptsRaw
+            .split(/[,\n]/)
+            .map((s: string) => s.trim())
+            .filter(Boolean)
+        : [];
     const stylePreset =
       typeof body?.stylePreset === "string" && body.stylePreset.trim().length > 0
         ? body.stylePreset.trim()
@@ -30,10 +32,7 @@ export async function POST(request: Request) {
 
     const moderation = await moderateText(prompt);
     if (!moderation.allowed) {
-      return NextResponse.json(
-        { error: "Prompt violates content policy" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Prompt violates content policy" }, { status: 400 });
     }
 
     const constraints: string[] = [];

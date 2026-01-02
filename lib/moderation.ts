@@ -14,7 +14,7 @@ export async function moderateText(input: string): Promise<ModerationResult> {
     const res = await fetch("https://api.openai.com/v1/moderations", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${key}`,
+        Authorization: `Bearer ${key}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({

@@ -48,4 +48,3 @@ export const messages = {
       "Design beautiful mobile app screens in minutes. Generate, theme, and export PNG/HTML with an AI design agent.",
   },
 };
-

@@ -46,8 +46,7 @@ export async function POST(request: Request) {
       includePaywall,
       negativePrompts,
       stylePreset,
-    } =
-      await request.json();
+    } = await request.json();
     const { getKindeServerSession } = await import("@kinde-oss/kinde-auth-nextjs/server");
     const session = await getKindeServerSession();
     const user = await session.getUser();
@@ -59,10 +58,7 @@ export async function POST(request: Request) {
 
     const moderation = await moderateText(prompt);
     if (!moderation.allowed) {
-      return NextResponse.json(
-        { error: "Prompt violates content policy" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Prompt violates content policy" }, { status: 400 });
     }
 
     const userId = user.id;
@@ -88,15 +84,14 @@ export async function POST(request: Request) {
             totalScreens: Number(totalScreens) || undefined,
             onboardingScreens: Number(onboardingScreens) || undefined,
             includePaywall: Boolean(includePaywall) || false,
-            negativePrompts:
-              Array.isArray(negativePrompts)
-                ? negativePrompts.map((s) => String(s).trim()).filter(Boolean)
-                : typeof negativePrompts === "string" && negativePrompts.trim().length > 0
-                  ? negativePrompts
-                      .split(/[,\n]/)
-                      .map((s) => s.trim())
-                      .filter(Boolean)
-                  : undefined,
+            negativePrompts: Array.isArray(negativePrompts)
+              ? negativePrompts.map((s) => String(s).trim()).filter(Boolean)
+              : typeof negativePrompts === "string" && negativePrompts.trim().length > 0
+                ? negativePrompts
+                    .split(/[,\n]/)
+                    .map((s) => s.trim())
+                    .filter(Boolean)
+                : undefined,
             stylePreset:
               typeof stylePreset === "string" && stylePreset.trim().length > 0
                 ? stylePreset.trim()

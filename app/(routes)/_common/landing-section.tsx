@@ -126,7 +126,15 @@ const LandingSection = () => {
       negativePrompts: negativeText,
       stylePreset,
     });
-  }, [promptText, totalScreens, onboardingScreens, includePaywall, negativeText, stylePreset, mutate]);
+  }, [
+    promptText,
+    totalScreens,
+    onboardingScreens,
+    includePaywall,
+    negativeText,
+    stylePreset,
+    mutate,
+  ]);
 
   const [isEnhancing, setIsEnhancing] = useState<boolean>(false);
   const handleEnhance = useCallback(async () => {
@@ -283,7 +291,7 @@ const LandingSection = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="w-full px-5">
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="negative-prompts" className="text-sm font-medium">

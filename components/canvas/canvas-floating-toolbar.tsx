@@ -171,7 +171,13 @@ const CanvasFloatingToolbar = ({
     try {
       for (const f of frames) {
         const fid = `all-${Math.random().toString(36).slice(2)}`;
-        const fullHtml = getHTMLWrapper(f.htmlContent, f.title, currentTheme?.style, fid, wireframeMode);
+        const fullHtml = getHTMLWrapper(
+          f.htmlContent,
+          f.title,
+          currentTheme?.style,
+          fid,
+          wireframeMode
+        );
         const h = await measureHeight(fullHtml, fid);
         const response = await axios.post(
           "/api/screenshot",
@@ -206,7 +212,13 @@ const CanvasFloatingToolbar = ({
     setIsExportingAll(true);
     try {
       for (const f of frames) {
-        const fullHtml = getHTMLWrapper(f.htmlContent, f.title, currentTheme?.style, undefined, wireframeMode);
+        const fullHtml = getHTMLWrapper(
+          f.htmlContent,
+          f.title,
+          currentTheme?.style,
+          undefined,
+          wireframeMode
+        );
         const blob = new Blob([fullHtml], { type: "text/html" });
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
@@ -371,7 +383,7 @@ const CanvasFloatingToolbar = ({
                   variant="ghost"
                   size="sm"
                   className={cn(
-                    "cursor-pointer rounded-full text-white! hover:bg-white/25! px-3",
+                    "cursor-pointer rounded-full px-3 text-white! hover:bg-white/25!",
                     wireframeMode && "bg-white/30 shadow ring-2 ring-white/70"
                   )}
                   onClick={() => setWireframeMode(!wireframeMode)}

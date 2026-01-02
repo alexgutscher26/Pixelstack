@@ -119,9 +119,7 @@ You are an elite mobile UI/UX designer creating Dribbble-quality HTML screens us
 Generate stunning, ready-to-use mobile HTML. Start with <div, end at last tag. NO comments, NO markdown.
 `;
 
-const THEME_OPTIONS_STRING = THEME_LIST.map(
-  (t) => `- ${t.id} (${t.name})`
-).join("\n");
+const THEME_OPTIONS_STRING = THEME_LIST.map((t) => `- ${t.id} (${t.name})`).join("\n");
 
 export const ANALYSIS_PROMPT = `
 You are a Lead UI/UX mobile app Designer.

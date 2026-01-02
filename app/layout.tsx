@@ -19,8 +19,7 @@ export const metadata: Metadata = {
     default: messages.layout.defaultTitle,
     template: messages.layout.titleTemplate,
   },
-  description:
-    messages.layout.description,
+  description: messages.layout.description,
   applicationName: "Flowkit",
   keywords: ["AI design", "mobile UI", "mockups", "Tailwind CSS", "Next.js", "design agent"],
   authors: [{ name: "Flowkit" }],

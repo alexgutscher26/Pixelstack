@@ -1,8 +1,8 @@
- "use client";
- import { usePathname } from "next/navigation";
- import { Monitor } from "lucide-react";
- 
- export function MobileBlocker() {
+"use client";
+import { usePathname } from "next/navigation";
+import { Monitor } from "lucide-react";
+
+export function MobileBlocker() {
   const pathname = usePathname();
   const shouldBlock = !!pathname?.match(/^\/project\/[^/]+$/);
   if (!shouldBlock) return null;
@@ -17,4 +17,4 @@
       </div>
     </div>
   );
- }
+}

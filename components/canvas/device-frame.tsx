@@ -131,8 +131,7 @@ const DeviceFrame = ({
   useEffect(() => {
     const win = iframeRef.current?.contentWindow;
     if (!win) return;
-    const frameLockedPaths =
-      frames.find((f) => f.id === frameId)?.lockedPaths?.slice() || [];
+    const frameLockedPaths = frames.find((f) => f.id === frameId)?.lockedPaths?.slice() || [];
     win.postMessage({ type: "LOCKED_SET", frameId, paths: frameLockedPaths }, "*");
   }, [frames, frameId, isSelected]);
 
@@ -369,7 +368,11 @@ const DeviceFrame = ({
         {isSelected && (selectedOuterHTML || (selectedOuterHTMLs && selectedOuterHTMLs.length)) && (
           <div className="dark:bg-muted xda-no-drag absolute top-4 right-4 z-20 w-90 max-w-[85%] rounded-xl border bg-white p-2 shadow-lg">
             <div className="mb-1 text-xs font-medium">
-              Edit selected {selectedOuterHTMLs && selectedOuterHTMLs.length ? `${selectedOuterHTMLs.length} parts` : "part"} with AI
+              Edit selected{" "}
+              {selectedOuterHTMLs && selectedOuterHTMLs.length
+                ? `${selectedOuterHTMLs.length} parts`
+                : "part"}{" "}
+              with AI
             </div>
             <InputGroup className="border-0! bg-transparent! px-0! shadow-none! ring-0!">
               <InputGroupAddon>
@@ -410,7 +413,9 @@ const DeviceFrame = ({
                 </Button>
                 <Button
                   size="icon-sm"
-                  disabled={!partialPrompt.trim() || regenerateMutation.isPending || isSelectionLocked}
+                  disabled={
+                    !partialPrompt.trim() || regenerateMutation.isPending || isSelectionLocked
+                  }
                   onClick={handlePartialRegenerate}
                 >
                   {regenerateMutation.isPending ? <></> : <Send className="size-4" />}
