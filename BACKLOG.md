@@ -135,7 +135,7 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 
 ### Comments & Review
 
-- [x] **Comment Threads**: Click anywhere to leave a comment (Figma style).
+- [ ] **Comment Threads**: Click anywhere to leave a comment (Figma style).
 - [ ] **Mention System**: @mention team members in comments to send email notifications.
 - [ ] **Resolve Comments**: Mark threads as resolved to hide them.
 
@@ -171,20 +171,6 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 ---
 
 ## 🧑‍� Phase 8: Developer Experience & Code Quality
-
-### Testing
-
-- [ ] **Unit Tests**:
-  - [ ] Test utility functions (`lib/utils.ts`).
-  - [ ] Test prompt generation logic (`lib/prompt.ts`).
-- [ ] **Integration Tests**:
-  - [ ] Test API routes (mocking the database).
-  - [ ] Test Inngest function triggers.
-- [ ] **E2E Tests (Playwright)**:
-  - [ ] User Login Flow.
-  - [ ] Create Project Flow.
-  - [ ] Generate Frame Flow.
-  - [ ] Delete Project Flow.
 
 ### Codebase Health
 
