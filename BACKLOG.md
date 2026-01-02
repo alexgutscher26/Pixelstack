@@ -133,15 +133,9 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 
 ## 👥 Phase 6: Collaboration & Teams (Enterprise)
 
-### Real-Time Collaboration
-
-- [ ] **Live Cursors**: See where other team members are looking.
-- [ ] **Component Locking**: Lock a component while someone else is editing it.
-- [ ] **Presence Indicators**: Show avatars of currently active users in the header.
-
 ### Comments & Review
 
-- [ ] **Comment Threads**: Click anywhere to leave a comment (Figma style).
+- [x] **Comment Threads**: Click anywhere to leave a comment (Figma style).
 - [ ] **Mention System**: @mention team members in comments to send email notifications.
 - [ ] **Resolve Comments**: Mark threads as resolved to hide them.
 
@@ -202,7 +196,7 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 
 ### Documentation
 
-- [ ] **Contributing Guide**: Create `CONTRIBUTING.md` for new developers.
+- [x] **Contributing Guide**: Create `CONTRIBUTING.md` for new developers.
 - [ ] **API Documentation**: Document internal API routes using Swagger/OpenAPI.
 - [ ] **Storybook**: Set up Storybook for the UI component library.
 
@@ -214,8 +208,8 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 
 - [ ] **Rate Limiting**: Implement `upstash/ratelimit` on API routes to prevent abuse.
 - [ ] **Input Sanitization**: Ensure all user inputs (prompts, project names) are sanitized (Zod).
-- [ ] **Content Moderation**: Check prompts against OpenAI's moderation API to prevent NSFW generation.
-- [ ] **Dependency Audit**: Run `npm audit` and fix high-severity vulnerabilities.
+- [x] **Content Moderation**: Check prompts against OpenAI's moderation API to prevent NSFW generation.
+- [x] **Dependency Audit**: Run `npm audit` and fix high-severity vulnerabilities.
 
 ### Compliance
 

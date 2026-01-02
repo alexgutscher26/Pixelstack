@@ -1,5 +1,5 @@
 "use client";
-import { memo, useRef, useState, useMemo, useCallback } from "react";
+import { memo, useRef, useState, useMemo, useCallback, Suspense } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { Suggestion, Suggestions } from "@/components/ai-elements/suggestion";
 import PromptInput from "@/components/prompt-input";
@@ -180,7 +180,9 @@ const LandingSection = () => {
   return (
     <div className="min-h-screen w-full">
       <div className="flex flex-col">
-        <Header />
+        <Suspense fallback={null}>
+          <Header />
+        </Suspense>
 
         <div className="relative overflow-hidden pt-28">
           <div className="mx-auto flex max-w-6xl flex-col items-center justify-center gap-8 px-4">

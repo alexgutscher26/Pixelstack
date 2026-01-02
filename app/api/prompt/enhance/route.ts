@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { openrouter } from "@/lib/openrouter";
 import { generateText } from "ai";
+import { moderateText } from "@/lib/moderation";
 
 export async function POST(request: Request) {
   try {
@@ -25,6 +26,14 @@ export async function POST(request: Request) {
 
     if (!prompt) {
       return NextResponse.json({ error: "Missing prompt" }, { status: 400 });
+    }
+
+    const moderation = await moderateText(prompt);
+    if (!moderation.allowed) {
+      return NextResponse.json(
+        { error: "Prompt violates content policy" },
+        { status: 400 }
+      );
     }
 
     const constraints: string[] = [];

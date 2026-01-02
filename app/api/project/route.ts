@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { generateProjectName } from "@/app/action/action";
 import { inngest } from "@/inngest/client";
+import { moderateText } from "@/lib/moderation";
 
 export async function GET() {
   try {
@@ -55,6 +56,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     if (!prompt) throw new Error("Missing Prompt");
+
+    const moderation = await moderateText(prompt);
+    if (!moderation.allowed) {
+      return NextResponse.json(
+        { error: "Prompt violates content policy" },
+        { status: 400 }
+      );
+    }
 
     const userId = user.id;
 

@@ -1,4 +1,5 @@
  import type { Metadata } from "next";
+ import { Suspense } from "react";
  import Header from "../_common/header";
  
  export const metadata: Metadata = {
@@ -10,7 +11,9 @@
  export default function PrivacyPage() {
    return (
      <div className="min-h-screen w-full">
-       <Header />
+       <Suspense fallback={null}>
+         <Header />
+       </Suspense>
        <main className="mx-auto max-w-3xl px-4 py-10">
          <h1 className="text-3xl font-semibold tracking-tight">Privacy Policy</h1>
          <p className="text-muted-foreground mt-2">
