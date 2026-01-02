@@ -143,8 +143,56 @@ export function getHTMLWrapper(
       document.body.appendChild(overlay);
       const selected=new Set();
       const selectionOverlays=new Map();
+      const groupOverlay=document.createElement('div');
+      groupOverlay.style.position='fixed';
+      groupOverlay.style.pointerEvents='none';
+      groupOverlay.style.zIndex='2147483645';
+      groupOverlay.style.border='2px dashed rgba(var(--ring-rgb,59,130,246),0.75)';
+      groupOverlay.style.borderRadius='10px';
+      groupOverlay.style.background='transparent';
+      groupOverlay.style.display='none';
+      document.body.appendChild(groupOverlay);
       let marquee=null;
       let dragStart=null;
+      const locked=new Set();
+      function isSelectable(el){
+        try{
+          const r=el.getBoundingClientRect();
+          const area=(r.width||0)*(r.height||0);
+          const disp=(getComputedStyle(el).display||'block');
+          return area>=1200 && disp!=='inline';
+        }catch{return true;}
+      }
+      function findSelectableAncestor(el){
+        let node=el;
+        let hops=0;
+        while(node && hops<8){
+          if(isSelectable(node)) return node;
+          node=node.parentElement;
+          hops++;
+        }
+        return el;
+      }
+      function dedupByContainment(set){
+        const arr=Array.from(set);
+        const keep=new Set(arr);
+        arr.forEach((a)=>{
+          arr.forEach((b)=>{
+            if(a!==b && keep.has(b) && a.contains(b)){
+              keep.delete(b);
+            }
+          });
+        });
+        return keep;
+      }
+      function pathToString(path){
+        return path.map((n)=>{
+          const cls=(n.classes||[]).map((c)=>'.'+c).join('');
+          const id=n.id?('#'+n.id):'';
+          const nth=':nth-child('+(Number(n.index||0)+1)+')';
+          return (n.tag||'div')+id+cls+nth;
+        }).join('>');
+      }
       function computePath(el){
         const path=[];
         let node=el;
@@ -163,6 +211,7 @@ export function getHTMLWrapper(
       function highlightSelected(){
         selectionOverlays.forEach((box)=>box.remove());
         selectionOverlays.clear();
+        let minL=Infinity,minT=Infinity,maxR=-Infinity,maxB=-Infinity,count=0;
         selected.forEach((el)=>{
           const rect=el.getBoundingClientRect();
           const box=document.createElement('div');
@@ -177,7 +226,21 @@ export function getHTMLWrapper(
           box.style.height=rect.height+'px';
           document.body.appendChild(box);
           selectionOverlays.set(el,box);
+          minL=Math.min(minL,rect.left);
+          minT=Math.min(minT,rect.top);
+          maxR=Math.max(maxR,rect.right);
+          maxB=Math.max(maxB,rect.bottom);
+          count++;
         });
+        if(count>1 && isFinite(minL) && isFinite(minT) && isFinite(maxR) && isFinite(maxB)){
+          groupOverlay.style.left=minL+'px';
+          groupOverlay.style.top=minT+'px';
+          groupOverlay.style.width=(maxR-minL)+'px';
+          groupOverlay.style.height=(maxB-minT)+'px';
+          groupOverlay.style.display='block';
+        }else{
+          groupOverlay.style.display='none';
+        }
       }
       function emitSelection(){
         const outs=[];
@@ -187,7 +250,12 @@ export function getHTMLWrapper(
           outs.push(el.outerHTML);
           rects.push({x:r.left,y:r.top,width:r.width,height:r.height});
         });
-        parent.postMessage({type:'ELEMENT_SELECTED',frameId:fid,outerHTML:outs.length<=1?outs[0]:outs,rects},'*');
+        const paths=[];
+        selected.forEach((el)=>{
+          const p=pathToString(computePath(el));
+          paths.push(p);
+        });
+        parent.postMessage({type:'ELEMENT_SELECTED',frameId:fid,outerHTML:outs.length<=1?outs[0]:outs,rects,paths:paths.length<=1?paths[0]:paths},'*');
       }
       function onMove(e){
         if(!enabled) return;
@@ -199,16 +267,27 @@ export function getHTMLWrapper(
         overlay.style.top=rect.top+'px';
         overlay.style.width=rect.width+'px';
         overlay.style.height=rect.height+'px';
+        try{
+          const p=pathToString(computePath(el));
+          const isLocked=locked.has(p);
+          overlay.style.border=isLocked?'2px solid rgba(255,0,0,0.75)':'2px solid rgba(var(--primary-rgb,59,130,246),0.7)';
+          overlay.style.boxShadow=isLocked?'0 0 16px rgba(255,0,0,0.5)':'0 0 16px rgba(var(--primary-rgb,59,130,246),0.5)';
+          overlay.style.cursor=isLocked?'not-allowed':'default';
+        }catch{}
         overlay.style.display='block';
       }
       function onClick(e){
         if(!enabled) return;
         e.preventDefault();
         e.stopPropagation();
-        const el=document.elementFromPoint(e.clientX,e.clientY) || currentEl;
+        let el=document.elementFromPoint(e.clientX,e.clientY) || currentEl;
+        if(el) el=findSelectableAncestor(el);
         if(!el) return;
         if(e.shiftKey){
           if(selected.has(el)) selected.delete(el); else selected.add(el);
+          const pruned=dedupByContainment(selected);
+          selected.clear();
+          pruned.forEach((n)=>selected.add(n));
         }else{
           selected.clear();
           selected.add(el);
@@ -251,13 +330,18 @@ export function getHTMLWrapper(
         if(marquee){
           const rect=marquee.getBoundingClientRect();
           const root=document.getElementById('root')?.firstElementChild||document.body;
-          const nodes=Array.from(root.querySelectorAll('*')).slice(0,800);
+          const nodes=Array.from(root.querySelectorAll('*')).slice(0,1200);
+          const candidates=[];
           nodes.forEach((n)=>{
             const r=n.getBoundingClientRect();
             const R={left:rect.left,top:rect.top,right:rect.right,bottom:rect.bottom};
             const S={left:r.left,top:r.top,right:r.right,bottom:r.bottom};
-            if(intersects(R,S)) selected.add(n);
+            if(intersects(R,S) && isSelectable(n)) candidates.push(n);
           });
+          const temp=new Set(candidates.map(findSelectableAncestor));
+          const pruned=dedupByContainment(temp);
+          selected.clear();
+          Array.from(pruned).slice(0,50).forEach((n)=>selected.add(n));
           marquee.remove();
           marquee=null;
           dragStart=null;
@@ -272,6 +356,13 @@ export function getHTMLWrapper(
           overlay.style.display='none';
           selected.clear();
           highlightSelected();
+        }
+        if(d && d.type==='LOCKED_SET' && d.frameId===fid){
+          try{
+            locked.clear();
+            const arr=Array.isArray(d.paths)?d.paths:(d.paths? [d.paths]:[]);
+            arr.forEach((p)=>{ if(typeof p==='string') locked.add(p); });
+          }catch{}
         }
       });
       document.addEventListener('mousemove',onMove,true);

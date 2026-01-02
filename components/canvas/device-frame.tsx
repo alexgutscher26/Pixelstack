@@ -14,7 +14,7 @@ import { useRegenerateFrame, useDeleteFrame } from "@/features/use-frame";
 import { InputGroup, InputGroupAddon } from "../ui/input-group";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Wand2Icon, Send } from "lucide-react";
+import { Wand2Icon, Send, Lock, Unlock } from "lucide-react";
 
 type PropsType = {
   html: string;
@@ -46,7 +46,7 @@ const DeviceFrame = ({
   onOpenHtmlDialog,
   onOpenReactDialog,
 }: PropsType) => {
-  const { selectedFrameId, setSelectedFrameId, updateFrame, wireframeMode } = useCanvas();
+  const { selectedFrameId, setSelectedFrameId, updateFrame, wireframeMode, frames } = useCanvas();
   const [frameSize, setFrameSize] = useState({
     width,
     height: minHeight,
@@ -61,6 +61,7 @@ const DeviceFrame = ({
   const fullHtml = getHTMLWrapper(html, title, theme_style, frameId, wireframeMode);
   const [selectedOuterHTML, setSelectedOuterHTML] = useState<string | null>(null);
   const [selectedOuterHTMLs, setSelectedOuterHTMLs] = useState<string[] | null>(null);
+  const [selectedPaths, setSelectedPaths] = useState<string[] | null>(null);
   const [partialPrompt, setPartialPrompt] = useState<string>("");
 
   useEffect(() => {
@@ -74,12 +75,18 @@ const DeviceFrame = ({
       if (event.data.type === "ELEMENT_SELECTED" && event.data.frameId === frameId) {
         setSelectedFrameId(frameId);
         const out = event.data.outerHTML;
+        const p = event.data.paths;
         if (Array.isArray(out)) {
           setSelectedOuterHTMLs(out.length ? out : null);
           setSelectedOuterHTML(null);
         } else {
           setSelectedOuterHTML(typeof out === "string" ? out : null);
           setSelectedOuterHTMLs(null);
+        }
+        if (Array.isArray(p)) {
+          setSelectedPaths(p.length ? p : null);
+        } else {
+          setSelectedPaths(typeof p === "string" ? [p] : null);
         }
       }
       if (event.data.type === "PERF_METRICS" && event.data.frameId === frameId) {
@@ -120,6 +127,14 @@ const DeviceFrame = ({
       "*"
     );
   }, [toolMode, isSelected, frameId]);
+
+  useEffect(() => {
+    const win = iframeRef.current?.contentWindow;
+    if (!win) return;
+    const frameLockedPaths =
+      frames.find((f) => f.id === frameId)?.lockedPaths?.slice() || [];
+    win.postMessage({ type: "LOCKED_SET", frameId, paths: frameLockedPaths }, "*");
+  }, [frames, frameId, isSelected]);
 
   const handleDownloadPng = useCallback(async () => {
     if (isDownloading) return;
@@ -172,6 +187,10 @@ const DeviceFrame = ({
 
   const handlePartialRegenerate = useCallback(() => {
     if (!partialPrompt.trim()) return;
+    const frameLockedPaths = frames.find((f) => f.id === frameId)?.lockedPaths || [];
+    const isSelectionLocked =
+      (selectedPaths && selectedPaths.some((p) => frameLockedPaths.includes(p))) || false;
+    if (isSelectionLocked) return;
     if (selectedOuterHTMLs && selectedOuterHTMLs.length) {
       updateFrame(frameId, { isLoading: true });
       selectedOuterHTMLs.forEach((html, idx) => {
@@ -208,7 +227,35 @@ const DeviceFrame = ({
         }
       );
     }
-  }, [frameId, partialPrompt, regenerateMutation, selectedOuterHTML, selectedOuterHTMLs, updateFrame]);
+  }, [
+    frameId,
+    partialPrompt,
+    regenerateMutation,
+    selectedOuterHTML,
+    selectedOuterHTMLs,
+    updateFrame,
+    frames,
+    selectedPaths,
+  ]);
+
+  const frameLockedPaths = frames.find((f) => f.id === frameId)?.lockedPaths || [];
+  const isSelectionLocked =
+    (selectedPaths && selectedPaths.some((p) => frameLockedPaths.includes(p))) || false;
+
+  const handleLockSelected = useCallback(() => {
+    if (!selectedPaths || selectedPaths.length === 0) return;
+    const existing = frames.find((f) => f.id === frameId)?.lockedPaths || [];
+    const next = Array.from(new Set([...existing, ...selectedPaths]));
+    updateFrame(frameId, { lockedPaths: next });
+  }, [frames, frameId, selectedPaths, updateFrame]);
+
+  const handleUnlockSelected = useCallback(() => {
+    if (!selectedPaths || selectedPaths.length === 0) return;
+    const existing = frames.find((f) => f.id === frameId)?.lockedPaths || [];
+    const toRemove = new Set(selectedPaths);
+    const next = existing.filter((p) => !toRemove.has(p));
+    updateFrame(frameId, { lockedPaths: next });
+  }, [frames, frameId, selectedPaths, updateFrame]);
 
   const handleDeleteFrame = useCallback(() => {
     deleteMutation.mutate(frameId);
@@ -333,6 +380,7 @@ const DeviceFrame = ({
                 value={partialPrompt}
                 onChange={(e) => setPartialPrompt(e.target.value)}
                 className="border-0! bg-transparent! shadow-none! ring-0!"
+                disabled={isSelectionLocked}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     handlePartialRegenerate();
@@ -342,7 +390,27 @@ const DeviceFrame = ({
               <InputGroupAddon align="inline-end">
                 <Button
                   size="icon-sm"
-                  disabled={!partialPrompt.trim() || regenerateMutation.isPending}
+                  variant={isSelectionLocked ? "default" : "outline"}
+                  className="mr-1"
+                  onClick={handleLockSelected}
+                  disabled={regenerateMutation.isPending || isSelectionLocked}
+                  aria-label="Lock selected"
+                >
+                  <Lock className="size-4" />
+                </Button>
+                <Button
+                  size="icon-sm"
+                  variant="outline"
+                  className="mr-1"
+                  onClick={handleUnlockSelected}
+                  disabled={regenerateMutation.isPending}
+                  aria-label="Unlock selected"
+                >
+                  <Unlock className="size-4" />
+                </Button>
+                <Button
+                  size="icon-sm"
+                  disabled={!partialPrompt.trim() || regenerateMutation.isPending || isSelectionLocked}
                   onClick={handlePartialRegenerate}
                 >
                   {regenerateMutation.isPending ? <></> : <Send className="size-4" />}

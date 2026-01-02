@@ -91,7 +91,7 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 - [ ] **Group/Ungroup**: Group elements together to move them as a unit.
 - [ ] **Alignment Tools**: "Align Left", "Align Center", "Distribute Vertically".
 - [ ] **Layer Management**: A dedicated "Layers" panel to reorder elements (z-index control).
-- [ ] **Lock/Unlock**: Lock elements to prevent accidental edits.
+- [x] **Lock/Unlock**: Lock elements to prevent accidental edits.
 
 ### Manual Design Tools
 

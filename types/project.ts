@@ -17,4 +17,5 @@ export type FrameType = {
   updatedAt?: Date;
 
   isLoading?: boolean;
+  lockedPaths?: string[];
 };
