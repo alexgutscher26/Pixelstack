@@ -11,6 +11,7 @@ import {
   Wand2,
   Wand2Icon,
 } from "lucide-react";
+import { GeneratedIcon } from "../ui/generated-icon";
 import { useState } from "react";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
@@ -84,6 +85,13 @@ const DeviceFrameToolbar = ({
         className="flex h-full flex-1 cursor-grab items-center justify-start gap-1.5 active:cursor-grabbing"
       >
         <GripVertical className="text-muted-foreground size-4" />
+        <GeneratedIcon
+          prompt={title}
+          size={16}
+          style="outline"
+          className="text-muted-foreground mr-1.5"
+          ariaLabel={`${title} icon`}
+        />
         <div
           className={cn(`mx-px mt-0.5 min-w-20 truncate text-sm font-medium`, isSelected && "w-25")}
         >
