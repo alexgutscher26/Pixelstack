@@ -287,7 +287,7 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 - [ ] **Optimize Inngest Functions**: Ensure functions are idempotent.
 - [ ] **Prisma Schema Review**: Check if `Project` and `Frame` relations need cascading deletes.
 - [ ] **Hardcoded Strings**: Move all UI strings to a `messages.json` or constant file for future i18n.
-- [ ] **Theme System**: Ensure the theme provider handles system preference changes correctly.
+- [x] **Theme System**: Ensure the theme provider handles system preference changes correctly.
 
 ---
 

@@ -38,8 +38,8 @@ interface HeaderProps {
 
 const Header = ({ projectName = "Untitled Project" }: HeaderProps) => {
   const router = useRouter();
-  const { theme, setTheme } = useTheme();
-  const isDark = theme === "dark";
+  const { theme, resolvedTheme, setTheme } = useTheme();
+  const isDark = (resolvedTheme ?? theme) === "dark";
   const params = useParams();
   const projectId = (params?.id as string) || "";
 
