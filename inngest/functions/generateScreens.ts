@@ -213,7 +213,13 @@ export const generateScreens = inngest.createFunction(
             ? (() => {
                 const hex = String(brandKit.primaryColor);
                 const clean = hex.replace(/^#/, "");
-                const full = clean.length === 3 ? clean.split("").map((c) => c + c).join("") : clean;
+                const full =
+                  clean.length === 3
+                    ? clean
+                        .split("")
+                        .map((c) => c + c)
+                        .join("")
+                    : clean;
                 const num = Number.parseInt(full, 16);
                 const r = (num >> 16) & 255;
                 const g = (num >> 8) & 255;

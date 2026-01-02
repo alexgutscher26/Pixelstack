@@ -197,11 +197,7 @@ const DeviceFrameToolbar = ({
                       }}
                     />
                     <InputGroupAddon align="inline-end">
-                      <Button
-                        size="icon-sm"
-                        disabled={!!isRegenerating}
-                        onClick={handleRegenerate}
-                      >
+                      <Button size="icon-sm" disabled={!!isRegenerating} onClick={handleRegenerate}>
                         {isRegenerating ? (
                           <Spinner className="size-3.5!" />
                         ) : (

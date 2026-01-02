@@ -291,7 +291,10 @@ const LandingSection = () => {
                               />
                             </div>
                             <div className="flex flex-col gap-1.5">
-                              <label htmlFor="onboarding-screens-pop" className="text-xs font-medium">
+                              <label
+                                htmlFor="onboarding-screens-pop"
+                                className="text-xs font-medium"
+                              >
                                 Onboarding screens
                               </label>
                               <input
@@ -357,7 +360,8 @@ const LandingSection = () => {
                               aria-label="Negative prompts"
                             />
                             <span className="text-muted-foreground text-xs">
-                              Comma or newline separated. We will strictly avoid these in the design.
+                              Comma or newline separated. We will strictly avoid these in the
+                              design.
                             </span>
                           </div>
                         </PopoverContent>
@@ -366,12 +370,6 @@ const LandingSection = () => {
                   }
                 />
               </div>
-
-              
-
-              
-
-              
 
               <div className="relative w-full px-5">
                 <div className="pointer-events-none absolute top-1/2 left-0 z-10 -translate-y-1/2">
