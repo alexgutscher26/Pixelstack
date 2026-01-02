@@ -75,8 +75,7 @@ export async function POST(request: Request) {
       typeof body?.style === "string" && body.style.trim().length > 0
         ? body.style.trim()
         : "outline";
-    const sizeVal =
-      typeof body?.size === "number" ? Math.max(16, Math.min(256, body.size)) : 24;
+    const sizeVal = typeof body?.size === "number" ? Math.max(16, Math.min(256, body.size)) : 24;
 
     if (!prompt) {
       return NextResponse.json({ error: "Missing prompt" }, { status: 400 });

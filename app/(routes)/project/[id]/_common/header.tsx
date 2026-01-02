@@ -90,9 +90,7 @@ const Header = ({
   const isRenameValid = nextName.trim().length > 0 && nextName.trim() !== projectName.trim();
   const isDeleteValid = deleteText.trim().toUpperCase() === "DELETE";
   const isBrandValid =
-    (logoUrl.trim().length > 0 ||
-      primaryColor.trim().length > 0 ||
-      fontFamily.trim().length > 0) &&
+    (logoUrl.trim().length > 0 || primaryColor.trim().length > 0 || fontFamily.trim().length > 0) &&
     !isUpdating;
 
   // Handlers
@@ -230,7 +228,10 @@ const Header = ({
                   <EyeIcon className="mr-2 size-4" />
                   View Only
                 </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer" onClick={() => setIsBrandKitOpen(true)}>
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={() => setIsBrandKitOpen(true)}
+                >
                   <PencilIcon className="mr-2 size-4" />
                   Brand Kit
                 </DropdownMenuItem>
@@ -331,12 +332,11 @@ const Header = ({
             <DialogTitle>{messages.header.feedbackDialogTitle}</DialogTitle>
             <DialogDescription>{messages.header.feedbackDialogDescription}</DialogDescription>
           </DialogHeader>
-          <Input
-            placeholder={messages.header.feedbackSubjectPlaceholder}
-            maxLength={120}
-          />
+          <Input placeholder={messages.header.feedbackSubjectPlaceholder} maxLength={120} />
           <div className="space-y-2">
-            <span className="text-xs text-muted-foreground">{messages.header.feedbackDescribeIssueLabel}</span>
+            <span className="text-xs text-muted-foreground">
+              {messages.header.feedbackDescribeIssueLabel}
+            </span>
             <Textarea
               value={feedbackText}
               onChange={(e) => setFeedbackText(e.target.value)}

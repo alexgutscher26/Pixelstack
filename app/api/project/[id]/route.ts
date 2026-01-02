@@ -107,7 +107,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const { themeId, name, brandLogoUrl, brandPrimaryColor, brandFontFamily } = await request.json();
+    const { themeId, name, brandLogoUrl, brandPrimaryColor, brandFontFamily } =
+      await request.json();
     const { getKindeServerSession } = await import("@kinde-oss/kinde-auth-nextjs/server");
     const session = await getKindeServerSession();
     const user = await session.getUser();
@@ -121,7 +122,13 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     const hasBrandLogo = typeof brandLogoUrl === "string";
     const hasBrandPrimaryColor = typeof brandPrimaryColor === "string";
     const hasBrandFontFamily = typeof brandFontFamily === "string";
-    if (!hasValidName && !hasTheme && !hasBrandLogo && !hasBrandPrimaryColor && !hasBrandFontFamily) {
+    if (
+      !hasValidName &&
+      !hasTheme &&
+      !hasBrandLogo &&
+      !hasBrandPrimaryColor &&
+      !hasBrandFontFamily
+    ) {
       return NextResponse.json({ error: "Nothing to update" }, { status: 400 });
     }
 

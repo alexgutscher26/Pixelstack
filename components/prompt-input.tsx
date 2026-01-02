@@ -62,46 +62,44 @@ const PromptInput = ({
         />
 
         <InputGroupAddon align="block-end" className="flex items-center justify-between">
+          <div className="flex items-center gap-2">{bottomLeftAddon}</div>
           <div className="flex items-center gap-2">
-            {bottomLeftAddon}
-          </div>
-          <div className="flex items-center gap-2">
-          {onEnhance && (
-            <InputGroupButton
-              variant="outline"
-              className=""
-              size="sm"
-              disabled={isEnhancing || trimmed.length === 0}
-              onClick={() => onEnhance?.()}
-            >
-              {isEnhancing ? (
-                <Spinner />
-              ) : (
-                <>
-                  Magic Enhance
-                  <Wand2 className="size-4" />
-                </>
-              )}
-            </InputGroupButton>
-          )}
-          {!hideSubmitBtn && (
-            <InputGroupButton
-              variant="default"
-              className=""
-              size="sm"
-              disabled={!!isLoading}
-              onClick={() => onSubmit?.()}
-            >
-              {isLoading ? (
-                <Spinner />
-              ) : (
-                <>
-                  Design
-                  <CornerDownLeftIcon className="size-4" />
-                </>
-              )}
-            </InputGroupButton>
-          )}
+            {onEnhance && (
+              <InputGroupButton
+                variant="outline"
+                className=""
+                size="sm"
+                disabled={isEnhancing || trimmed.length === 0}
+                onClick={() => onEnhance?.()}
+              >
+                {isEnhancing ? (
+                  <Spinner />
+                ) : (
+                  <>
+                    Magic Enhance
+                    <Wand2 className="size-4" />
+                  </>
+                )}
+              </InputGroupButton>
+            )}
+            {!hideSubmitBtn && (
+              <InputGroupButton
+                variant="default"
+                className=""
+                size="sm"
+                disabled={!!isLoading}
+                onClick={() => onSubmit?.()}
+              >
+                {isLoading ? (
+                  <Spinner />
+                ) : (
+                  <>
+                    Design
+                    <CornerDownLeftIcon className="size-4" />
+                  </>
+                )}
+              </InputGroupButton>
+            )}
           </div>
         </InputGroupAddon>
       </InputGroup>

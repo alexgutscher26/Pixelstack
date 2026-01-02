@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   turbopack: {
-    root: __dirname,
-  },
-};
+    root: __dirname
+  }
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig
