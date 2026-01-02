@@ -3,17 +3,19 @@ import { memo, useRef, useState, useMemo, useCallback, Suspense } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { Suggestion, Suggestions } from "@/components/ai-elements/suggestion";
 import PromptInput from "@/components/prompt-input";
+import { InputGroupButton } from "@/components/ui/input-group";
 import Header from "./header";
 import { useCreateProject, useGetProjects } from "@/features/use-project";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { ProjectType } from "@/types/project";
 import { useRouter } from "next/navigation";
-import { FolderOpen, ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { FolderOpen, ChevronLeft, ChevronRight, Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FallbackImage } from "@/components/ui/fallback-image";
 import { Input } from "@/components/ui/input";
 import NoProjectsIllustration from "@/components/illustrations/no-projects-illustration";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 
 // Extract suggestions to constant to prevent recreation
 const SUGGESTIONS = [
@@ -217,99 +219,124 @@ const LandingSection = () => {
                   placeholder="Describe your app idea..."
                   onEnhance={handleEnhance}
                   isEnhancing={isEnhancing}
+                  bottomLeftAddon={
+                    <div className="flex items-center gap-2">
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <InputGroupButton
+                            size="icon-sm"
+                            variant="ghost"
+                            aria-label="Open design options"
+                            className="rounded-full"
+                          >
+                            <SlidersHorizontal className="size-4" />
+                          </InputGroupButton>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-80 p-3">
+                          <div className="grid grid-cols-1 gap-3">
+                            <div className="flex flex-col gap-1.5">
+                              <label htmlFor="total-screens-pop" className="text-xs font-medium">
+                                Non-onboarding screens
+                              </label>
+                              <input
+                                id="total-screens-pop"
+                                type="number"
+                                min={SCREEN_LIMITS.total.min}
+                                max={SCREEN_LIMITS.total.max}
+                                value={totalScreens}
+                                onChange={(e) =>
+                                  setTotalScreens(
+                                    clampValue(
+                                      Number(e.target.value) || SCREEN_LIMITS.total.min,
+                                      SCREEN_LIMITS.total.min,
+                                      SCREEN_LIMITS.total.max
+                                    )
+                                  )
+                                }
+                                className="bg-background h-9 rounded-md border px-2 focus:ring-2 focus:ring-primary focus:outline-none"
+                                aria-label="Number of non-onboarding screens"
+                              />
+                            </div>
+                            <div className="flex flex-col gap-1.5">
+                              <label htmlFor="onboarding-screens-pop" className="text-xs font-medium">
+                                Onboarding screens
+                              </label>
+                              <input
+                                id="onboarding-screens-pop"
+                                type="number"
+                                min={SCREEN_LIMITS.onboarding.min}
+                                max={SCREEN_LIMITS.onboarding.max}
+                                value={onboardingScreens}
+                                onChange={(e) =>
+                                  setOnboardingScreens(
+                                    clampValue(
+                                      Number(e.target.value) || SCREEN_LIMITS.onboarding.min,
+                                      SCREEN_LIMITS.onboarding.min,
+                                      SCREEN_LIMITS.onboarding.max
+                                    )
+                                  )
+                                }
+                                className="bg-background h-9 rounded-md border px-2 focus:ring-2 focus:ring-primary focus:outline-none"
+                                aria-label="Number of onboarding screens"
+                              />
+                            </div>
+                            <div className="flex flex-col gap-1.5">
+                              <label htmlFor="paywall-toggle-pop" className="text-xs font-medium">
+                                Include paywall
+                              </label>
+                              <Button
+                                id="paywall-toggle-pop"
+                                type="button"
+                                variant={includePaywall ? "default" : "outline"}
+                                className="h-9"
+                                onClick={() => setIncludePaywall((v) => !v)}
+                                aria-pressed={includePaywall}
+                                aria-label="Toggle paywall inclusion"
+                              >
+                                {includePaywall ? "Yes" : "No"}
+                              </Button>
+                            </div>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <InputGroupButton
+                            size="sm"
+                            variant="ghost"
+                            aria-label="Open negative prompts"
+                            className="rounded-full"
+                          >
+                            Negatives
+                          </InputGroupButton>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-96 p-3">
+                          <div className="flex flex-col gap-1.5">
+                            <label htmlFor="negative-prompts-pop" className="text-xs font-medium">
+                              Negative prompts
+                            </label>
+                            <textarea
+                              id="negative-prompts-pop"
+                              placeholder={`Examples: no red, no rounded corners, no gradients`}
+                              value={negativeText}
+                              onChange={(e) => setNegativeText(e.target.value)}
+                              className="bg-background min-h-24 rounded-md border px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none"
+                              aria-label="Negative prompts"
+                            />
+                            <span className="text-muted-foreground text-xs">
+                              Comma or newline separated. We will strictly avoid these in the design.
+                            </span>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                  }
                 />
               </div>
 
-              <div className="w-full px-5">
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="total-screens" className="text-sm font-medium">
-                      Non-onboarding screens
-                    </label>
-                    <input
-                      id="total-screens"
-                      type="number"
-                      min={SCREEN_LIMITS.total.min}
-                      max={SCREEN_LIMITS.total.max}
-                      value={totalScreens}
-                      onChange={(e) =>
-                        setTotalScreens(
-                          clampValue(
-                            Number(e.target.value) || SCREEN_LIMITS.total.min,
-                            SCREEN_LIMITS.total.min,
-                            SCREEN_LIMITS.total.max
-                          )
-                        )
-                      }
-                      className="bg-background focus:ring-primary h-10 rounded-lg border px-3 focus:ring-2 focus:outline-none"
-                      aria-label="Number of non-onboarding screens"
-                    />
-                  </div>
+              
 
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="onboarding-screens" className="text-sm font-medium">
-                      Onboarding screens
-                    </label>
-                    <input
-                      id="onboarding-screens"
-                      type="number"
-                      min={SCREEN_LIMITS.onboarding.min}
-                      max={SCREEN_LIMITS.onboarding.max}
-                      value={onboardingScreens}
-                      onChange={(e) =>
-                        setOnboardingScreens(
-                          clampValue(
-                            Number(e.target.value) || SCREEN_LIMITS.onboarding.min,
-                            SCREEN_LIMITS.onboarding.min,
-                            SCREEN_LIMITS.onboarding.max
-                          )
-                        )
-                      }
-                      className="bg-background focus:ring-primary h-10 rounded-lg border px-3 focus:ring-2 focus:outline-none"
-                      aria-label="Number of onboarding screens"
-                    />
-                  </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="paywall-toggle" className="text-sm font-medium">
-                      Include paywall
-                    </label>
-                    <button
-                      id="paywall-toggle"
-                      type="button"
-                      className={`focus:ring-primary h-10 rounded-lg border px-3 transition-colors focus:ring-2 focus:outline-none ${
-                        includePaywall
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-background hover:bg-accent"
-                      }`}
-                      onClick={() => setIncludePaywall((v) => !v)}
-                      aria-pressed={includePaywall}
-                      aria-label="Toggle paywall inclusion"
-                    >
-                      {includePaywall ? "Yes" : "No"}
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="w-full px-5">
-                <div className="flex flex-col gap-1.5">
-                  <label htmlFor="negative-prompts" className="text-sm font-medium">
-                    Negative prompts
-                  </label>
-                  <textarea
-                    id="negative-prompts"
-                    placeholder={`Examples: no red, no rounded corners, no gradients`}
-                    value={negativeText}
-                    onChange={(e) => setNegativeText(e.target.value)}
-                    className="bg-background focus:ring-primary min-h-20 rounded-lg border px-3 py-2 focus:ring-2 focus:outline-none"
-                    aria-label="Negative prompts"
-                  />
-                  <span className="text-muted-foreground text-xs">
-                    Comma or newline separated. We will strictly avoid these in the design.
-                  </span>
-                </div>
-              </div>
+              
 
               <div className="w-full px-5">
                 <div className="flex flex-col gap-1.5">

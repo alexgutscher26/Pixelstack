@@ -20,6 +20,9 @@ interface PropsType {
   placeholder?: string;
   onEnhance?: () => void;
   isEnhancing?: boolean;
+  blockStartAddon?: React.ReactNode;
+  inlineStartAddon?: React.ReactNode;
+  bottomLeftAddon?: React.ReactNode;
 }
 const PromptInput = ({
   promptText,
@@ -31,6 +34,9 @@ const PromptInput = ({
   placeholder,
   onEnhance,
   isEnhancing,
+  blockStartAddon,
+  inlineStartAddon,
+  bottomLeftAddon,
 }: PropsType) => {
   const trimmed = promptText.trim();
   const invalidMsg =
@@ -42,6 +48,16 @@ const PromptInput = ({
   return (
     <div className="bg-background">
       <InputGroup className={cn("bg-background min-h-43 rounded-3xl", className && className)}>
+        {inlineStartAddon && (
+          <InputGroupAddon align="inline-start" className="max-sm:hidden">
+            {inlineStartAddon}
+          </InputGroupAddon>
+        )}
+        {blockStartAddon && (
+          <InputGroupAddon align="block-start" className="w-full">
+            {blockStartAddon}
+          </InputGroupAddon>
+        )}
         <InputGroupTextarea
           className="py-2.5! text-base!"
           placeholder={placeholder ?? "I want to design an app that..."}
@@ -52,7 +68,11 @@ const PromptInput = ({
           }}
         />
 
-        <InputGroupAddon align="block-end" className="flex items-center justify-end">
+        <InputGroupAddon align="block-end" className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            {bottomLeftAddon}
+          </div>
+          <div className="flex items-center gap-2">
           {onEnhance && (
             <InputGroupButton
               variant="outline"
@@ -89,6 +109,7 @@ const PromptInput = ({
               )}
             </InputGroupButton>
           )}
+          </div>
         </InputGroupAddon>
       </InputGroup>
       {invalidMsg && (
