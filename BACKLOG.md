@@ -237,7 +237,7 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 
 ### SEO
 
-- [ ] **Sitemap**: Generate `sitemap.xml` dynamically.
+- [x] **Sitemap**: Generate `sitemap.xml` dynamically.
 - [ ] **Robots.txt**: Configure crawling rules.
 - [ ] **Meta Tags**: Optimize OpenGraph images and descriptions for Twitter/LinkedIn sharing.
 - [ ] **Blog**: Add a `/blog` section (using MDX) for content marketing.
@@ -255,13 +255,8 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 
 ### Mobile Support
 
-- [ ] **Responsive Dashboard**: Make the project list viewable on mobile.
-- [ ] **Mobile Viewer**: Allow opening a "View Only" version of the design on a phone for previewing.
-
-### Native Apps (Long Term)
-
-- [ ] **React Native App**: Wrapper around the viewer.
-- [ ] **iPad App**: Full editor optimized for touch/Apple Pencil.
+- [x] **Responsive Dashboard**: Make the project list viewable on mobile.
+- [x] **Mobile Viewer**: Allow opening a "View Only" version of the design on a phone for previewing.
 
 ---
 

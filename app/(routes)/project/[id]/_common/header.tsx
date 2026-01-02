@@ -11,6 +11,7 @@ import {
   MoonIcon,
   SunIcon,
   MoreHorizontalIcon,
+  EyeIcon,
   PencilIcon,
   Trash2Icon,
 } from "lucide-react";
@@ -183,6 +184,13 @@ const Header = ({ projectName = "Untitled Project" }: HeaderProps) => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-40">
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={() => router.push(`/project/${projectId}/view`)}
+                >
+                  <EyeIcon className="mr-2 size-4" />
+                  View Only
+                </DropdownMenuItem>
                 <DropdownMenuItem className="cursor-pointer" onClick={() => setIsRenameOpen(true)}>
                   <PencilIcon className="mr-2 size-4" />
                   {messages.common.rename}
