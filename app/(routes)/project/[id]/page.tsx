@@ -23,13 +23,23 @@ const Page = () => {
 
   return (
     <div className="relative flex h-screen w-full flex-col">
-      <Header projectName={project?.name} />
+      <Header
+        projectName={project?.name}
+        brandLogoUrl={project?.brandLogoUrl}
+        brandPrimaryColor={project?.brandPrimaryColor}
+        brandFontFamily={project?.brandFontFamily}
+      />
 
       <CanvasProvider
         initialFrames={project?.frames ?? []}
         initialThemeId={project?.theme ?? undefined}
         hasInitialData={hasInitialData}
         projectId={project?.id ?? null}
+        initialBrandKit={{
+          logoUrl: project?.brandLogoUrl ?? undefined,
+          primaryColor: project?.brandPrimaryColor ?? undefined,
+          fontFamily: project?.brandFontFamily ?? undefined,
+        }}
       >
         <div className="flex flex-1 overflow-hidden">
           <div className="relative flex-1">

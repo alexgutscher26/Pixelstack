@@ -49,6 +49,11 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         theme: project.theme,
         frame: frame,
         targetOuterHTML: targetOuterHTML || null,
+        brandKit: {
+          logoUrl: project.brandLogoUrl,
+          primaryColor: project.brandPrimaryColor,
+          fontFamily: project.brandFontFamily,
+        },
       },
     });
 

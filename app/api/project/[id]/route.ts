@@ -79,6 +79,11 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
           prompt,
           frames: project.frames,
           theme: project.theme,
+          brandKit: {
+            logoUrl: project.brandLogoUrl,
+            primaryColor: project.brandPrimaryColor,
+            fontFamily: project.brandFontFamily,
+          },
         },
       });
     } catch (error) {
@@ -102,7 +107,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const { themeId, name } = await request.json();
+    const { themeId, name, brandLogoUrl, brandPrimaryColor, brandFontFamily } = await request.json();
     const { getKindeServerSession } = await import("@kinde-oss/kinde-auth-nextjs/server");
     const session = await getKindeServerSession();
     const user = await session.getUser();
@@ -113,7 +118,10 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     const trimmedName = typeof name === "string" ? name.trim() : undefined;
     const hasValidName = !!trimmedName && trimmedName.length > 0;
     const hasTheme = themeId !== undefined;
-    if (!hasValidName && !hasTheme) {
+    const hasBrandLogo = typeof brandLogoUrl === "string";
+    const hasBrandPrimaryColor = typeof brandPrimaryColor === "string";
+    const hasBrandFontFamily = typeof brandFontFamily === "string";
+    if (!hasValidName && !hasTheme && !hasBrandLogo && !hasBrandPrimaryColor && !hasBrandFontFamily) {
       return NextResponse.json({ error: "Nothing to update" }, { status: 400 });
     }
 
@@ -122,6 +130,9 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     const data: Record<string, unknown> = {};
     if (hasTheme) data.theme = themeId;
     if (hasValidName) data.name = trimmedName;
+    if (hasBrandLogo) data.brandLogoUrl = brandLogoUrl;
+    if (hasBrandPrimaryColor) data.brandPrimaryColor = brandPrimaryColor;
+    if (hasBrandFontFamily) data.brandFontFamily = brandFontFamily;
 
     const project = await prisma.project.update({
       where: { id, userId },

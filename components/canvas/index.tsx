@@ -26,6 +26,7 @@ const Canvas = ({
 }) => {
   const {
     theme,
+    themeStyle,
     frames,
     selectedFrame,
     setSelectedFrameId,
@@ -327,7 +328,7 @@ const Canvas = ({
                             y,
                           }}
                           toolMode={toolMode}
-                          theme_style={theme?.style}
+                          theme_style={themeStyle}
                           onOpenHtmlDialog={onOpenHtmlDialog}
                           onOpenReactDialog={onOpenReactDialog}
                         />

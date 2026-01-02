@@ -4,6 +4,7 @@ import { fetchRealtimeSubscriptionToken } from "@/app/action/realtime";
 import { THEME_LIST, ThemeType } from "@/lib/themes";
 import { FrameType } from "@/types/project";
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
+import { hexToRgb } from "@/lib/utils";
 
 export type LoadingStatusType = "idle" | "running" | "analyzing" | "generating" | "completed";
 
@@ -11,6 +12,13 @@ interface CanvasContextType {
   theme?: ThemeType;
   setTheme: (id: string) => void;
   themes: ThemeType[];
+  themeStyle?: string;
+  brandKit?: {
+    logoUrl?: string;
+    primaryColor?: string;
+    fontFamily?: string;
+  };
+  setBrandKit?: (kit: { logoUrl?: string; primaryColor?: string; fontFamily?: string }) => void;
 
   frames: FrameType[];
   setFrames: (frames: FrameType[]) => void;
@@ -40,12 +48,18 @@ export const CanvasProvider = ({
   initialThemeId,
   hasInitialData,
   projectId,
+  initialBrandKit,
 }: {
   children: ReactNode;
   initialFrames: FrameType[];
   initialThemeId?: string;
   hasInitialData: boolean;
   projectId: string | null;
+  initialBrandKit?: {
+    logoUrl?: string;
+    primaryColor?: string;
+    fontFamily?: string;
+  };
 }) => {
   const [themeId, setThemeId] = useState<string>(initialThemeId || THEME_LIST[0].id);
 
@@ -71,6 +85,25 @@ export const CanvasProvider = ({
   }
 
   const theme = THEME_LIST.find((t) => t.id === themeId);
+  const [brandKit, setBrandKit] = useState<{
+    logoUrl?: string;
+    primaryColor?: string;
+    fontFamily?: string;
+  }>(initialBrandKit || {});
+  const brandCssOverride = (() => {
+    let css = "";
+    if (brandKit?.primaryColor) {
+      const rgb = hexToRgb(brandKit.primaryColor);
+      css += `--primary: ${brandKit.primaryColor};`;
+      if (rgb) css += `--primary-rgb: ${rgb.r}, ${rgb.g}, ${rgb.b};`;
+    }
+    if (brandKit?.fontFamily && brandKit.fontFamily.trim().length > 0) {
+      const ff = brandKit.fontFamily.trim();
+      css += `--font-sans: "${ff}";--font-heading: "${ff}";`;
+    }
+    return css ? `\n${css}\n` : "";
+  })();
+  const themeStyle = `${theme?.style || ""}${brandCssOverride}`;
   const selectedFrame =
     selectedFrameId && frames.length !== 0
       ? frames.find((f) => f.id === selectedFrameId) || null
@@ -149,6 +182,9 @@ export const CanvasProvider = ({
         theme,
         setTheme: setThemeId,
         themes: THEME_LIST,
+        themeStyle,
+        brandKit,
+        setBrandKit,
         frames,
         setFrames,
         selectedFrameId,

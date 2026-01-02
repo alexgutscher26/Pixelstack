@@ -21,6 +21,9 @@ model Project {
     name    String
     theme String?
     thumbnail String?
+    brandLogoUrl String?
+    brandPrimaryColor String?
+    brandFontFamily String?
     frames Frame[]
 
     createdAt DateTime @default(now())

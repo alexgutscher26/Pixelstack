@@ -3,6 +3,9 @@ export type ProjectType = {
   name: string;
   theme: string;
   thumbnail?: string;
+  brandLogoUrl?: string;
+  brandPrimaryColor?: string;
+  brandFontFamily?: string;
   frames: FrameType[];
   createdAt: Date;
   updatedAt?: Date;

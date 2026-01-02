@@ -53,6 +53,7 @@ export const generateScreens = inngest.createFunction(
       frames,
       theme: existingTheme,
       preferences,
+      brandKit,
     } = event.data;
     const CHANNEL = `user:${userId}`;
     const isExistingGeneration = Array.isArray(frames) && frames.length > 0;
@@ -207,6 +208,22 @@ export const generateScreens = inngest.createFunction(
       const fullThemeCSS = `
         ${BASE_VARIABLES}
         ${selectedTheme?.style || ""}
+        ${
+          brandKit?.primaryColor
+            ? (() => {
+                const hex = String(brandKit.primaryColor);
+                const clean = hex.replace(/^#/, "");
+                const full = clean.length === 3 ? clean.split("").map((c) => c + c).join("") : clean;
+                const num = Number.parseInt(full, 16);
+                const r = (num >> 16) & 255;
+                const g = (num >> 8) & 255;
+                const b = num & 255;
+                const rgbText = `${r}, ${g}, ${b}`;
+                return `--primary: ${hex}; --primary-rgb: ${rgbText};`;
+              })()
+            : ""
+        }
+        ${brandKit?.fontFamily ? `--font-sans: "${String(brandKit.fontFamily)}"; --font-heading: "${String(brandKit.fontFamily)}";` : ""}
       `;
 
       // Get all previous existing or generated frames
@@ -237,6 +254,15 @@ export const generateScreens = inngest.createFunction(
           THEME VARIABLES (Reference ONLY - already defined in parent, do NOT redeclare these):
           ${fullThemeCSS}
 
+          BRAND KIT:
+          ${
+            brandKit?.primaryColor
+              ? `Primary Color: ${brandKit.primaryColor} (strictly use var(--primary) for color styles)`
+              : "Primary Color: None"
+          }
+          ${brandKit?.fontFamily ? `Font Family: ${brandKit.fontFamily} (strictly use theme font variables)` : "Font Family: None"}
+          ${brandKit?.logoUrl ? `Logo URL: ${brandKit.logoUrl} (use in header/navbar where appropriate)` : "Logo URL: None"}
+          
         CRITICAL REQUIREMENTS A MUST - READ CAREFULLY:
         - **If previous screens exist, COPY the EXACT bottom navigation component structure and styling - do NOT recreate it
         - **Extract common components (cards, buttons, headers) and reuse their styling

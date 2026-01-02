@@ -46,6 +46,9 @@ export async function POST(request: Request) {
       includePaywall,
       negativePrompts,
       stylePreset,
+      brandLogoUrl,
+      brandPrimaryColor,
+      brandFontFamily,
     } = await request.json();
     const { getKindeServerSession } = await import("@kinde-oss/kinde-auth-nextjs/server");
     const session = await getKindeServerSession();
@@ -69,6 +72,9 @@ export async function POST(request: Request) {
       data: {
         userId,
         name: projectName,
+        brandLogoUrl: typeof brandLogoUrl === "string" ? brandLogoUrl : undefined,
+        brandPrimaryColor: typeof brandPrimaryColor === "string" ? brandPrimaryColor : undefined,
+        brandFontFamily: typeof brandFontFamily === "string" ? brandFontFamily : undefined,
       },
     });
 
@@ -96,6 +102,11 @@ export async function POST(request: Request) {
               typeof stylePreset === "string" && stylePreset.trim().length > 0
                 ? stylePreset.trim()
                 : undefined,
+          },
+          brandKit: {
+            logoUrl: typeof brandLogoUrl === "string" ? brandLogoUrl : undefined,
+            primaryColor: typeof brandPrimaryColor === "string" ? brandPrimaryColor : undefined,
+            fontFamily: typeof brandFontFamily === "string" ? brandFontFamily : undefined,
           },
         },
       });

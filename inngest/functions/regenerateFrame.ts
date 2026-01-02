@@ -18,6 +18,7 @@ export const regenerateFrame = inngest.createFunction(
       theme: themeId,
       frame,
       targetOuterHTML,
+      brandKit,
     } = event.data;
     const CHANNEL = `user:${userId}`;
 
@@ -50,6 +51,22 @@ export const regenerateFrame = inngest.createFunction(
       const fullThemeCSS = `
         ${BASE_VARIABLES}
         ${selectedTheme?.style || ""}
+        ${
+          brandKit?.primaryColor
+            ? (() => {
+                const hex = String(brandKit.primaryColor);
+                const clean = hex.replace(/^#/, "");
+                const full = clean.length === 3 ? clean.split("").map((c) => c + c).join("") : clean;
+                const num = Number.parseInt(full, 16);
+                const r = (num >> 16) & 255;
+                const g = (num >> 8) & 255;
+                const b = num & 255;
+                const rgbText = `${r}, ${g}, ${b}`;
+                return `--primary: ${hex}; --primary-rgb: ${rgbText};`;
+              })()
+            : ""
+        }
+        ${brandKit?.fontFamily ? `--font-sans: "${String(brandKit.fontFamily)}"; --font-heading: "${String(brandKit.fontFamily)}";` : ""}
       `;
 
       const result = await generateText({
@@ -66,6 +83,15 @@ export const regenerateFrame = inngest.createFunction(
         ORIGINAL SCREEN HTML: ${frame.htmlContent}
 
         THEME VARIABLES (Reference ONLY - already defined in parent, do NOT redeclare these): ${fullThemeCSS}
+
+        BRAND KIT:
+        ${
+          brandKit?.primaryColor
+            ? `Primary Color: ${brandKit.primaryColor} (strictly use var(--primary) for color styles)`
+            : "Primary Color: None"
+        }
+        ${brandKit?.fontFamily ? `Font Family: ${brandKit.fontFamily} (strictly use theme font variables)` : "Font Family: None"}
+        ${brandKit?.logoUrl ? `Logo URL: ${brandKit.logoUrl} (use in header/navbar where appropriate)` : "Logo URL: None"}
 
         PROJECT CONTEXT (use for consistency across screens):
         ${priorContext || "No prior frames"}

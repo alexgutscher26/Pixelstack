@@ -36,9 +36,17 @@ import { useDeleteProject, useUpdateProject } from "@/features/use-project-id";
 
 interface HeaderProps {
   projectName?: string;
+  brandLogoUrl?: string;
+  brandPrimaryColor?: string;
+  brandFontFamily?: string;
 }
 
-const Header = ({ projectName = "Untitled Project" }: HeaderProps) => {
+const Header = ({
+  projectName = "Untitled Project",
+  brandLogoUrl,
+  brandPrimaryColor,
+  brandFontFamily,
+}: HeaderProps) => {
   const router = useRouter();
   const { theme, resolvedTheme, setTheme } = useTheme();
   const isDark = (resolvedTheme ?? theme) === "dark";
@@ -57,6 +65,10 @@ const Header = ({ projectName = "Untitled Project" }: HeaderProps) => {
   const [deleteText, setDeleteText] = useState("");
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [feedbackText, setFeedbackText] = useState("");
+  const [isBrandKitOpen, setIsBrandKitOpen] = useState(false);
+  const [logoUrl, setLogoUrl] = useState(brandLogoUrl || "");
+  const [primaryColor, setPrimaryColor] = useState(brandPrimaryColor || "");
+  const [fontFamily, setFontFamily] = useState(brandFontFamily || "");
 
   // Sync nextName when projectName changes or dialog opens
   useEffect(() => {
@@ -65,10 +77,23 @@ const Header = ({ projectName = "Untitled Project" }: HeaderProps) => {
       setNextName(projectName);
     }
   }, [isRenameOpen, projectName]);
+  const handleBrandDialogOpenChange = (open: boolean) => {
+    setIsBrandKitOpen(open);
+    if (open) {
+      setLogoUrl(brandLogoUrl || "");
+      setPrimaryColor(brandPrimaryColor || "");
+      setFontFamily(brandFontFamily || "");
+    }
+  };
 
   // Validation
   const isRenameValid = nextName.trim().length > 0 && nextName.trim() !== projectName.trim();
   const isDeleteValid = deleteText.trim().toUpperCase() === "DELETE";
+  const isBrandValid =
+    (logoUrl.trim().length > 0 ||
+      primaryColor.trim().length > 0 ||
+      fontFamily.trim().length > 0) &&
+    !isUpdating;
 
   // Handlers
   const handleRename = () => {
@@ -94,6 +119,20 @@ const Header = ({ projectName = "Untitled Project" }: HeaderProps) => {
         router.push("/");
       },
     });
+  };
+  const handleBrandKitSave = () => {
+    updateProject(
+      {
+        brandLogoUrl: logoUrl.trim() || undefined,
+        brandPrimaryColor: primaryColor.trim() || undefined,
+        brandFontFamily: fontFamily.trim() || undefined,
+      },
+      {
+        onSuccess: () => {
+          setIsBrandKitOpen(false);
+        },
+      }
+    );
   };
 
   const isFeedbackValid = feedbackText.trim().length >= 10;
@@ -190,6 +229,10 @@ const Header = ({ projectName = "Untitled Project" }: HeaderProps) => {
                 >
                   <EyeIcon className="mr-2 size-4" />
                   View Only
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer" onClick={() => setIsBrandKitOpen(true)}>
+                  <PencilIcon className="mr-2 size-4" />
+                  Brand Kit
                 </DropdownMenuItem>
                 <DropdownMenuItem className="cursor-pointer" onClick={() => setIsRenameOpen(true)}>
                   <PencilIcon className="mr-2 size-4" />
@@ -308,6 +351,58 @@ const Header = ({ projectName = "Untitled Project" }: HeaderProps) => {
             </Button>
             <Button onClick={handleSendFeedback} disabled={!isFeedbackValid}>
               {messages.common.send}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isBrandKitOpen} onOpenChange={handleBrandDialogOpenChange}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Brand Kit</DialogTitle>
+            <DialogDescription>Define logo, primary color, and font family</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="space-y-1">
+              <span className="text-xs text-muted-foreground">Logo URL</span>
+              <Input
+                value={logoUrl}
+                onChange={(e) => setLogoUrl(e.target.value)}
+                placeholder="https://example.com/logo.png"
+                disabled={isUpdating}
+              />
+            </div>
+            <div className="space-y-1">
+              <span className="text-xs text-muted-foreground">Primary Color (Hex)</span>
+              <div className="flex items-center gap-2">
+                <Input
+                  value={primaryColor}
+                  onChange={(e) => setPrimaryColor(e.target.value)}
+                  placeholder="#3b82f6"
+                  disabled={isUpdating}
+                />
+                <div
+                  className="h-8 w-8 rounded-md border"
+                  style={{ backgroundColor: primaryColor || "#ffffff" }}
+                />
+              </div>
+            </div>
+            <div className="space-y-1">
+              <span className="text-xs text-muted-foreground">Font Family</span>
+              <Input
+                value={fontFamily}
+                onChange={(e) => setFontFamily(e.target.value)}
+                placeholder='"Plus Jakarta Sans"'
+                disabled={isUpdating}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setIsBrandKitOpen(false)} disabled={isUpdating}>
+              {messages.common.cancel}
+            </Button>
+            <Button onClick={handleBrandKitSave} disabled={!isBrandValid || isUpdating}>
+              {isUpdating ? messages.common.saving : messages.common.save}
             </Button>
           </DialogFooter>
         </DialogContent>
