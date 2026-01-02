@@ -221,8 +221,8 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 
 - [ ] **GDPR Export**: "Download all my data" button.
 - [ ] **Account Deletion**: "Delete my account" button (hard delete from DB).
-- [ ] **Privacy Policy**: Create a dedicated page.
-- [ ] **Terms of Service**: Create a dedicated page.
+- [x] **Privacy Policy**: Create a dedicated page.
+- [x] **Terms of Service**: Create a dedicated page.
 - [ ] **Cookie Consent**: Add a cookie banner if tracking is implemented.
 
 ### Ops / DevOps
@@ -238,8 +238,8 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 ### SEO
 
 - [x] **Sitemap**: Generate `sitemap.xml` dynamically.
-- [ ] **Robots.txt**: Configure crawling rules.
-- [ ] **Meta Tags**: Optimize OpenGraph images and descriptions for Twitter/LinkedIn sharing.
+- [x] **Robots.txt**: Configure crawling rules.
+- [x] **Meta Tags**: Optimize OpenGraph images and descriptions for Twitter/LinkedIn sharing.
 - [ ] **Blog**: Add a `/blog` section (using MDX) for content marketing.
 
 ### Growth Features

@@ -38,10 +38,10 @@ export const metadata: Metadata = {
       "Generate polished mobile designs fast. Explore themes, export assets, and iterate with AI.",
     images: [
       {
-        url: "/next.svg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Flowkit preview",
+        alt: "Flowkit – AI Mobile Design Agent",
       },
     ],
     locale: "en_US",
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Flowkit – AI Mobile Design Agent",
     description: "Create mobile app designs in minutes using AI. Theme, preview, export.",
-    images: ["/next.svg"],
+    images: ["/twitter-image"],
     creator: "@snackforcode",
   },
   robots: {
