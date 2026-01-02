@@ -60,6 +60,7 @@ const DeviceFrame = ({
   const isSelected = selectedFrameId === frameId;
   const fullHtml = getHTMLWrapper(html, title, theme_style, frameId, wireframeMode);
   const [selectedOuterHTML, setSelectedOuterHTML] = useState<string | null>(null);
+  const [selectedOuterHTMLs, setSelectedOuterHTMLs] = useState<string[] | null>(null);
   const [partialPrompt, setPartialPrompt] = useState<string>("");
 
   useEffect(() => {
@@ -72,7 +73,14 @@ const DeviceFrame = ({
       }
       if (event.data.type === "ELEMENT_SELECTED" && event.data.frameId === frameId) {
         setSelectedFrameId(frameId);
-        setSelectedOuterHTML(event.data.outerHTML || null);
+        const out = event.data.outerHTML;
+        if (Array.isArray(out)) {
+          setSelectedOuterHTMLs(out.length ? out : null);
+          setSelectedOuterHTML(null);
+        } else {
+          setSelectedOuterHTML(typeof out === "string" ? out : null);
+          setSelectedOuterHTMLs(null);
+        }
       }
       if (event.data.type === "PERF_METRICS" && event.data.frameId === frameId) {
         const store = (window as any).__perfStore || ((window as any).__perfStore = {});
@@ -163,21 +171,44 @@ const DeviceFrame = ({
   );
 
   const handlePartialRegenerate = useCallback(() => {
-    if (!selectedOuterHTML || !partialPrompt.trim()) return;
-    regenerateMutation.mutate(
-      { frameId, prompt: partialPrompt, targetOuterHTML: selectedOuterHTML },
-      {
-        onSuccess: () => {
-          updateFrame(frameId, { isLoading: true });
-          setPartialPrompt("");
-          setSelectedOuterHTML(null);
-        },
-        onError: () => {
-          updateFrame(frameId, { isLoading: false });
-        },
-      }
-    );
-  }, [frameId, partialPrompt, regenerateMutation, selectedOuterHTML, updateFrame]);
+    if (!partialPrompt.trim()) return;
+    if (selectedOuterHTMLs && selectedOuterHTMLs.length) {
+      updateFrame(frameId, { isLoading: true });
+      selectedOuterHTMLs.forEach((html, idx) => {
+        regenerateMutation.mutate(
+          { frameId, prompt: partialPrompt, targetOuterHTML: html },
+          {
+            onSuccess: () => {
+              if (idx === selectedOuterHTMLs.length - 1) {
+                setPartialPrompt("");
+                setSelectedOuterHTMLs(null);
+                updateFrame(frameId, { isLoading: true });
+              }
+            },
+            onError: () => {
+              updateFrame(frameId, { isLoading: false });
+            },
+          }
+        );
+      });
+      return;
+    }
+    if (selectedOuterHTML) {
+      regenerateMutation.mutate(
+        { frameId, prompt: partialPrompt, targetOuterHTML: selectedOuterHTML },
+        {
+          onSuccess: () => {
+            updateFrame(frameId, { isLoading: true });
+            setPartialPrompt("");
+            setSelectedOuterHTML(null);
+          },
+          onError: () => {
+            updateFrame(frameId, { isLoading: false });
+          },
+        }
+      );
+    }
+  }, [frameId, partialPrompt, regenerateMutation, selectedOuterHTML, selectedOuterHTMLs, updateFrame]);
 
   const handleDeleteFrame = useCallback(() => {
     deleteMutation.mutate(frameId);
@@ -288,9 +319,11 @@ const DeviceFrame = ({
             )}
           </div>
         </div>
-        {isSelected && selectedOuterHTML && (
+        {isSelected && (selectedOuterHTML || (selectedOuterHTMLs && selectedOuterHTMLs.length)) && (
           <div className="dark:bg-muted xda-no-drag absolute top-4 right-4 z-20 w-90 max-w-[85%] rounded-xl border bg-white p-2 shadow-lg">
-            <div className="mb-1 text-xs font-medium">Edit selected part with AI</div>
+            <div className="mb-1 text-xs font-medium">
+              Edit selected {selectedOuterHTMLs && selectedOuterHTMLs.length ? `${selectedOuterHTMLs.length} parts` : "part"} with AI
+            </div>
             <InputGroup className="border-0! bg-transparent! px-0! shadow-none! ring-0!">
               <InputGroupAddon>
                 <Wand2Icon />

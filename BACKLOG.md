@@ -87,7 +87,7 @@ This backlog serves as the single source of truth for the XDesign AI product roa
 
 ### Object Manipulation
 
-- [ ] **Multi-Select**: Allow selecting multiple elements (Shift+Click or Drag Select).
+- [x] **Multi-Select**: Allow selecting multiple elements (Shift+Click or Drag Select).
 - [ ] **Group/Ungroup**: Group elements together to move them as a unit.
 - [ ] **Alignment Tools**: "Align Left", "Align Center", "Distribute Vertically".
 - [ ] **Layer Management**: A dedicated "Layers" panel to reorder elements (z-index control).

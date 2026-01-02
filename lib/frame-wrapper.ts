@@ -141,6 +141,10 @@ export function getHTMLWrapper(
       overlay.style.background='transparent';
       overlay.style.display='none';
       document.body.appendChild(overlay);
+      const selected=new Set();
+      const selectionOverlays=new Map();
+      let marquee=null;
+      let dragStart=null;
       function computePath(el){
         const path=[];
         let node=el;
@@ -155,6 +159,35 @@ export function getHTMLWrapper(
           node=node.parentElement;
         }
         return path;
+      }
+      function highlightSelected(){
+        selectionOverlays.forEach((box)=>box.remove());
+        selectionOverlays.clear();
+        selected.forEach((el)=>{
+          const rect=el.getBoundingClientRect();
+          const box=document.createElement('div');
+          box.style.position='fixed';
+          box.style.pointerEvents='none';
+          box.style.zIndex='2147483646';
+          box.style.border='2px dashed rgba(var(--ring-rgb,59,130,246),0.7)';
+          box.style.borderRadius='8px';
+          box.style.left=rect.left+'px';
+          box.style.top=rect.top+'px';
+          box.style.width=rect.width+'px';
+          box.style.height=rect.height+'px';
+          document.body.appendChild(box);
+          selectionOverlays.set(el,box);
+        });
+      }
+      function emitSelection(){
+        const outs=[];
+        const rects=[];
+        selected.forEach((el)=>{
+          const r=el.getBoundingClientRect();
+          outs.push(el.outerHTML);
+          rects.push({x:r.left,y:r.top,width:r.width,height:r.height});
+        });
+        parent.postMessage({type:'ELEMENT_SELECTED',frameId:fid,outerHTML:outs.length<=1?outs[0]:outs,rects},'*');
       }
       function onMove(e){
         if(!enabled) return;
@@ -172,19 +205,78 @@ export function getHTMLWrapper(
         if(!enabled) return;
         e.preventDefault();
         e.stopPropagation();
-        if(!currentEl) return;
-        const rect=currentEl.getBoundingClientRect();
-        parent.postMessage({type:'ELEMENT_SELECTED',frameId:fid,outerHTML:currentEl.outerHTML,path:computePath(currentEl),rect:{x:rect.left,y:rect.top,width:rect.width,height:rect.height}},'*');
+        const el=document.elementFromPoint(e.clientX,e.clientY) || currentEl;
+        if(!el) return;
+        if(e.shiftKey){
+          if(selected.has(el)) selected.delete(el); else selected.add(el);
+        }else{
+          selected.clear();
+          selected.add(el);
+        }
+        highlightSelected();
+        emitSelection();
+      }
+      function onMouseDown(e){
+        if(!enabled) return;
+        if(e.button!==0) return;
+        dragStart={x:e.clientX,y:e.clientY};
+        marquee=document.createElement('div');
+        marquee.style.position='fixed';
+        marquee.style.left=dragStart.x+'px';
+        marquee.style.top=dragStart.y+'px';
+        marquee.style.border='1.5px solid rgba(255,255,255,0.9)';
+        marquee.style.background='rgba(255,255,255,0.08)';
+        marquee.style.zIndex='2147483648';
+        document.body.appendChild(marquee);
+        document.addEventListener('mousemove',onDrag,true);
+        document.addEventListener('mouseup',onMouseUp,true);
+      }
+      function onDrag(e){
+        if(!dragStart||!marquee) return;
+        const x=Math.min(dragStart.x,e.clientX);
+        const y=Math.min(dragStart.y,e.clientY);
+        const w=Math.abs(e.clientX-dragStart.x);
+        const h=Math.abs(e.clientY-dragStart.y);
+        marquee.style.left=x+'px';
+        marquee.style.top=y+'px';
+        marquee.style.width=w+'px';
+        marquee.style.height=h+'px';
+      }
+      function intersects(a,b){
+        return !(b.left>a.right||b.right<a.left||b.top>a.bottom||b.bottom<a.top);
+      }
+      function onMouseUp(e){
+        document.removeEventListener('mousemove',onDrag,true);
+        document.removeEventListener('mouseup',onMouseUp,true);
+        if(marquee){
+          const rect=marquee.getBoundingClientRect();
+          const root=document.getElementById('root')?.firstElementChild||document.body;
+          const nodes=Array.from(root.querySelectorAll('*')).slice(0,800);
+          nodes.forEach((n)=>{
+            const r=n.getBoundingClientRect();
+            const R={left:rect.left,top:rect.top,right:rect.right,bottom:rect.bottom};
+            const S={left:r.left,top:r.top,right:r.right,bottom:r.bottom};
+            if(intersects(R,S)) selected.add(n);
+          });
+          marquee.remove();
+          marquee=null;
+          dragStart=null;
+          highlightSelected();
+          emitSelection();
+        }
       }
       window.addEventListener('message',(event)=>{
         const d=event.data;
         if(d && d.type==='SELECT_MODE' && d.frameId===fid){
           enabled=!!d.enabled;
           overlay.style.display='none';
+          selected.clear();
+          highlightSelected();
         }
       });
       document.addEventListener('mousemove',onMove,true);
       document.addEventListener('click',onClick,true);
+      document.addEventListener('mousedown',onMouseDown,true);
     })();
   </script>
   
