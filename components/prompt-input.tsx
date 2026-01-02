@@ -39,12 +39,6 @@ const PromptInput = ({
   bottomLeftAddon,
 }: PropsType) => {
   const trimmed = promptText.trim();
-  const invalidMsg =
-    trimmed.length === 0
-      ? "Please enter a prompt"
-      : trimmed.length < 10
-        ? "Enter at least 10 characters"
-        : "";
   return (
     <div className="bg-background">
       <InputGroup className={cn("bg-background min-h-43 rounded-3xl", className && className)}>
@@ -62,7 +56,6 @@ const PromptInput = ({
           className="py-2.5! text-base!"
           placeholder={placeholder ?? "I want to design an app that..."}
           value={promptText}
-          aria-invalid={!!invalidMsg}
           onChange={(e) => {
             setPromptText(e.target.value);
           }}
@@ -96,7 +89,7 @@ const PromptInput = ({
               variant="default"
               className=""
               size="sm"
-              disabled={!!invalidMsg || isLoading}
+              disabled={!!isLoading}
               onClick={() => onSubmit?.()}
             >
               {isLoading ? (
@@ -112,9 +105,6 @@ const PromptInput = ({
           </div>
         </InputGroupAddon>
       </InputGroup>
-      {invalidMsg && (
-        <div className="text-destructive mt-2 px-1 text-xs font-medium">{invalidMsg}</div>
-      )}
     </div>
   );
 };

@@ -65,13 +65,6 @@ const DeviceFrameToolbar = ({
       setIsPopoverOpen(false);
     }
   };
-  const trimmed = promptValue.trim();
-  const invalidMsg =
-    trimmed.length === 0
-      ? "Please enter a prompt"
-      : trimmed.length < 10
-        ? "Enter at least 10 characters"
-        : "";
   return (
     <div
       className={cn(
@@ -189,13 +182,8 @@ const DeviceFrameToolbar = ({
                       value={promptValue}
                       onChange={(e) => setPromptValue(e.target.value)}
                       className="xda-no-drag border-0! bg-transparent! shadow-none! ring-0!"
-                      aria-invalid={!!invalidMsg}
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {
-                          if (invalidMsg) {
-                            e.preventDefault();
-                            return;
-                          }
                           handleRegenerate();
                         }
                       }}
@@ -203,7 +191,7 @@ const DeviceFrameToolbar = ({
                     <InputGroupAddon align="inline-end">
                       <Button
                         size="icon-sm"
-                        disabled={!!invalidMsg || isRegenerating}
+                        disabled={!!isRegenerating}
                         onClick={handleRegenerate}
                       >
                         {isRegenerating ? (
@@ -214,9 +202,6 @@ const DeviceFrameToolbar = ({
                       </Button>
                     </InputGroupAddon>
                   </InputGroup>
-                  {invalidMsg && (
-                    <div className="text-destructive px-1 text-xs font-medium">{invalidMsg}</div>
-                  )}
                 </div>
               </PopoverContent>
             </Popover>

@@ -90,11 +90,12 @@ const LandingSection = () => {
   const [includePaywall, setIncludePaywall] = useState<boolean>(false);
   const [negativeText, setNegativeText] = useState<string>("");
   const STYLE_PRESETS = [
-    "Minimalist",
-    "Brutalist",
-    "Corporate / Enterprise",
-    "Playful / Gamified",
-    "Dark Mode Native",
+    "Futuristic",
+    "Neo‑Brutalism",
+    "Nature",
+    "Playful",
+    "Minimal",
+    "Retro",
   ] as const;
   const [stylePreset, setStylePreset] = useState<(typeof STYLE_PRESETS)[number] | undefined>();
   const userId = user?.id;
@@ -209,6 +210,38 @@ const LandingSection = () => {
             </div>
 
             <div className="item-center relative z-50 flex w-full max-w-3xl flex-col gap-8">
+              <div className="w-full px-5">
+                <div className="flex flex-wrap justify-center gap-2">
+                  {STYLE_PRESETS.map((p) => {
+                    const color =
+                      p === "Futuristic"
+                        ? "bg-blue-500"
+                        : p === "Neo‑Brutalism"
+                          ? "bg-pink-600"
+                          : p === "Nature"
+                            ? "bg-green-600"
+                            : p === "Playful"
+                              ? "bg-purple-500"
+                              : p === "Minimal"
+                                ? "bg-gray-400"
+                                : "bg-amber-500";
+                    const active = stylePreset === p;
+                    return (
+                      <Button
+                        key={p}
+                        type="button"
+                        variant={active ? "default" : "outline"}
+                        size="sm"
+                        className="rounded-full px-3 h-8 gap-2"
+                        onClick={() => setStylePreset(active ? undefined : p)}
+                      >
+                        <span className={`size-2 rounded-full ${color}`}></span>
+                        <span className="text-sm">{p}</span>
+                      </Button>
+                    );
+                  })}
+                </div>
+              </div>
               <div className="w-full">
                 <PromptInput
                   className="ring-primary ring-2"
@@ -338,28 +371,7 @@ const LandingSection = () => {
 
               
 
-              <div className="w-full px-5">
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-sm font-medium">Design style presets</label>
-                  <div className="flex flex-wrap gap-2">
-                    {STYLE_PRESETS.map((p) => (
-                      <Button
-                        key={p}
-                        type="button"
-                        variant={stylePreset === p ? "default" : "outline"}
-                        size="sm"
-                        className="rounded-full"
-                        onClick={() => setStylePreset(stylePreset === p ? undefined : p)}
-                      >
-                        {p}
-                      </Button>
-                    ))}
-                  </div>
-                  <span className="text-muted-foreground text-xs">
-                    Choose one preset to guide visual style. Optional.
-                  </span>
-                </div>
-              </div>
+              
 
               <div className="relative w-full px-5">
                 <div className="pointer-events-none absolute top-1/2 left-0 z-10 -translate-y-1/2">
