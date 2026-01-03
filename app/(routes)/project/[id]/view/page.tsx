@@ -59,7 +59,7 @@ const Page = () => {
         <div className="mx-auto max-w-md px-4 py-4 md:max-w-lg">
           <div className="mb-3 text-center">
             <div className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium">
-              <span className="h-2 w-2 rounded-full bg-green-500"></span>
+              <span className="h-2 w-2 rounded-full bg-green-500" />
               View Only
             </div>
           </div>
