@@ -34,7 +34,13 @@ export const useGenerateDesignById = (projectId: string) => {
 export const useUpdateProject = (projectId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (payload: { themeId?: string; name?: string }) =>
+    mutationFn: async (payload: {
+      themeId?: string;
+      name?: string;
+      brandLogoUrl?: string;
+      brandPrimaryColor?: string;
+      brandFontFamily?: string;
+    }) =>
       await axios.patch(`/api/project/${projectId}`, payload).then((res) => res.data),
     onSuccess: () => {
       toast.success("Project updated");

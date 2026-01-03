@@ -41,6 +41,240 @@ interface HeaderProps {
   brandFontFamily?: string;
 }
 
+interface RenameDialogProps {
+  open: boolean;
+  setOpen: (v: boolean) => void;
+  nextName: string;
+  setNextName: (v: string) => void;
+  isUpdating: boolean;
+  isValid: boolean;
+  onRename: () => void;
+  onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+}
+
+const RenameDialog = ({
+  open,
+  setOpen,
+  nextName,
+  setNextName,
+  isUpdating,
+  isValid,
+  onRename,
+  onKeyDown,
+}: RenameDialogProps) => {
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{messages.header.renameProjectTitle}</DialogTitle>
+          <DialogDescription>{messages.header.renameProjectDescription}</DialogDescription>
+        </DialogHeader>
+        <Input
+          value={nextName}
+          onChange={(e) => setNextName(e.target.value)}
+          onKeyDown={onKeyDown}
+          placeholder={messages.header.renameDialogPlaceholder}
+          disabled={isUpdating}
+          maxLength={100}
+        />
+        <DialogFooter>
+          <Button variant="ghost" onClick={() => setOpen(false)} disabled={isUpdating}>
+            {messages.common.cancel}
+          </Button>
+          <Button onClick={onRename} disabled={!isValid || isUpdating}>
+            {isUpdating ? messages.common.saving : messages.common.save}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+interface DeleteDialogProps {
+  open: boolean;
+  setOpen: (v: boolean) => void;
+  deleteText: string;
+  setDeleteText: (v: string) => void;
+  isDeleting: boolean;
+  isValid: boolean;
+  onDelete: () => void;
+  onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  projectName: string;
+}
+
+const DeleteDialog = ({
+  open,
+  setOpen,
+  deleteText,
+  setDeleteText,
+  isDeleting,
+  isValid,
+  onDelete,
+  onKeyDown,
+  projectName,
+}: DeleteDialogProps) => {
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{messages.header.deleteProjectTitle}</DialogTitle>
+          <DialogDescription>
+            {messages.header.deleteProjectDescriptionPrefix}
+            <span className="font-semibold">{messages.header.deleteConfirmWord}</span>
+            {messages.header.deleteProjectDescriptionSuffix}
+            <span className="font-semibold">{projectName}</span>
+            {" and all its frames."}
+          </DialogDescription>
+        </DialogHeader>
+        <Input
+          placeholder={messages.header.deleteConfirmPlaceholder}
+          value={deleteText}
+          onChange={(e) => setDeleteText(e.target.value)}
+          onKeyDown={onKeyDown}
+          disabled={isDeleting}
+        />
+        <DialogFooter>
+          <Button variant="ghost" onClick={() => setOpen(false)} disabled={isDeleting}>
+            {messages.common.cancel}
+          </Button>
+          <Button variant="destructive" disabled={!isValid || isDeleting} onClick={onDelete}>
+            {isDeleting ? messages.common.deleting : messages.common.delete}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+interface FeedbackDialogProps {
+  open: boolean;
+  setOpen: (v: boolean) => void;
+  feedbackText: string;
+  setFeedbackText: (v: string) => void;
+  isValid: boolean;
+  onSend: () => void;
+}
+
+const FeedbackDialog = ({
+  open,
+  setOpen,
+  feedbackText,
+  setFeedbackText,
+  isValid,
+  onSend,
+}: FeedbackDialogProps) => {
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{messages.header.feedbackDialogTitle}</DialogTitle>
+          <DialogDescription>{messages.header.feedbackDialogDescription}</DialogDescription>
+        </DialogHeader>
+        <Input placeholder={messages.header.feedbackSubjectPlaceholder} maxLength={120} />
+        <div className="space-y-2">
+          <span className="text-muted-foreground text-xs">
+            {messages.header.feedbackDescribeIssueLabel}
+          </span>
+          <Textarea
+            value={feedbackText}
+            onChange={(e) => setFeedbackText(e.target.value)}
+            placeholder={messages.header.feedbackTextareaPlaceholder}
+            maxLength={2000}
+            className="min-h-28"
+          />
+        </div>
+        <DialogFooter>
+          <Button variant="ghost" onClick={() => setOpen(false)}>
+            {messages.common.cancel}
+          </Button>
+          <Button onClick={onSend} disabled={!isValid}>
+            {messages.common.send}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+interface BrandKitDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  logoUrl: string;
+  setLogoUrl: (v: string) => void;
+  primaryColor: string;
+  setPrimaryColor: (v: string) => void;
+  fontFamily: string;
+  setFontFamily: (v: string) => void;
+  isUpdating: boolean;
+  isValid: boolean;
+  onSave: () => void;
+}
+
+const BrandKitDialog = ({
+  open,
+  onOpenChange,
+  logoUrl,
+  setLogoUrl,
+  primaryColor,
+  setPrimaryColor,
+  fontFamily,
+  setFontFamily,
+  isUpdating,
+  isValid,
+  onSave,
+}: BrandKitDialogProps) => {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Brand Kit</DialogTitle>
+          <DialogDescription>Define logo, primary color, and font family</DialogDescription>
+        </DialogHeader>
+        <div className="space-y-3">
+          <div className="space-y-1">
+            <span className="text-muted-foreground text-xs">Logo URL</span>
+            <Input
+              value={logoUrl}
+              onChange={(e) => setLogoUrl(e.target.value)}
+              placeholder="https://example.com/logo.png"
+              disabled={isUpdating}
+            />
+          </div>
+          <div className="space-y-1">
+            <span className="text-muted-foreground text-xs">Primary Color (Hex)</span>
+            <div className="flex items-center gap-2">
+              <Input
+                value={primaryColor}
+                onChange={(e) => setPrimaryColor(e.target.value)}
+                placeholder="#3b82f6"
+                disabled={isUpdating}
+              />
+              <div className="h-8 w-8 rounded-md border" style={{ backgroundColor: primaryColor || "#ffffff" }} />
+            </div>
+          </div>
+          <div className="space-y-1">
+            <span className="text-muted-foreground text-xs">Font Family</span>
+            <Input
+              value={fontFamily}
+              onChange={(e) => setFontFamily(e.target.value)}
+              placeholder='"Plus Jakarta Sans"'
+              disabled={isUpdating}
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="ghost" onClick={() => onOpenChange(false)} disabled={isUpdating}>
+            {messages.common.cancel}
+          </Button>
+          <Button onClick={onSave} disabled={!isValid || isUpdating}>
+            {isUpdating ? messages.common.saving : messages.common.save}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 const Header = ({
   projectName = "Untitled Project",
   brandLogoUrl,
@@ -259,152 +493,48 @@ const Header = ({
         </div>
       </header>
 
-      {/* Rename Dialog */}
-      <Dialog open={isRenameOpen} onOpenChange={setIsRenameOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{messages.header.renameProjectTitle}</DialogTitle>
-            <DialogDescription>{messages.header.renameProjectDescription}</DialogDescription>
-          </DialogHeader>
-
-          <Input
-            value={nextName}
-            onChange={(e) => setNextName(e.target.value)}
-            onKeyDown={handleRenameKeyDown}
-            placeholder={messages.header.renameDialogPlaceholder}
-            disabled={isUpdating}
-            maxLength={100}
-          />
-
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setIsRenameOpen(false)} disabled={isUpdating}>
-              {messages.common.cancel}
-            </Button>
-            <Button onClick={handleRename} disabled={!isRenameValid || isUpdating}>
-              {isUpdating ? messages.common.saving : messages.common.save}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Delete Dialog */}
-      <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{messages.header.deleteProjectTitle}</DialogTitle>
-            <DialogDescription>
-              {messages.header.deleteProjectDescriptionPrefix}
-              <span className="font-semibold">{messages.header.deleteConfirmWord}</span>
-              {messages.header.deleteProjectDescriptionSuffix}
-              <span className="font-semibold">{projectName}</span>
-              {" and all its frames."}
-            </DialogDescription>
-          </DialogHeader>
-
-          <Input
-            placeholder={messages.header.deleteConfirmPlaceholder}
-            value={deleteText}
-            onChange={(e) => setDeleteText(e.target.value)}
-            onKeyDown={handleDeleteKeyDown}
-            disabled={isDeleting}
-          />
-
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setIsDeleteOpen(false)} disabled={isDeleting}>
-              {messages.common.cancel}
-            </Button>
-            <Button
-              variant="destructive"
-              disabled={!isDeleteValid || isDeleting}
-              onClick={handleDelete}
-            >
-              {isDeleting ? messages.common.deleting : messages.common.delete}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={isFeedbackOpen} onOpenChange={setIsFeedbackOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{messages.header.feedbackDialogTitle}</DialogTitle>
-            <DialogDescription>{messages.header.feedbackDialogDescription}</DialogDescription>
-          </DialogHeader>
-          <Input placeholder={messages.header.feedbackSubjectPlaceholder} maxLength={120} />
-          <div className="space-y-2">
-            <span className="text-muted-foreground text-xs">
-              {messages.header.feedbackDescribeIssueLabel}
-            </span>
-            <Textarea
-              value={feedbackText}
-              onChange={(e) => setFeedbackText(e.target.value)}
-              placeholder={messages.header.feedbackTextareaPlaceholder}
-              maxLength={2000}
-              className="min-h-28"
-            />
-          </div>
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setIsFeedbackOpen(false)}>
-              {messages.common.cancel}
-            </Button>
-            <Button onClick={handleSendFeedback} disabled={!isFeedbackValid}>
-              {messages.common.send}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={isBrandKitOpen} onOpenChange={handleBrandDialogOpenChange}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Brand Kit</DialogTitle>
-            <DialogDescription>Define logo, primary color, and font family</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-3">
-            <div className="space-y-1">
-              <span className="text-muted-foreground text-xs">Logo URL</span>
-              <Input
-                value={logoUrl}
-                onChange={(e) => setLogoUrl(e.target.value)}
-                placeholder="https://example.com/logo.png"
-                disabled={isUpdating}
-              />
-            </div>
-            <div className="space-y-1">
-              <span className="text-muted-foreground text-xs">Primary Color (Hex)</span>
-              <div className="flex items-center gap-2">
-                <Input
-                  value={primaryColor}
-                  onChange={(e) => setPrimaryColor(e.target.value)}
-                  placeholder="#3b82f6"
-                  disabled={isUpdating}
-                />
-                <div
-                  className="h-8 w-8 rounded-md border"
-                  style={{ backgroundColor: primaryColor || "#ffffff" }}
-                />
-              </div>
-            </div>
-            <div className="space-y-1">
-              <span className="text-muted-foreground text-xs">Font Family</span>
-              <Input
-                value={fontFamily}
-                onChange={(e) => setFontFamily(e.target.value)}
-                placeholder='"Plus Jakarta Sans"'
-                disabled={isUpdating}
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setIsBrandKitOpen(false)} disabled={isUpdating}>
-              {messages.common.cancel}
-            </Button>
-            <Button onClick={handleBrandKitSave} disabled={!isBrandValid || isUpdating}>
-              {isUpdating ? messages.common.saving : messages.common.save}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <RenameDialog
+        open={isRenameOpen}
+        setOpen={setIsRenameOpen}
+        nextName={nextName}
+        setNextName={setNextName}
+        isUpdating={isUpdating}
+        isValid={isRenameValid}
+        onRename={handleRename}
+        onKeyDown={handleRenameKeyDown}
+      />
+      <DeleteDialog
+        open={isDeleteOpen}
+        setOpen={setIsDeleteOpen}
+        deleteText={deleteText}
+        setDeleteText={setDeleteText}
+        isDeleting={isDeleting}
+        isValid={isDeleteValid}
+        onDelete={handleDelete}
+        onKeyDown={handleDeleteKeyDown}
+        projectName={projectName}
+      />
+      <FeedbackDialog
+        open={isFeedbackOpen}
+        setOpen={setIsFeedbackOpen}
+        feedbackText={feedbackText}
+        setFeedbackText={setFeedbackText}
+        isValid={isFeedbackValid}
+        onSend={handleSendFeedback}
+      />
+      <BrandKitDialog
+        open={isBrandKitOpen}
+        onOpenChange={handleBrandDialogOpenChange}
+        logoUrl={logoUrl}
+        setLogoUrl={setLogoUrl}
+        primaryColor={primaryColor}
+        setPrimaryColor={setPrimaryColor}
+        fontFamily={fontFamily}
+        setFontFamily={setFontFamily}
+        isUpdating={isUpdating}
+        isValid={isBrandValid}
+        onSave={handleBrandKitSave}
+      />
     </div>
   );
 };

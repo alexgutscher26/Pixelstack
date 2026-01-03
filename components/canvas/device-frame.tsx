@@ -31,6 +31,149 @@ type PropsType = {
   onOpenHtmlDialog: () => void;
   onOpenReactDialog?: () => void;
 };
+type SelectionEditorProps = {
+  visible: boolean;
+  count: number;
+  partialPrompt: string;
+  onPartialPromptChange: (v: string) => void;
+  isSelectionLocked: boolean;
+  isPending: boolean;
+  onLockSelected: () => void;
+  onUnlockSelected: () => void;
+  onSubmit: () => void;
+};
+const SelectionEditor = ({
+  visible,
+  count,
+  partialPrompt,
+  onPartialPromptChange,
+  isSelectionLocked,
+  isPending,
+  onLockSelected,
+  onUnlockSelected,
+  onSubmit,
+}: SelectionEditorProps) => {
+  if (!visible) return null;
+  return (
+    <div className="dark:bg-muted xda-no-drag absolute top-4 right-4 z-20 w-90 max-w-[85%] rounded-xl border bg-white p-2 shadow-lg">
+      <div className="mb-1 text-xs font-medium">
+        Edit selected {count > 1 ? `${count} parts` : "part"} with AI
+      </div>
+      <InputGroup className="border-0! bg-transparent! px-0! shadow-none! ring-0!">
+        <InputGroupAddon>
+          <Wand2Icon />
+        </InputGroupAddon>
+        <Input
+          placeholder="Describe the change..."
+          value={partialPrompt}
+          onChange={(e) => onPartialPromptChange(e.target.value)}
+          className="border-0! bg-transparent! shadow-none! ring-0!"
+          disabled={isSelectionLocked}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") onSubmit();
+          }}
+        />
+        <InputGroupAddon align="inline-end">
+          <Button
+            size="icon-sm"
+            variant={isSelectionLocked ? "default" : "outline"}
+            className="mr-1"
+            onClick={onLockSelected}
+            disabled={isPending || isSelectionLocked}
+            aria-label="Lock selected"
+          >
+            <Lock className="size-4" />
+          </Button>
+          <Button
+            size="icon-sm"
+            variant="outline"
+            className="mr-1"
+            onClick={onUnlockSelected}
+            disabled={isPending}
+            aria-label="Unlock selected"
+          >
+            <Unlock className="size-4" />
+          </Button>
+          <Button
+            size="icon-sm"
+            disabled={!partialPrompt.trim() || isPending || isSelectionLocked}
+            onClick={onSubmit}
+          >
+            {isPending ? <></> : <Send className="size-4" />}
+          </Button>
+        </InputGroupAddon>
+      </InputGroup>
+    </div>
+  );
+};
+
+type FrameViewportProps = {
+  isLoading: boolean;
+  width: number;
+  minHeight: number | string;
+  frameHeight: number | string;
+  fullHtml: string;
+  title: string;
+  iframeRef: React.MutableRefObject<HTMLIFrameElement | null>;
+  isSelectable: boolean;
+  wireframeMode: boolean;
+  toolMode: ToolModeType;
+};
+const FrameViewport = ({
+  isLoading,
+  width,
+  minHeight,
+  frameHeight,
+  fullHtml,
+  title,
+  iframeRef,
+  isSelectable,
+  wireframeMode,
+  toolMode,
+}: FrameViewportProps) => {
+  return (
+    <div
+      className={cn(
+        "relative h-auto w-full overflow-hidden rounded-[36px] bg-black shadow-2xl",
+        isSelectable && toolMode !== TOOL_MODE_ENUM.HAND && "rounded-none"
+      )}
+    >
+      <div
+        className={cn(
+          "relative overflow-hidden",
+          wireframeMode ? "bg-white" : "dark:bg-background bg-white"
+        )}
+      >
+        {isLoading ? (
+          <DeviceFrameSkeleton
+            style={{
+              position: "relative",
+              width,
+              minHeight: minHeight,
+              height: `${frameHeight}px`,
+            }}
+          />
+        ) : (
+          <iframe
+            ref={iframeRef}
+            srcDoc={fullHtml}
+            title={title}
+            sandbox="allow-scripts allow-same-origin"
+            style={{
+              width: "100%",
+              minHeight: `${minHeight}px`,
+              height: `${frameHeight}px`,
+              border: "none",
+              pointerEvents: isSelectable && toolMode === TOOL_MODE_ENUM.SELECT ? "auto" : "none",
+              display: "block",
+              background: "transparent",
+            }}
+          />
+        )}
+      </div>
+    </div>
+  );
+};
 const DeviceFrame = ({
   html,
   title = "Untitled",
@@ -64,48 +207,65 @@ const DeviceFrame = ({
   const [selectedPaths, setSelectedPaths] = useState<string[] | null>(null);
   const [partialPrompt, setPartialPrompt] = useState<string>("");
 
+  const applyFrameHeight = useCallback((height: number) => {
+    setFrameSize((prev) => ({ ...prev, height }));
+  }, []);
+
+  const applyElementSelected = useCallback(
+    (out: unknown, p: unknown) => {
+      setSelectedFrameId(frameId);
+      if (Array.isArray(out)) {
+        setSelectedOuterHTMLs(out.length ? out : null);
+        setSelectedOuterHTML(null);
+      } else {
+        setSelectedOuterHTML(typeof out === "string" ? out : null);
+        setSelectedOuterHTMLs(null);
+      }
+      if (Array.isArray(p)) {
+        setSelectedPaths(p.length ? p : null);
+      } else {
+        setSelectedPaths(typeof p === "string" ? [p] : null);
+      }
+    },
+    [frameId, setSelectedFrameId]
+  );
+
+  const recordPerfMetrics = useCallback(
+    (metrics: any) => {
+      const store = (window as any).__perfStore || ((window as any).__perfStore = {});
+      if (!store[frameId]) store[frameId] = [];
+      store[frameId].push({
+        ts: Date.now(),
+        title,
+        ...metrics,
+      });
+      const arr = store[frameId];
+      if (arr.length % 5 === 0) {
+        console.info("PERF_METRICS", frameId, arr[arr.length - 1]);
+      }
+    },
+    [frameId, title]
+  );
+
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      if (event.data.type === "FRAME_HEIGHT" && event.data.frameId === frameId) {
-        setFrameSize((prev) => ({
-          ...prev,
-          height: event.data.height,
-        }));
-      }
-      if (event.data.type === "ELEMENT_SELECTED" && event.data.frameId === frameId) {
-        setSelectedFrameId(frameId);
-        const out = event.data.outerHTML;
-        const p = event.data.paths;
-        if (Array.isArray(out)) {
-          setSelectedOuterHTMLs(out.length ? out : null);
-          setSelectedOuterHTML(null);
-        } else {
-          setSelectedOuterHTML(typeof out === "string" ? out : null);
-          setSelectedOuterHTMLs(null);
-        }
-        if (Array.isArray(p)) {
-          setSelectedPaths(p.length ? p : null);
-        } else {
-          setSelectedPaths(typeof p === "string" ? [p] : null);
-        }
-      }
-      if (event.data.type === "PERF_METRICS" && event.data.frameId === frameId) {
-        const store = (window as any).__perfStore || ((window as any).__perfStore = {});
-        if (!store[frameId]) store[frameId] = [];
-        store[frameId].push({
-          ts: Date.now(),
-          title,
-          ...event.data.metrics,
-        });
-        const arr = store[frameId];
-        if (arr.length % 5 === 0) {
-          console.info("PERF_METRICS", frameId, arr[arr.length - 1]);
-        }
+      const data = event.data || {};
+      if (data.frameId !== frameId) return;
+      switch (data.type) {
+        case "FRAME_HEIGHT":
+          applyFrameHeight(data.height);
+          break;
+        case "ELEMENT_SELECTED":
+          applyElementSelected(data.outerHTML, data.paths);
+          break;
+        case "PERF_METRICS":
+          recordPerfMetrics(data.metrics);
+          break;
       }
     };
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
-  }, [frameId, setSelectedFrameId, title]);
+  }, [applyElementSelected, applyFrameHeight, frameId, recordPerfMetrics]);
 
   useEffect(() => {
     if (!(window as any).exportPerf) {
@@ -323,102 +483,29 @@ const DeviceFrame = ({
           onOpenReactDialog={onOpenReactDialog}
         />
 
-        <div
-          className={cn(
-            "relative h-auto w-full overflow-hidden rounded-[36px] bg-black shadow-2xl",
-            isSelected && toolMode !== TOOL_MODE_ENUM.HAND && "rounded-none"
-          )}
-        >
-          <div
-            className={cn(
-              "relative overflow-hidden",
-              wireframeMode ? "bg-white" : "dark:bg-background bg-white"
-            )}
-          >
-            {isLoading ? (
-              <DeviceFrameSkeleton
-                style={{
-                  position: "relative",
-                  width,
-                  minHeight: minHeight,
-                  height: `${frameSize.height}px`,
-                }}
-              />
-            ) : (
-              <iframe
-                ref={iframeRef}
-                srcDoc={fullHtml}
-                title={title}
-                sandbox="allow-scripts allow-same-origin"
-                style={{
-                  width: "100%",
-                  minHeight: `${minHeight}px`,
-                  height: `${frameSize.height}px`,
-                  border: "none",
-                  pointerEvents: isSelected && toolMode === TOOL_MODE_ENUM.SELECT ? "auto" : "none",
-                  display: "block",
-                  background: "transparent",
-                }}
-              />
-            )}
-          </div>
-        </div>
-        {isSelected && (selectedOuterHTML || selectedOuterHTMLs?.length) && (
-          <div className="dark:bg-muted xda-no-drag absolute top-4 right-4 z-20 w-90 max-w-[85%] rounded-xl border bg-white p-2 shadow-lg">
-            <div className="mb-1 text-xs font-medium">
-              Edit selected{" "}
-              {selectedOuterHTMLs?.length ? `${selectedOuterHTMLs.length} parts` : "part"} with AI
-            </div>
-            <InputGroup className="border-0! bg-transparent! px-0! shadow-none! ring-0!">
-              <InputGroupAddon>
-                <Wand2Icon />
-              </InputGroupAddon>
-              <Input
-                placeholder="Describe the change..."
-                value={partialPrompt}
-                onChange={(e) => setPartialPrompt(e.target.value)}
-                className="border-0! bg-transparent! shadow-none! ring-0!"
-                disabled={isSelectionLocked}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handlePartialRegenerate();
-                  }
-                }}
-              />
-              <InputGroupAddon align="inline-end">
-                <Button
-                  size="icon-sm"
-                  variant={isSelectionLocked ? "default" : "outline"}
-                  className="mr-1"
-                  onClick={handleLockSelected}
-                  disabled={regenerateMutation.isPending || isSelectionLocked}
-                  aria-label="Lock selected"
-                >
-                  <Lock className="size-4" />
-                </Button>
-                <Button
-                  size="icon-sm"
-                  variant="outline"
-                  className="mr-1"
-                  onClick={handleUnlockSelected}
-                  disabled={regenerateMutation.isPending}
-                  aria-label="Unlock selected"
-                >
-                  <Unlock className="size-4" />
-                </Button>
-                <Button
-                  size="icon-sm"
-                  disabled={
-                    !partialPrompt.trim() || regenerateMutation.isPending || isSelectionLocked
-                  }
-                  onClick={handlePartialRegenerate}
-                >
-                  {regenerateMutation.isPending ? <></> : <Send className="size-4" />}
-                </Button>
-              </InputGroupAddon>
-            </InputGroup>
-          </div>
-        )}
+        <FrameViewport
+          isLoading={isLoading}
+          width={width}
+          minHeight={minHeight}
+          frameHeight={frameSize.height}
+          fullHtml={fullHtml}
+          title={title}
+          iframeRef={iframeRef}
+          isSelectable={isSelected}
+          wireframeMode={wireframeMode}
+          toolMode={toolMode}
+        />
+        <SelectionEditor
+          visible={isSelected && (!!selectedOuterHTML || !!selectedOuterHTMLs?.length)}
+          count={selectedOuterHTMLs?.length || (selectedOuterHTML ? 1 : 0)}
+          partialPrompt={partialPrompt}
+          onPartialPromptChange={setPartialPrompt}
+          isSelectionLocked={isSelectionLocked}
+          isPending={regenerateMutation.isPending}
+          onLockSelected={handleLockSelected}
+          onUnlockSelected={handleUnlockSelected}
+          onSubmit={handlePartialRegenerate}
+        />
       </div>
     </Rnd>
   );

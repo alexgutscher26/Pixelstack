@@ -66,9 +66,9 @@ function createGenerationPrompt(input: {
   const brandLogo = brandKit?.logoUrl
     ? `Logo URL: ${brandKit.logoUrl} (use in header/navbar where appropriate)`
     : "Logo URL: None";
-  const targetMode = input.targetOuterHTML ? "Yes" : "No";
-  const targetOriginal = input.targetOuterHTML
-    ? `ORIGINAL TARGET OUTER HTML: ${input.targetOuterHTML}`
+  const targetMode = targetOuterHTML ? "Yes" : "No";
+  const targetOriginal = targetOuterHTML
+    ? `ORIGINAL TARGET OUTER HTML: ${targetOuterHTML}`
     : "";
   const projectCtx = priorContext || "No prior frames";
   return `
