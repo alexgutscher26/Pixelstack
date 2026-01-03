@@ -263,7 +263,7 @@ const CanvasFloatingToolbar = ({
                   promptText={promptText}
                   setPromptText={setPromptText}
                   className="border-muted min-h-37.5 rounded-xl! shadow-none ring-1! ring-purple-500!"
-                  hideSubmitBtn={true}
+                  hideSubmitBtn
                 />
                 <Button
                   disabled={isPending}

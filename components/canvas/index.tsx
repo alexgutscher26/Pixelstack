@@ -251,7 +251,7 @@ const Canvas = ({
           doubleClick={{ disabled: true }}
           centerZoomedOut={false}
           centerOnInit={false}
-          smooth={true}
+          smooth
           limitToBounds={false}
           panning={{
             disabled: toolMode !== TOOL_MODE_ENUM.HAND,
