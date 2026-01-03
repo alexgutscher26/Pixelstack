@@ -71,20 +71,20 @@
 
 .dark {
   --black: #1d1716;
-  --background: #1A1A1A;
-  --foreground: #F4F4F5;
+  --background: #1a1a1a;
+  --foreground: #f4f4f5;
   --card: #262626;
-  --card-foreground: #F4F4F5;
+  --card-foreground: #f4f4f5;
   --popover: #262626;
-  --popover-foreground: #F4F4F5;
-  --primary: #FF0000;
-  --primary-foreground: #FFFFFF;
-  --secondary: #F4F4F5;
+  --popover-foreground: #f4f4f5;
+  --primary: #ff0000;
+  --primary-foreground: #ffffff;
+  --secondary: #f4f4f5;
   --secondary-foreground: #262626;
-  --muted: #3F3F46;
-  --muted-foreground: #A1A1AA;
-  --accent: #FF0000;
-  --accent-foreground: #FFFFFF;
+  --muted: #3f3f46;
+  --muted-foreground: #a1a1aa;
+  --accent: #ff0000;
+  --accent-foreground: #ffffff;
   --destructive: oklch(0.6368 0.2078 25.3313);
   --destructive-foreground: oklch(1 0 0);
   --success: oklch(0.65 0.13 142);
@@ -93,9 +93,9 @@
   --warning-foreground: oklch(0.95 0 0);
   --info: oklch(0.68 0.09 240);
   --info-foreground: oklch(0.95 0 0);
-  --border: #3F3F46;
+  --border: #3f3f46;
   --input: #202023;
-  --ring: #FF0000;
+  --ring: #ff0000;
   --chart-1: oklch(0.5583 0.1276 42.9956);
   --chart-2: oklch(0.6898 0.1581 290.4107);
   --chart-3: oklch(0.213 0.0078 95.4245);
@@ -270,7 +270,7 @@
   .scrollbar-track-card::-webkit-scrollbar-track {
     background: hsl(var(--card));
   }
-  
+
   /* Glow shadow effects */
   .shadow-glow {
     box-shadow: 0 0 60px -15px rgba(255, 0, 0, 0.3);
