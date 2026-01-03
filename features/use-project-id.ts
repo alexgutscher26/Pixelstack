@@ -9,7 +9,7 @@ export const useGetProjectById = (projectId: string) => {
       const res = await axios.get(`/api/project/${projectId}`);
       return res.data;
     },
-    enabled: !!projectId,
+    enabled: Boolean(projectId),
   });
 };
 

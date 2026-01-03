@@ -36,6 +36,6 @@ export const useGetProjects = (userId?: string) => {
       const res = await axios.get("/api/project");
       return res.data.data;
     },
-    enabled: !!userId,
+    enabled: Boolean(userId),
   });
 };

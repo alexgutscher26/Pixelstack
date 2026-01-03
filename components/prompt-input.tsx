@@ -87,7 +87,7 @@ const PromptInput = ({
                 variant="default"
                 className=""
                 size="sm"
-                disabled={!!isLoading}
+                disabled={Boolean(isLoading)}
                 onClick={() => onSubmit?.()}
               >
                 {isLoading ? (
