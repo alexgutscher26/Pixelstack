@@ -28,8 +28,7 @@ function parseNegatives(input: unknown): string[] {
 function parseBody(body: unknown): ParsedBody {
   const b = body as Record<string, unknown>;
   const prompt = typeof b?.prompt === "string" ? b.prompt.trim() : "";
-  const totalScreens =
-    typeof b?.totalScreens === "number" ? (b.totalScreens as number) : undefined;
+  const totalScreens = typeof b?.totalScreens === "number" ? (b.totalScreens as number) : undefined;
   const onboardingScreens =
     typeof b?.onboardingScreens === "number" ? (b.onboardingScreens as number) : undefined;
   const includePaywall =

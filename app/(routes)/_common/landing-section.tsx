@@ -232,7 +232,7 @@ const LandingSection = () => {
                         type="button"
                         variant={active ? "default" : "outline"}
                         size="sm"
-                        className="rounded-full px-3 h-8 gap-2"
+                        className="h-8 gap-2 rounded-full px-3"
                         onClick={() => setStylePreset(active ? undefined : p)}
                       >
                         <span className={`size-2 rounded-full ${color}`}></span>
@@ -286,7 +286,7 @@ const LandingSection = () => {
                                     )
                                   )
                                 }
-                                className="bg-background h-9 rounded-md border px-2 focus:ring-2 focus:ring-primary focus:outline-none"
+                                className="bg-background focus:ring-primary h-9 rounded-md border px-2 focus:ring-2 focus:outline-none"
                                 aria-label="Number of non-onboarding screens"
                               />
                             </div>
@@ -312,7 +312,7 @@ const LandingSection = () => {
                                     )
                                   )
                                 }
-                                className="bg-background h-9 rounded-md border px-2 focus:ring-2 focus:ring-primary focus:outline-none"
+                                className="bg-background focus:ring-primary h-9 rounded-md border px-2 focus:ring-2 focus:outline-none"
                                 aria-label="Number of onboarding screens"
                               />
                             </div>
@@ -356,7 +356,7 @@ const LandingSection = () => {
                               placeholder={`Examples: no red, no rounded corners, no gradients`}
                               value={negativeText}
                               onChange={(e) => setNegativeText(e.target.value)}
-                              className="bg-background min-h-24 rounded-md border px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none"
+                              className="bg-background focus:ring-primary min-h-24 rounded-md border px-3 py-2 focus:ring-2 focus:outline-none"
                               aria-label="Negative prompts"
                             />
                             <span className="text-muted-foreground text-xs">

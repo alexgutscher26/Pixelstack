@@ -67,7 +67,7 @@ export function GeneratedIcon({
       <div
         role="img"
         aria-label={ariaLabel || "Icon generation failed"}
-        className={cn("inline-block size-6 rounded-sm bg-muted", className)}
+        className={cn("bg-muted inline-block size-6 rounded-sm", className)}
         title={title}
       />
     );

@@ -334,7 +334,7 @@ const Header = ({
           </DialogHeader>
           <Input placeholder={messages.header.feedbackSubjectPlaceholder} maxLength={120} />
           <div className="space-y-2">
-            <span className="text-xs text-muted-foreground">
+            <span className="text-muted-foreground text-xs">
               {messages.header.feedbackDescribeIssueLabel}
             </span>
             <Textarea
@@ -364,7 +364,7 @@ const Header = ({
           </DialogHeader>
           <div className="space-y-3">
             <div className="space-y-1">
-              <span className="text-xs text-muted-foreground">Logo URL</span>
+              <span className="text-muted-foreground text-xs">Logo URL</span>
               <Input
                 value={logoUrl}
                 onChange={(e) => setLogoUrl(e.target.value)}
@@ -373,7 +373,7 @@ const Header = ({
               />
             </div>
             <div className="space-y-1">
-              <span className="text-xs text-muted-foreground">Primary Color (Hex)</span>
+              <span className="text-muted-foreground text-xs">Primary Color (Hex)</span>
               <div className="flex items-center gap-2">
                 <Input
                   value={primaryColor}
@@ -388,7 +388,7 @@ const Header = ({
               </div>
             </div>
             <div className="space-y-1">
-              <span className="text-xs text-muted-foreground">Font Family</span>
+              <span className="text-muted-foreground text-xs">Font Family</span>
               <Input
                 value={fontFamily}
                 onChange={(e) => setFontFamily(e.target.value)}
