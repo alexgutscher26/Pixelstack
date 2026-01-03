@@ -7,6 +7,7 @@ import { MobileBlocker } from "@/components/mobile-blocker";
 import { QueryProvider } from "@/context/query-provider";
 import { SessionProvider } from "@/context/session-provider";
 import { messages } from "@/constant/messages";
+import { ConsentManager } from "./consent-manager";
 
 const jostSans = Jost({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -69,20 +70,22 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${jostSans.className} antialiased`}>
-        <QueryProvider>
-          <SessionProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              {children}
-              <MobileBlocker />
-              <Toaster richColors position="bottom-right" />
-            </ThemeProvider>
-          </SessionProvider>
-        </QueryProvider>
+        <ConsentManager>
+          <QueryProvider>
+            <SessionProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                {children}
+                <MobileBlocker />
+                <Toaster richColors position="bottom-right" />
+              </ThemeProvider>
+            </SessionProvider>
+          </QueryProvider>
+        </ConsentManager>
       </body>
     </html>
   );

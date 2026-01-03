@@ -41,7 +41,7 @@ const PromptInput = ({
   const trimmed = promptText.trim();
   return (
     <div className="bg-background">
-      <InputGroup className={cn("bg-background min-h-43 rounded-3xl", className && className)}>
+      <InputGroup className={cn("bg-background min-h-43 rounded-3xl", className)}>
         {inlineStartAddon && (
           <InputGroupAddon align="inline-start" className="max-sm:hidden">
             {inlineStartAddon}
