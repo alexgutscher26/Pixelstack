@@ -21,7 +21,7 @@ const ReactDialog = ({
   title?: string;
 }) => {
   const componentName = toComponentName(title);
-  const escapedHtml = html.replace(/`/g, "\\`").replace(/\$\{/g, "\\${");
+  const escapedHtml = html.replace(/\\/g, "\\\\").replace(/`/g, "\\`").replace(/\$\{/g, "\\${");
   const jsxCode = `
 import React from "react";
 
