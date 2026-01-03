@@ -1,5 +1,7 @@
 # Flowkit — AI Mobile Design Agent
 
+[![CodeFactor](https://www.codefactor.io/repository/github/alexgutscher26/pixelstack/badge)](https://www.codefactor.io/repository/github/alexgutscher26/pixelstack)
+
 Flowkit is an AI-powered mobile design agent that helps you generate polished app screens, apply themes, and export assets fast. It uses Next.js, Tailwind CSS, Prisma, Inngest, and OpenRouter AI to streamline ideation → mockups.
 
 ## Features
