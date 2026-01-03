@@ -8,13 +8,27 @@ import { useCreateProject, useGetProjects } from "@/features/use-project";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { ProjectType } from "@/types/project";
 import { useRouter } from "next/navigation";
-import { FolderOpen, ChevronLeft, ChevronRight, SlidersHorizontal, ImageIcon, MicIcon, Sparkles, Search } from "lucide-react";
+import {
+  FolderOpen,
+  ChevronLeft,
+  ChevronRight,
+  SlidersHorizontal,
+  ImageIcon,
+  MicIcon,
+  Sparkles,
+  Search,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FallbackImage } from "@/components/ui/fallback-image";
 import NoProjectsIllustration from "@/components/illustrations/no-projects-illustration";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
-import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupButton } from "@/components/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupButton,
+} from "@/components/ui/input-group";
 
 // Extract suggestions to constant to prevent recreation
 const SUGGESTIONS = [
@@ -206,12 +220,24 @@ const LandingSection = () => {
         </Suspense>
 
         <div className="relative overflow-hidden pt-28">
-          <div className="fixed inset-0 pointer-events-none opacity-40" style={{backgroundImage: 'radial-gradient(rgba(255, 0, 0, 0.07) 1px, transparent 1px)', backgroundSize: '40px 40px'}} />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] pointer-events-none blur-3xl" style={{background: 'linear-gradient(to bottom, rgba(255, 0, 0, 0.2), transparent)'}} />
+          <div
+            className="fixed inset-0 pointer-events-none opacity-40"
+            style={{
+              backgroundImage: "radial-gradient(rgba(255, 0, 0, 0.07) 1px, transparent 1px)",
+              backgroundSize: "40px 40px",
+            }}
+          />
+          <div
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] pointer-events-none blur-3xl"
+            style={{ background: "linear-gradient(to bottom, rgba(255, 0, 0, 0.2), transparent)" }}
+          />
           <div className="mx-auto flex max-w-6xl flex-col items-center justify-center gap-8 px-4 relative z-10">
             <div className="space-y-4">
               <h1 className="text-center text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
-                Unlock your <span className="bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent">Creative Flow</span>
+                Unlock your{" "}
+                <span className="bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent">
+                  Creative Flow
+                </span>
               </h1>
               <div className="mx-auto max-w-2xl">
                 <p className="text-muted-foreground text-center text-base sm:text-lg">
@@ -260,7 +286,9 @@ const LandingSection = () => {
                         } ${borderColor}`}
                         onClick={() => setStylePreset(active ? undefined : p)}
                       >
-                        <span className={`size-2.5 rounded-full bg-gradient-to-tr shadow-sm ${colorClass}`} />
+                        <span
+                          className={`size-2.5 rounded-full bg-gradient-to-tr shadow-sm ${colorClass}`}
+                        />
                         <span className="text-sm font-bold text-gray-300 transition-colors group-hover:text-white">
                           {p}
                         </span>
@@ -283,109 +311,115 @@ const LandingSection = () => {
                       onEnhance={handleEnhance}
                       isEnhancing={isEnhancing}
                       bottomLeftAddon={
-                      <>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          aria-label="Upload image"
-                          className="rounded-xl bg-card border border-white/5 p-2.5 text-muted-foreground hover:text-white hover:border-primary/30 transition-all"
-                        >
-                          <ImageIcon className="size-5" />
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          aria-label="Voice input"
-                          className="rounded-xl bg-card border border-white/5 p-2.5 text-muted-foreground hover:text-white hover:border-primary/30 transition-all"
-                        >
-                          <MicIcon className="size-5" />
-                        </Button>
-                        <div className="h-8 w-[1px] bg-white/10 mx-1" />
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              aria-label="Open design options"
-                              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-                            >
-                              <SlidersHorizontal className="size-4" />
-                              <span>Settings</span>
-                            </Button>
-                          </PopoverTrigger>
-                        <PopoverContent className="w-80 p-3">
-                          <div className="grid grid-cols-1 gap-3">
-                            <div className="flex flex-col gap-1.5">
-                              <label htmlFor="total-screens-pop" className="text-xs font-medium">
-                                Non-onboarding screens
-                              </label>
-                              <input
-                                id="total-screens-pop"
-                                type="number"
-                                min={SCREEN_LIMITS.total.min}
-                                max={SCREEN_LIMITS.total.max}
-                                value={totalScreens}
-                                onChange={(e) =>
-                                  setTotalScreens(
-                                    clampValue(
-                                      Number(e.target.value) || SCREEN_LIMITS.total.min,
-                                      SCREEN_LIMITS.total.min,
-                                      SCREEN_LIMITS.total.max
-                                    )
-                                  )
-                                }
-                                className="bg-background focus:ring-primary h-9 rounded-md border px-2 focus:ring-2 focus:outline-none"
-                                aria-label="Number of non-onboarding screens"
-                              />
-                            </div>
-                            <div className="flex flex-col gap-1.5">
-                              <label
-                                htmlFor="onboarding-screens-pop"
-                                className="text-xs font-medium"
-                              >
-                                Onboarding screens
-                              </label>
-                              <input
-                                id="onboarding-screens-pop"
-                                type="number"
-                                min={SCREEN_LIMITS.onboarding.min}
-                                max={SCREEN_LIMITS.onboarding.max}
-                                value={onboardingScreens}
-                                onChange={(e) =>
-                                  setOnboardingScreens(
-                                    clampValue(
-                                      Number(e.target.value) || SCREEN_LIMITS.onboarding.min,
-                                      SCREEN_LIMITS.onboarding.min,
-                                      SCREEN_LIMITS.onboarding.max
-                                    )
-                                  )
-                                }
-                                className="bg-background focus:ring-primary h-9 rounded-md border px-2 focus:ring-2 focus:outline-none"
-                                aria-label="Number of onboarding screens"
-                              />
-                            </div>
-                            <div className="flex flex-col gap-1.5">
-                              <label htmlFor="paywall-toggle-pop" className="text-xs font-medium">
-                                Include paywall
-                              </label>
+                        <>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            aria-label="Upload image"
+                            className="rounded-xl bg-card border border-white/5 p-2.5 text-muted-foreground hover:text-white hover:border-primary/30 transition-all"
+                          >
+                            <ImageIcon className="size-5" />
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            aria-label="Voice input"
+                            className="rounded-xl bg-card border border-white/5 p-2.5 text-muted-foreground hover:text-white hover:border-primary/30 transition-all"
+                          >
+                            <MicIcon className="size-5" />
+                          </Button>
+                          <div className="h-8 w-[1px] bg-white/10 mx-1" />
+                          <Popover>
+                            <PopoverTrigger asChild>
                               <Button
-                                id="paywall-toggle-pop"
-                                type="button"
-                                variant={includePaywall ? "default" : "outline"}
-                                className="h-9"
-                                onClick={() => setIncludePaywall((v) => !v)}
-                                aria-pressed={includePaywall}
-                                aria-label="Toggle paywall inclusion"
+                                size="sm"
+                                variant="ghost"
+                                aria-label="Open design options"
+                                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
                               >
-                                {includePaywall ? "Yes" : "No"}
+                                <SlidersHorizontal className="size-4" />
+                                <span>Settings</span>
                               </Button>
-                            </div>
-                          </div>
-                        </PopoverContent>
-                      </Popover>
-                      </>
-                    }
-                  />
+                            </PopoverTrigger>
+                            <PopoverContent className="w-80 p-3">
+                              <div className="grid grid-cols-1 gap-3">
+                                <div className="flex flex-col gap-1.5">
+                                  <label
+                                    htmlFor="total-screens-pop"
+                                    className="text-xs font-medium"
+                                  >
+                                    Non-onboarding screens
+                                  </label>
+                                  <input
+                                    id="total-screens-pop"
+                                    type="number"
+                                    min={SCREEN_LIMITS.total.min}
+                                    max={SCREEN_LIMITS.total.max}
+                                    value={totalScreens}
+                                    onChange={(e) =>
+                                      setTotalScreens(
+                                        clampValue(
+                                          Number(e.target.value) || SCREEN_LIMITS.total.min,
+                                          SCREEN_LIMITS.total.min,
+                                          SCREEN_LIMITS.total.max
+                                        )
+                                      )
+                                    }
+                                    className="bg-background focus:ring-primary h-9 rounded-md border px-2 focus:ring-2 focus:outline-none"
+                                    aria-label="Number of non-onboarding screens"
+                                  />
+                                </div>
+                                <div className="flex flex-col gap-1.5">
+                                  <label
+                                    htmlFor="onboarding-screens-pop"
+                                    className="text-xs font-medium"
+                                  >
+                                    Onboarding screens
+                                  </label>
+                                  <input
+                                    id="onboarding-screens-pop"
+                                    type="number"
+                                    min={SCREEN_LIMITS.onboarding.min}
+                                    max={SCREEN_LIMITS.onboarding.max}
+                                    value={onboardingScreens}
+                                    onChange={(e) =>
+                                      setOnboardingScreens(
+                                        clampValue(
+                                          Number(e.target.value) || SCREEN_LIMITS.onboarding.min,
+                                          SCREEN_LIMITS.onboarding.min,
+                                          SCREEN_LIMITS.onboarding.max
+                                        )
+                                      )
+                                    }
+                                    className="bg-background focus:ring-primary h-9 rounded-md border px-2 focus:ring-2 focus:outline-none"
+                                    aria-label="Number of onboarding screens"
+                                  />
+                                </div>
+                                <div className="flex flex-col gap-1.5">
+                                  <label
+                                    htmlFor="paywall-toggle-pop"
+                                    className="text-xs font-medium"
+                                  >
+                                    Include paywall
+                                  </label>
+                                  <Button
+                                    id="paywall-toggle-pop"
+                                    type="button"
+                                    variant={includePaywall ? "default" : "outline"}
+                                    className="h-9"
+                                    onClick={() => setIncludePaywall((v) => !v)}
+                                    aria-pressed={includePaywall}
+                                    aria-label="Toggle paywall inclusion"
+                                  >
+                                    {includePaywall ? "Yes" : "No"}
+                                  </Button>
+                                </div>
+                              </div>
+                            </PopoverContent>
+                          </Popover>
+                        </>
+                      }
+                    />
                   </div>
                 </div>
               </div>
@@ -475,7 +509,10 @@ const LandingSection = () => {
               {isLoading ? (
                 <div className="flex overflow-x-auto gap-6 pb-10 snap-x snap-mandatory px-2">
                   {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="snap-start shrink-0 w-[240px] md:w-[280px] flex flex-col overflow-hidden rounded-2xl border">
+                    <div
+                      key={i}
+                      className="snap-start shrink-0 w-[240px] md:w-[280px] flex flex-col overflow-hidden rounded-2xl border"
+                    >
                       <div className="bg-background aspect-[9/14]">
                         <Skeleton className="h-full w-full rounded-none" />
                       </div>
@@ -599,7 +636,9 @@ const ProjectCard = memo(({ project }: { project: ProjectType }) => {
         </div>
       </div>
       <div className="mt-4 px-1">
-        <h3 className="text-lg font-bold text-white group-hover:text-primary transition-colors">{project.name}</h3>
+        <h3 className="text-lg font-bold text-white group-hover:text-primary transition-colors">
+          {project.name}
+        </h3>
         <time
           className="text-xs text-muted-foreground"
           dateTime={new Date(project.createdAt).toISOString()}
