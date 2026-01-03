@@ -226,11 +226,11 @@ const LandingSection = () => {
               backgroundImage: "radial-gradient(rgba(255, 0, 0, 0.07) 1px, transparent 1px)",
               backgroundSize: "40px 40px",
             }}
-           />
+          />
           <div
             className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] pointer-events-none blur-3xl"
             style={{ background: "linear-gradient(to bottom, rgba(255, 0, 0, 0.2), transparent)" }}
-           />
+          />
           <div className="mx-auto flex max-w-6xl flex-col items-center justify-center gap-8 px-4 relative z-10">
             <div className="space-y-4">
               <h1 className="text-center text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
