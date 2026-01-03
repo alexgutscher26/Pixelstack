@@ -187,8 +187,7 @@ const DeviceFrame = ({
   const handlePartialRegenerate = useCallback(() => {
     if (!partialPrompt.trim()) return;
     const frameLockedPaths = frames.find((f) => f.id === frameId)?.lockedPaths || [];
-    const isSelectionLocked =
-      (selectedPaths?.some((p) => frameLockedPaths.includes(p))) || false;
+    const isSelectionLocked = selectedPaths?.some((p) => frameLockedPaths.includes(p)) || false;
     if (isSelectionLocked) return;
     if (selectedOuterHTMLs?.length) {
       updateFrame(frameId, { isLoading: true });
@@ -238,8 +237,7 @@ const DeviceFrame = ({
   ]);
 
   const frameLockedPaths = frames.find((f) => f.id === frameId)?.lockedPaths || [];
-  const isSelectionLocked =
-    (selectedPaths?.some((p) => frameLockedPaths.includes(p))) || false;
+  const isSelectionLocked = selectedPaths?.some((p) => frameLockedPaths.includes(p)) || false;
 
   const handleLockSelected = useCallback(() => {
     if (!selectedPaths || selectedPaths.length === 0) return;
@@ -365,14 +363,11 @@ const DeviceFrame = ({
             )}
           </div>
         </div>
-        {isSelected && (selectedOuterHTML || (selectedOuterHTMLs?.length)) && (
+        {isSelected && (selectedOuterHTML || selectedOuterHTMLs?.length) && (
           <div className="dark:bg-muted xda-no-drag absolute top-4 right-4 z-20 w-90 max-w-[85%] rounded-xl border bg-white p-2 shadow-lg">
             <div className="mb-1 text-xs font-medium">
               Edit selected{" "}
-              {selectedOuterHTMLs?.length
-                ? `${selectedOuterHTMLs.length} parts`
-                : "part"}{" "}
-              with AI
+              {selectedOuterHTMLs?.length ? `${selectedOuterHTMLs.length} parts` : "part"} with AI
             </div>
             <InputGroup className="border-0! bg-transparent! px-0! shadow-none! ring-0!">
               <InputGroupAddon>
