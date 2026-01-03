@@ -246,7 +246,7 @@ const LandingSection = () => {
                         className="h-8 gap-2 rounded-full px-3"
                         onClick={() => setStylePreset(active ? undefined : p)}
                       >
-                        <span className={`size-2 rounded-full ${color}`}></span>
+                        <span className={`size-2 rounded-full ${color}`} />
                         <span className="text-sm">{p}</span>
                       </Button>
                     );
@@ -426,9 +426,9 @@ const LandingSection = () => {
             </div>
 
             <div className="pointer-events-none absolute top-[80%] left-1/2 -z-10 h-750 w-1250 -translate-x-1/2">
-              <div className="bg-radial-primary absolute bottom-[calc(100%-300px)] left-1/2 h-500 w-500 -translate-x-1/2 opacity-20"></div>
-              <div className="bg-primary/20 absolute -mt-2.5 size-full rounded-[50%] opacity-70 [box-shadow:0_-15px_24.8px_var(--primary)]"></div>
-              <div className="bg-background absolute z-0 size-full rounded-[50%]"></div>
+              <div className="bg-radial-primary absolute bottom-[calc(100%-300px)] left-1/2 h-500 w-500 -translate-x-1/2 opacity-20" />
+              <div className="bg-primary/20 absolute -mt-2.5 size-full rounded-[50%] opacity-70 [box-shadow:0_-15px_24.8px_var(--primary)]" />
+              <div className="bg-background absolute z-0 size-full rounded-[50%]" />
             </div>
           </div>
         </div>
