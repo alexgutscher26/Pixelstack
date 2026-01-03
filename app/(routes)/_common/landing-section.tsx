@@ -206,8 +206,8 @@ const LandingSection = () => {
         </Suspense>
 
         <div className="relative overflow-hidden pt-28">
-          <div className="fixed inset-0 pointer-events-none opacity-40" style={{backgroundImage: 'radial-gradient(rgba(255, 0, 0, 0.07) 1px, transparent 1px)', backgroundSize: '40px 40px'}}></div>
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] pointer-events-none blur-3xl" style={{background: 'linear-gradient(to bottom, rgba(255, 0, 0, 0.2), transparent)'}}></div>
+          <div className="fixed inset-0 pointer-events-none opacity-40" style={{backgroundImage: 'radial-gradient(rgba(255, 0, 0, 0.07) 1px, transparent 1px)', backgroundSize: '40px 40px'}} />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] pointer-events-none blur-3xl" style={{background: 'linear-gradient(to bottom, rgba(255, 0, 0, 0.2), transparent)'}} />
           <div className="mx-auto flex max-w-6xl flex-col items-center justify-center gap-8 px-4 relative z-10">
             <div className="space-y-4">
               <h1 className="text-center text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
@@ -271,7 +271,7 @@ const LandingSection = () => {
               </div>
               <div className="w-full">
                 <div className="group relative mt-4">
-                  <div className="bg-primary-dark via-primary to-primary-dark absolute -inset-0.5 rounded-[2.1rem] bg-gradient-to-r opacity-30 blur-xl transition duration-500 group-hover:opacity-60"></div>
+                  <div className="bg-primary-dark via-primary to-primary-dark absolute -inset-0.5 rounded-[2.1rem] bg-gradient-to-r opacity-30 blur-xl transition duration-500 group-hover:opacity-60" />
                   <div className="border-border relative w-full rounded-[2rem] border border-white/10 bg-card p-2 shadow-2xl">
                     <PromptInput
                       className="border-0 bg-transparent ring-0 shadow-none"
@@ -300,7 +300,7 @@ const LandingSection = () => {
                         >
                           <MicIcon className="size-5" />
                         </Button>
-                        <div className="h-8 w-[1px] bg-white/10 mx-1"></div>
+                        <div className="h-8 w-[1px] bg-white/10 mx-1" />
                         <Popover>
                           <PopoverTrigger asChild>
                             <Button
