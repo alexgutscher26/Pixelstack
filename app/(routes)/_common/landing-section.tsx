@@ -299,7 +299,7 @@ const LandingSection = () => {
               </div>
               <div className="w-full">
                 <div className="group relative mt-4">
-                  <div className="bg-primary-dark via-primary to-primary-dark absolute -inset-0.5 rounded-[2.1rem] bg-gradient-to-r opacity-30 blur-xl transition duration-500 group-hover:opacity-60"></div>
+                  <div className="bg-primary-dark via-primary to-primary-dark absolute -inset-0.5 rounded-[2.1rem] bg-gradient-to-r opacity-30 blur-xl transition duration-500 group-hover:opacity-60" />
                   <div className="border-border relative w-full rounded-[2rem] border border-white/10 bg-card p-2 shadow-2xl">
                     <PromptInput
                       className="border-0 bg-transparent ring-0 shadow-none"
