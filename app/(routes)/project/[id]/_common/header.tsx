@@ -268,7 +268,7 @@ const Header = ({
           </DialogHeader>
 
           <Input
-            autoFocus
+            
             value={nextName}
             onChange={(e) => setNextName(e.target.value)}
             onKeyDown={handleRenameKeyDown}
@@ -303,7 +303,7 @@ const Header = ({
           </DialogHeader>
 
           <Input
-            autoFocus
+            
             placeholder={messages.header.deleteConfirmPlaceholder}
             value={deleteText}
             onChange={(e) => setDeleteText(e.target.value)}
