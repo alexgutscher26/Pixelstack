@@ -46,7 +46,7 @@ export async function POST(req: Request) {
 
     //Detect environment
     const isProduction = process.env.NODE_ENV === "production";
-    const isVercel = !!process.env.VERCEL;
+    const isVercel = Boolean(process.env.VERCEL);
 
     let puppeteer: any;
     let launchOptions: any = {

@@ -236,7 +236,7 @@ const CanvasFloatingToolbar = ({
     }
   }, [frames, currentTheme?.style, isExportingAll, wireframeMode]);
 
-  const hasSelected = useMemo(() => !!selectedFrame, [selectedFrame]);
+  const hasSelected = useMemo(() => Boolean(selectedFrame), [selectedFrame]);
 
   return (
     <div className="fixed top-6 left-1/2 z-50 -translate-x-1/2">

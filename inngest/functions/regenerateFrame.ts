@@ -303,7 +303,7 @@ export const regenerateFrame = inngest.createFunction(
         }),
       });
 
-      const isElementMode = !!targetOuterHTML;
+      const isElementMode = Boolean(targetOuterHTML);
       const finalHtml = extractFinalHtml(result.text ?? "", isElementMode);
 
       let newHtmlContent = frame.htmlContent;

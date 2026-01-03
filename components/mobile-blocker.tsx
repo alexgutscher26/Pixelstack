@@ -4,7 +4,7 @@ import { Monitor } from "lucide-react";
 
 export function MobileBlocker() {
   const pathname = usePathname();
-  const shouldBlock = !!pathname?.match(/^\/project\/[^/]+$/);
+  const shouldBlock = Boolean(pathname?.match(/^\/project\/[^/]+$/));
   if (!shouldBlock) return null;
   return (
     <div className="bg-background fixed inset-0 z-50 flex items-center justify-center p-4 text-center md:hidden">
