@@ -249,7 +249,10 @@ const BrandKitDialog = ({
                 placeholder="#3b82f6"
                 disabled={isUpdating}
               />
-              <div className="h-8 w-8 rounded-md border" style={{ backgroundColor: primaryColor || "#ffffff" }} />
+              <div
+                className="h-8 w-8 rounded-md border"
+                style={{ backgroundColor: primaryColor || "#ffffff" }}
+              />
             </div>
           </div>
           <div className="space-y-1">
