@@ -266,7 +266,7 @@ const Canvas = ({
               <div
                 ref={canvasRootRef}
                 className={cn(
-                  `absolute inset-0 h-full w-full bg-[#eee] p-3 dark:bg-[#242423]`,
+                  "absolute inset-0 h-full w-full bg-[#eee] p-3 dark:bg-[#242423]",
                   toolMode === TOOL_MODE_ENUM.HAND
                     ? "cursor-grab active:cursor-grabbing"
                     : "cursor-default"
@@ -463,7 +463,7 @@ function CanvasLoader({ status }: { status?: LoadingStatusType | "fetching" | "f
   return (
     <div
       className={cn(
-        `fixed top-20 left-1/2 z-60 -translate-x-1/2 rounded-full px-5 py-2 shadow-lg`,
+        "fixed top-20 left-1/2 z-60 -translate-x-1/2 rounded-full px-5 py-2 shadow-lg",
         "text-white",
         status === "fetching" && "bg-gray-500",
         status === "running" && "bg-amber-500",
