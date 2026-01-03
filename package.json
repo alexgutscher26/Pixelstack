@@ -45,7 +45,8 @@
     "shiki": "^3.20.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.4.0",
-    "zod": "^4.3.4"
+    "zod": "^4.3.4",
+    "jsdom": "^27.4.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",
