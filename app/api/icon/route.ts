@@ -2,6 +2,45 @@ import { NextResponse } from "next/server";
 import { openrouter } from "@/lib/openrouter";
 import { generateText } from "ai";
 import { moderateText } from "@/lib/moderation";
+import { JSDOM } from "jsdom";
+
+function sanitizeSvg(svg: string): string {
+  // Wrap SVG in an HTML document so jsdom can parse it reliably
+  const dom = new JSDOM(`<!DOCTYPE html><html><body>${svg}</body></html>`);
+  const document = dom.window.document;
+  const svgElement = document.querySelector("svg");
+  if (!svgElement) {
+    return svg.trim();
+  }
+
+  // Remove all <script> elements inside the SVG
+  const scripts = svgElement.querySelectorAll("script");
+  scripts.forEach((script) => {
+    script.remove();
+  });
+
+  // Remove event handler attributes and javascript: URLs
+  const elements = svgElement.querySelectorAll("*");
+  elements.forEach((el) => {
+    // Copy attributes first to avoid issues while mutating
+    const attrs = Array.from(el.attributes);
+    attrs.forEach((attr) => {
+      const name = attr.name;
+      const value = attr.value;
+      // Remove inline event handlers like onclick, onload, etc.
+      if (/^on/i.test(name)) {
+        el.removeAttribute(name);
+        return;
+      }
+      // Remove javascript: URLs in href and xlink:href
+      if (/^(href|xlink:href)$/i.test(name) && /^javascript:/i.test(value.trim())) {
+        el.removeAttribute(name);
+      }
+    });
+  });
+
+  return svgElement.outerHTML.trim();
+}
 
 function extractSvg(raw: string): string | null {
   if (!raw) return null;
@@ -12,9 +51,13 @@ function extractSvg(raw: string): string | null {
   const end = cleaned.lastIndexOf("</svg>");
   if (start === -1 || end === -1) return null;
   let svg = cleaned.slice(start, end + 6);
-  svg = svg.replace(/<script[\s\S]*?<\/script>/gi, "");
-  svg = svg.replace(/\son\w+="[^"]*"/gi, "");
-  svg = svg.replace(/\s(href|xlink:href)="javascript:[^"]*"/gi, "");
+  let previous: string;
+  do {
+    previous = svg;
+    svg = svg.replace(/<script[\s\S]*?<\/script>/gi, "");
+    svg = svg.replace(/\son\w+="[^"]*"/gi, "");
+    svg = svg.replace(/\s(href|xlink:href)="javascript:[^"]*"/gi, "");
+  } while (svg !== previous);
   return svg.trim();
 }
 
