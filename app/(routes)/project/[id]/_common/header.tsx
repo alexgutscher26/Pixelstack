@@ -268,7 +268,6 @@ const Header = ({
           </DialogHeader>
 
           <Input
-            
             value={nextName}
             onChange={(e) => setNextName(e.target.value)}
             onKeyDown={handleRenameKeyDown}
@@ -303,7 +302,6 @@ const Header = ({
           </DialogHeader>
 
           <Input
-            
             placeholder={messages.header.deleteConfirmPlaceholder}
             value={deleteText}
             onChange={(e) => setDeleteText(e.target.value)}
