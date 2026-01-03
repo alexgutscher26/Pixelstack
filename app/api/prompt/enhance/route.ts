@@ -3,28 +3,77 @@ import { openrouter } from "@/lib/openrouter";
 import { generateText } from "ai";
 import { moderateText } from "@/lib/moderation";
 
+type ParsedBody = {
+  prompt: string;
+  totalScreens?: number;
+  onboardingScreens?: number;
+  includePaywall?: boolean;
+  negatives: string[];
+  stylePreset?: string;
+};
+
+function parseNegatives(input: unknown): string[] {
+  if (Array.isArray(input)) {
+    return input.map((s: unknown) => String(s).trim()).filter(Boolean);
+  }
+  if (typeof input === "string") {
+    return input
+      .split(/[,\n]/)
+      .map((s: string) => s.trim())
+      .filter(Boolean);
+  }
+  return [];
+}
+
+function parseBody(body: unknown): ParsedBody {
+  const b = body as Record<string, unknown>;
+  const prompt = typeof b?.prompt === "string" ? b.prompt.trim() : "";
+  const totalScreens =
+    typeof b?.totalScreens === "number" ? (b.totalScreens as number) : undefined;
+  const onboardingScreens =
+    typeof b?.onboardingScreens === "number" ? (b.onboardingScreens as number) : undefined;
+  const includePaywall =
+    typeof b?.includePaywall === "boolean" ? (b.includePaywall as boolean) : undefined;
+  const stylePreset =
+    typeof b?.stylePreset === "string" && (b.stylePreset as string).trim().length > 0
+      ? (b.stylePreset as string).trim()
+      : undefined;
+  const negatives = parseNegatives(b?.negativePrompts);
+  return { prompt, totalScreens, onboardingScreens, includePaywall, negatives, stylePreset };
+}
+
+function buildConstraintsText({
+  totalScreens,
+  onboardingScreens,
+  includePaywall,
+  negatives,
+  stylePreset,
+}: ParsedBody): string {
+  const constraints: string[] = [];
+  if (typeof totalScreens === "number") {
+    constraints.push(`Non-onboarding screens: ${totalScreens}`);
+  }
+  if (typeof onboardingScreens === "number") {
+    constraints.push(`Onboarding screens: ${onboardingScreens}`);
+  }
+  if (typeof includePaywall === "boolean") {
+    constraints.push(`Include paywall: ${includePaywall ? "Yes" : "No"}`);
+  }
+  if (negatives.length > 0) {
+    constraints.push(`Negative prompts (strictly avoid): ${negatives.join("; ")}`);
+  }
+  if (stylePreset) {
+    constraints.push(`Design style preset: ${stylePreset}`);
+  }
+  if (constraints.length === 0) return "";
+  return `\n\nSCREEN GENERATION CONSTRAINTS\n- ${constraints.join("\n- ")}\n`;
+}
+
 export async function POST(request: Request) {
   try {
-    const body = await request.json().catch(() => ({}));
-    const prompt = typeof body?.prompt === "string" ? body.prompt.trim() : "";
-    const totalScreens = typeof body?.totalScreens === "number" ? body.totalScreens : undefined;
-    const onboardingScreens =
-      typeof body?.onboardingScreens === "number" ? body.onboardingScreens : undefined;
-    const includePaywall =
-      typeof body?.includePaywall === "boolean" ? body.includePaywall : undefined;
-    const negativePromptsRaw = body?.negativePrompts;
-    const negatives: string[] = Array.isArray(negativePromptsRaw)
-      ? negativePromptsRaw.map((s: unknown) => String(s).trim()).filter(Boolean)
-      : typeof negativePromptsRaw === "string"
-        ? negativePromptsRaw
-            .split(/[,\n]/)
-            .map((s: string) => s.trim())
-            .filter(Boolean)
-        : [];
-    const stylePreset =
-      typeof body?.stylePreset === "string" && body.stylePreset.trim().length > 0
-        ? body.stylePreset.trim()
-        : undefined;
+    const raw = await request.json().catch(() => ({}));
+    const parsed = parseBody(raw);
+    const { prompt } = parsed;
 
     if (!prompt) {
       return NextResponse.json({ error: "Missing prompt" }, { status: 400 });
@@ -35,26 +84,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Prompt violates content policy" }, { status: 400 });
     }
 
-    const constraints: string[] = [];
-    if (typeof totalScreens === "number") {
-      constraints.push(`Non-onboarding screens: ${totalScreens}`);
-    }
-    if (typeof onboardingScreens === "number") {
-      constraints.push(`Onboarding screens: ${onboardingScreens}`);
-    }
-    if (typeof includePaywall === "boolean") {
-      constraints.push(`Include paywall: ${includePaywall ? "Yes" : "No"}`);
-    }
-    if (negatives.length > 0) {
-      constraints.push(`Negative prompts (strictly avoid): ${negatives.join("; ")}`);
-    }
-    if (stylePreset) {
-      constraints.push(`Design style preset: ${stylePreset}`);
-    }
-    const constraintsText =
-      constraints.length > 0
-        ? `\n\nSCREEN GENERATION CONSTRAINTS\n- ${constraints.join("\n- ")}\n`
-        : "";
+    const constraintsText = buildConstraintsText(parsed);
 
     const { text } = await generateText({
       model: openrouter.chat("google/gemini-2.5-flash-lite"),
