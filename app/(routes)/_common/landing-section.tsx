@@ -112,7 +112,7 @@ const LandingSection = () => {
   const [totalScreens, setTotalScreens] = useState<number>(9);
   const [onboardingScreens, setOnboardingScreens] = useState<number>(1);
   const [includePaywall, setIncludePaywall] = useState<boolean>(false);
-  const [negativeText] = useState<string>("");
+  const [negativeText, setNegativeText] = useState<string>("");
   const STYLE_PRESETS = [
     "Futuristic",
     "Neo‑Brutalism",
@@ -414,6 +414,60 @@ const LandingSection = () => {
                                     {includePaywall ? "Yes" : "No"}
                                   </Button>
                                 </div>
+                                <div className="flex flex-col gap-1.5">
+                                  <label
+                                    htmlFor="negative-prompts-pop"
+                                    className="text-xs font-medium"
+                                  >
+                                    Negative prompts
+                                  </label>
+                                  <textarea
+                                    id="negative-prompts-pop"
+                                    rows={3}
+                                    placeholder="e.g. No ads, avoid neon colors, no charts"
+                                    value={negativeText}
+                                    onChange={(e) => setNegativeText(e.target.value)}
+                                    className="bg-background focus:ring-primary rounded-md border px-2 py-2 focus:ring-2 focus:outline-none"
+                                    aria-label="Negative prompts to exclude styles or elements"
+                                  />
+                                  <span className="text-[10px] text-muted-foreground">
+                                    Comma or newline separated phrases to avoid in generation.
+                                  </span>
+                                </div>
+                              </div>
+                            </PopoverContent>
+                          </Popover>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                aria-label="Open negative prompts"
+                                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                              >
+                                <span>Negative Prompts</span>
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-80 p-3">
+                              <div className="flex flex-col gap-1.5">
+                                <label
+                                  htmlFor="negative-prompts-inline"
+                                  className="text-xs font-medium"
+                                >
+                                  Negative prompts
+                                </label>
+                                <textarea
+                                  id="negative-prompts-inline"
+                                  rows={3}
+                                  placeholder="e.g. No ads, avoid neon colors, no charts"
+                                  value={negativeText}
+                                  onChange={(e) => setNegativeText(e.target.value)}
+                                  className="bg-background focus:ring-primary rounded-md border px-2 py-2 focus:ring-2 focus:outline-none"
+                                  aria-label="Negative prompts to exclude styles or elements"
+                                />
+                                <span className="text-[10px] text-muted-foreground">
+                                  Comma or newline separated phrases to avoid in generation.
+                                </span>
                               </div>
                             </PopoverContent>
                           </Popover>
