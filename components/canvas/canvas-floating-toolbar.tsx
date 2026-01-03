@@ -92,7 +92,7 @@ const CanvasFloatingToolbar = ({
       iframe.style.left = "-99999px";
       iframe.style.top = "-99999px";
       iframe.style.width = `${exportWidth}px`;
-      iframe.style.height = `800px`;
+      iframe.style.height = "800px";
       iframe.setAttribute("sandbox", "allow-scripts allow-same-origin");
       document.body.appendChild(iframe);
       iframe.srcdoc = fullHtml;
@@ -293,7 +293,7 @@ const CanvasFloatingToolbar = ({
                                 setTheme(theme.id);
                               }}
                               className={cn(
-                                `h-6.5 w-6.5 cursor-pointer rounded-full`,
+                                "h-6.5 w-6.5 cursor-pointer rounded-full",
                                 currentTheme?.id === theme.id && "ring-1 ring-offset-1"
                               )}
                               style={{
