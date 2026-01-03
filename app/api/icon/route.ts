@@ -51,7 +51,13 @@ function extractSvg(raw: string): string | null {
   const end = cleaned.lastIndexOf("</svg>");
   if (start === -1 || end === -1) return null;
   let svg = cleaned.slice(start, end + 6);
-  svg = sanitizeSvg(svg);
+  let previous: string;
+  do {
+    previous = svg;
+    svg = svg.replace(/<script[\s\S]*?<\/script>/gi, "");
+    svg = svg.replace(/\son\w+="[^"]*"/gi, "");
+    svg = svg.replace(/\s(href|xlink:href)="javascript:[^"]*"/gi, "");
+  } while (svg !== previous);
   return svg.trim();
 }
 
