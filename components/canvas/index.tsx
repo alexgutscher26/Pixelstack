@@ -60,9 +60,6 @@ const Canvas = ({
           height: 700,
           projectId,
         });
-        if (response.data) {
-          console.log("Thumbnail saved", response.data);
-        }
       } catch (error) {
         console.log(error);
       } finally {
