@@ -40,7 +40,7 @@ const PromptInput = ({
 }: PropsType) => {
   const trimmed = promptText.trim();
   return (
-    <div className="rounded-[1.8rem] overflow-hidden" style={{backgroundColor: '#202023'}}>
+    <div className="rounded-[1.8rem] overflow-hidden" style={{ backgroundColor: "#202023" }}>
       <InputGroup className={cn("bg-transparent min-h-[176px] rounded-[1.8rem]", className)}>
         {inlineStartAddon && (
           <InputGroupAddon align="inline-start" className="max-sm:hidden">
@@ -61,7 +61,10 @@ const PromptInput = ({
           }}
         />
 
-        <InputGroupAddon align="block-end" className="flex flex-col md:flex-row items-center justify-between gap-4 px-6 pb-6 pt-2 bg-gradient-to-t from-card to-transparent">
+        <InputGroupAddon
+          align="block-end"
+          className="flex flex-col md:flex-row items-center justify-between gap-4 px-6 pb-6 pt-2 bg-gradient-to-t from-card to-transparent"
+        >
           <div className="flex items-center gap-3 w-full md:w-auto">{bottomLeftAddon}</div>
           <div className="flex items-center gap-4 w-full md:w-auto">
             {onEnhance && (
