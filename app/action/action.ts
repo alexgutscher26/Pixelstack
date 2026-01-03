@@ -124,7 +124,7 @@ Return ONLY the project name. No quotes, no explanation, no extra text.`,
  */
 export async function generateProjectNameSuggestions(
   prompt: string,
-  count: number = 3
+  count = 3
 ): Promise<string[]> {
   if (!prompt?.trim() || count < 1) {
     return [DEFAULT_PROJECT_NAME];
