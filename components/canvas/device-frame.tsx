@@ -496,7 +496,9 @@ const DeviceFrame = ({
           toolMode={toolMode}
         />
         <SelectionEditor
-          visible={isSelected && (Boolean(selectedOuterHTML) || Boolean(selectedOuterHTMLs?.length))}
+          visible={
+            isSelected && (Boolean(selectedOuterHTML) || Boolean(selectedOuterHTMLs?.length))
+          }
           count={selectedOuterHTMLs?.length || (selectedOuterHTML ? 1 : 0)}
           partialPrompt={partialPrompt}
           onPartialPromptChange={setPartialPrompt}
