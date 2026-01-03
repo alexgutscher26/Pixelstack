@@ -101,7 +101,8 @@ Constraints:
       return NextResponse.json({ error: "Failed to generate SVG" }, { status: 500 });
     }
 
-    return new NextResponse(svg, {
+    const safe = sanitizeSvg(svg);
+    return new NextResponse(safe, {
       headers: {
         "Content-Type": "image/svg+xml; charset=utf-8",
         "Cache-Control": "no-store",
@@ -152,7 +153,8 @@ Constraints:
       return NextResponse.json({ error: "Failed to generate SVG" }, { status: 500 });
     }
 
-    return new NextResponse(svg, {
+    const safe = sanitizeSvg(svg);
+    return new NextResponse(safe, {
       headers: {
         "Content-Type": "image/svg+xml; charset=utf-8",
         "Cache-Control": "no-store",

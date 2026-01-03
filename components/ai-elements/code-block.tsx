@@ -78,6 +78,13 @@ export const CodeBlock = ({
   children,
   ...props
 }: CodeBlockProps) => {
+  const sanitize = (input: string) => {
+    let out = input || "";
+    out = out.replace(/<script[\s\S]*?<\/script>/gi, "");
+    out = out.replace(/\son\w+="[^"]*"/gi, "");
+    out = out.replace(/\s(href|xlink:href)="javascript:[^"]*"/gi, "");
+    return out;
+  };
   const [html, setHtml] = useState<string>("");
   const [darkHtml, setDarkHtml] = useState<string>("");
   const mounted = useRef(false);
@@ -85,8 +92,8 @@ export const CodeBlock = ({
   useEffect(() => {
     highlightCode(code, language, showLineNumbers).then(([light, dark]) => {
       if (!mounted.current) {
-        setHtml(light);
-        setDarkHtml(dark);
+        setHtml(sanitize(light));
+        setDarkHtml(sanitize(dark));
         mounted.current = true;
       }
     });

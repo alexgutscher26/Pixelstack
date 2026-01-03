@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -75,13 +76,16 @@ export function GeneratedIcon({
   if (!svg) {
     return <Spinner className={cn("size-5", className)} />;
   }
+  const dataUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
   return (
-    <span
-      role="img"
-      aria-label={ariaLabel || prompt}
+    <img
+      alt={ariaLabel || prompt}
       className={cn("inline-flex", className)}
       title={title}
-      dangerouslySetInnerHTML={{ __html: svg }}
+      src={dataUrl}
+      width={size}
+      height={size}
+      decoding="async"
     />
   );
 }
