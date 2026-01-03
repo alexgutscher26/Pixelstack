@@ -7,7 +7,7 @@ import {
   InputGroupButton,
   InputGroupTextarea,
 } from "./ui/input-group";
-import { CornerDownLeftIcon, Wand2 } from "lucide-react";
+import { CornerDownLeftIcon, Wand2, ImageIcon, MicIcon } from "lucide-react";
 import { Spinner } from "./ui/spinner";
 
 interface PropsType {
@@ -40,8 +40,8 @@ const PromptInput = ({
 }: PropsType) => {
   const trimmed = promptText.trim();
   return (
-    <div className="bg-background">
-      <InputGroup className={cn("bg-background min-h-43 rounded-3xl", className)}>
+    <div className="rounded-[1.8rem] overflow-hidden" style={{backgroundColor: '#202023'}}>
+      <InputGroup className={cn("bg-transparent min-h-[176px] rounded-[1.8rem]", className)}>
         {inlineStartAddon && (
           <InputGroupAddon align="inline-start" className="max-sm:hidden">
             {inlineStartAddon}
@@ -53,7 +53,7 @@ const PromptInput = ({
           </InputGroupAddon>
         )}
         <InputGroupTextarea
-          className="py-2.5! text-base!"
+          className="bg-transparent border-none py-8! px-8! text-xl! text-white placeholder:text-muted-foreground/40 resize-none leading-relaxed"
           placeholder={placeholder ?? "I want to design an app that..."}
           value={promptText}
           onChange={(e) => {
@@ -61,13 +61,13 @@ const PromptInput = ({
           }}
         />
 
-        <InputGroupAddon align="block-end" className="flex items-center justify-between">
-          <div className="flex items-center gap-2">{bottomLeftAddon}</div>
-          <div className="flex items-center gap-2">
+        <InputGroupAddon align="block-end" className="flex flex-col md:flex-row items-center justify-between gap-4 px-6 pb-6 pt-2 bg-gradient-to-t from-card to-transparent">
+          <div className="flex items-center gap-3 w-full md:w-auto">{bottomLeftAddon}</div>
+          <div className="flex items-center gap-4 w-full md:w-auto">
             {onEnhance && (
               <InputGroupButton
-                variant="outline"
-                className=""
+                variant="ghost"
+                className="hidden md:flex items-center gap-2 text-sm font-bold text-yellow-500 hover:text-white transition-colors"
                 size="sm"
                 disabled={isEnhancing || trimmed.length === 0}
                 onClick={() => onEnhance?.()}
@@ -76,8 +76,8 @@ const PromptInput = ({
                   <Spinner />
                 ) : (
                   <>
+                    <Wand2 className="size-5" />
                     Magic Enhance
-                    <Wand2 className="size-4" />
                   </>
                 )}
               </InputGroupButton>
@@ -85,7 +85,7 @@ const PromptInput = ({
             {!hideSubmitBtn && (
               <InputGroupButton
                 variant="default"
-                className=""
+                className="w-full md:w-auto bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-extrabold py-3 px-8 rounded-xl shadow-[0_4px_14px_0_rgba(245,158,11,0.39)] hover:shadow-[0_6px_20px_rgba(245,158,11,0.23)] hover:-translate-y-0.5 transition-all"
                 size="sm"
                 disabled={Boolean(isLoading)}
                 onClick={() => onSubmit?.()}
@@ -94,8 +94,8 @@ const PromptInput = ({
                   <Spinner />
                 ) : (
                   <>
-                    Design
-                    <CornerDownLeftIcon className="size-4" />
+                    Design App
+                    <CornerDownLeftIcon className="size-5 font-bold" />
                   </>
                 )}
               </InputGroupButton>

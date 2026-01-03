@@ -26,19 +26,37 @@ const Header = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const redirectURL = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : "");
+  const navItems = [
+    { label: "Dashboard", href: "/" },
+    { label: "Pricing", href: "/pricing" },
+    { label: "Community", href: "/community" },
+  ];
   return (
-    <div className="sticky top-0 right-0 left-0 z-30">
-      <header className="bg-background h-16 border-b py-4">
+    <div className="sticky top-0 right-0 left-0 z-30 relative">
+      <div
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] pointer-events-none blur-3xl"
+        style={{ background: "linear-gradient(to bottom, rgba(255, 0, 0, 0.2), transparent)" }}
+      />
+      <header className="bg-transparent h-16 py-4 relative z-10">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between">
           <Logo />
 
           <div className="hidden flex-1 items-center justify-center gap-8 md:flex">
-            <Link href="/" className="text-foreground-muted text-sm">
-              {messages.common.home}
-            </Link>
-            <Link href="/" className="text-foreground-muted text-sm">
-              {messages.common.pricing}
-            </Link>
+            {navItems.map(({ label, href }) => {
+              const active = pathname === href || (href !== "/" && pathname?.startsWith(href));
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={cn(
+                    "text-foreground hover:text-foreground/80 text-sm font-medium transition-colors pb-1 border-b-2",
+                    active ? "border-primary" : "border-transparent"
+                  )}
+                >
+                  {label}
+                </Link>
+              );
+            })}
           </div>
 
           <div className="flex flex-1 items-center justify-end gap-3">

@@ -3,19 +3,18 @@ import { memo, useRef, useState, useMemo, useCallback, Suspense } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { Suggestion, Suggestions } from "@/components/ai-elements/suggestion";
 import PromptInput from "@/components/prompt-input";
-import { InputGroupButton } from "@/components/ui/input-group";
 import Header from "./header";
 import { useCreateProject, useGetProjects } from "@/features/use-project";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { ProjectType } from "@/types/project";
 import { useRouter } from "next/navigation";
-import { FolderOpen, ChevronLeft, ChevronRight, Search, SlidersHorizontal } from "lucide-react";
+import { FolderOpen, ChevronLeft, ChevronRight, SlidersHorizontal, ImageIcon, MicIcon, Sparkles, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FallbackImage } from "@/components/ui/fallback-image";
-import { Input } from "@/components/ui/input";
 import NoProjectsIllustration from "@/components/illustrations/no-projects-illustration";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupButton } from "@/components/ui/input-group";
 
 // Extract suggestions to constant to prevent recreation
 const SUGGESTIONS = [
@@ -99,7 +98,7 @@ const LandingSection = () => {
   const [totalScreens, setTotalScreens] = useState<number>(9);
   const [onboardingScreens, setOnboardingScreens] = useState<number>(1);
   const [includePaywall, setIncludePaywall] = useState<boolean>(false);
-  const [negativeText, setNegativeText] = useState<string>("");
+  const [negativeText] = useState<string>("");
   const STYLE_PRESETS = [
     "Futuristic",
     "Neo‑Brutalism",
@@ -207,75 +206,113 @@ const LandingSection = () => {
         </Suspense>
 
         <div className="relative overflow-hidden pt-28">
-          <div className="mx-auto flex max-w-6xl flex-col items-center justify-center gap-8 px-4">
-            <div className="space-y-3">
-              <h1 className="text-center text-4xl font-semibold tracking-tight sm:text-5xl">
-                Design mobile apps <br className="md:hidden" />
-                <span className="text-primary">in minutes</span>
+          <div className="fixed inset-0 pointer-events-none opacity-40" style={{backgroundImage: 'radial-gradient(rgba(255, 0, 0, 0.07) 1px, transparent 1px)', backgroundSize: '40px 40px'}}></div>
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] pointer-events-none blur-3xl" style={{background: 'linear-gradient(to bottom, rgba(255, 0, 0, 0.2), transparent)'}}></div>
+          <div className="mx-auto flex max-w-6xl flex-col items-center justify-center gap-8 px-4 relative z-10">
+            <div className="space-y-4">
+              <h1 className="text-center text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
+                Unlock your <span className="bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent">Creative Flow</span>
               </h1>
               <div className="mx-auto max-w-2xl">
-                <p className="text-foreground text-center leading-relaxed font-medium sm:text-lg">
-                  Go from idea to beautiful app mockups in minutes by chatting with AI.
+                <p className="text-muted-foreground text-center text-base sm:text-lg">
+                  Generate stunning mobile interfaces in seconds with our AI explorer.
                 </p>
               </div>
             </div>
 
-            <div className="item-center relative z-50 flex w-full max-w-3xl flex-col gap-8">
+            <div className="item-center relative z-50 flex w-full max-w-4xl flex-col gap-6">
               <div className="w-full px-5">
-                <div className="flex flex-wrap justify-center gap-2">
+                <div className="flex flex-wrap justify-center gap-3">
                   {STYLE_PRESETS.map((p) => {
-                    const color =
+                    const colorClass =
                       p === "Futuristic"
-                        ? "bg-blue-500"
+                        ? "from-blue-400 to-blue-600"
                         : p === "Neo‑Brutalism"
-                          ? "bg-pink-600"
+                          ? "from-pink-400 to-pink-600"
                           : p === "Nature"
-                            ? "bg-green-600"
+                            ? "from-emerald-400 to-emerald-600"
                             : p === "Playful"
-                              ? "bg-purple-500"
+                              ? "from-orange-400 to-orange-600"
                               : p === "Minimal"
-                                ? "bg-gray-400"
-                                : "bg-amber-500";
+                                ? "from-purple-400 to-purple-600"
+                                : "from-yellow-400 to-yellow-600";
+                    const borderColor =
+                      p === "Futuristic"
+                        ? "hover:border-blue-400/50"
+                        : p === "Neo‑Brutalism"
+                          ? "hover:border-pink-400/50"
+                          : p === "Nature"
+                            ? "hover:border-emerald-400/50"
+                            : p === "Playful"
+                              ? "hover:border-orange-400/50"
+                              : p === "Minimal"
+                                ? "hover:border-purple-400/50"
+                                : "hover:border-yellow-400/50";
                     const active = stylePreset === p;
                     return (
                       <Button
                         key={p}
                         type="button"
-                        variant={active ? "default" : "outline"}
+                        variant="ghost"
                         size="sm"
-                        className="h-8 gap-2 rounded-full px-3"
+                        className={`hover:bg-card group relative h-auto gap-2 rounded-full border px-5 py-2 transition-all hover:-translate-y-1 hover:scale-105 ${
+                          active ? "border-primary/50 bg-card" : "border-white/5 bg-card"
+                        } ${borderColor}`}
                         onClick={() => setStylePreset(active ? undefined : p)}
                       >
-                        <span className={`size-2 rounded-full ${color}`} />
-                        <span className="text-sm">{p}</span>
+                        <span className={`size-2.5 rounded-full bg-gradient-to-tr shadow-sm ${colorClass}`} />
+                        <span className="text-sm font-bold text-gray-300 transition-colors group-hover:text-white">
+                          {p}
+                        </span>
                       </Button>
                     );
                   })}
                 </div>
               </div>
               <div className="w-full">
-                <PromptInput
-                  className="ring-primary ring-2"
-                  promptText={promptText}
-                  setPromptText={setPromptText}
-                  isLoading={isPending}
-                  onSubmit={handleSubmit}
-                  placeholder="Describe your app idea..."
-                  onEnhance={handleEnhance}
-                  isEnhancing={isEnhancing}
-                  bottomLeftAddon={
-                    <div className="flex items-center gap-2">
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <InputGroupButton
-                            size="icon-sm"
-                            variant="ghost"
-                            aria-label="Open design options"
-                            className="rounded-full"
-                          >
-                            <SlidersHorizontal className="size-4" />
-                          </InputGroupButton>
-                        </PopoverTrigger>
+                <div className="group relative mt-4">
+                  <div className="bg-primary-dark via-primary to-primary-dark absolute -inset-0.5 rounded-[2.1rem] bg-gradient-to-r opacity-30 blur-xl transition duration-500 group-hover:opacity-60"></div>
+                  <div className="border-border relative w-full rounded-[2rem] border border-white/10 bg-card p-2 shadow-2xl">
+                    <PromptInput
+                      className="border-0 bg-transparent ring-0 shadow-none"
+                      promptText={promptText}
+                      setPromptText={setPromptText}
+                      isLoading={isPending}
+                      onSubmit={handleSubmit}
+                      placeholder="Describe your app idea here... e.g. 'A meditation tracker with forest sounds, using a calming green palette and rounded cards.'"
+                      onEnhance={handleEnhance}
+                      isEnhancing={isEnhancing}
+                      bottomLeftAddon={
+                      <>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          aria-label="Upload image"
+                          className="rounded-xl bg-card border border-white/5 p-2.5 text-muted-foreground hover:text-white hover:border-primary/30 transition-all"
+                        >
+                          <ImageIcon className="size-5" />
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          aria-label="Voice input"
+                          className="rounded-xl bg-card border border-white/5 p-2.5 text-muted-foreground hover:text-white hover:border-primary/30 transition-all"
+                        >
+                          <MicIcon className="size-5" />
+                        </Button>
+                        <div className="h-8 w-[1px] bg-white/10 mx-1"></div>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              aria-label="Open design options"
+                              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                            >
+                              <SlidersHorizontal className="size-4" />
+                              <span>Settings</span>
+                            </Button>
+                          </PopoverTrigger>
                         <PopoverContent className="w-80 p-3">
                           <div className="grid grid-cols-1 gap-3">
                             <div className="flex flex-col gap-1.5">
@@ -346,65 +383,36 @@ const LandingSection = () => {
                           </div>
                         </PopoverContent>
                       </Popover>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <InputGroupButton
-                            size="sm"
-                            variant="ghost"
-                            aria-label="Open negative prompts"
-                            className="rounded-full"
-                          >
-                            Negatives
-                          </InputGroupButton>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-96 p-3">
-                          <div className="flex flex-col gap-1.5">
-                            <label htmlFor="negative-prompts-pop" className="text-xs font-medium">
-                              Negative prompts
-                            </label>
-                            <textarea
-                              id="negative-prompts-pop"
-                              placeholder={"Examples: no red, no rounded corners, no gradients"}
-                              value={negativeText}
-                              onChange={(e) => setNegativeText(e.target.value)}
-                              className="bg-background focus:ring-primary min-h-24 rounded-md border px-3 py-2 focus:ring-2 focus:outline-none"
-                              aria-label="Negative prompts"
-                            />
-                            <span className="text-muted-foreground text-xs">
-                              Comma or newline separated. We will strictly avoid these in the
-                              design.
-                            </span>
-                          </div>
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                  }
-                />
+                      </>
+                    }
+                  />
+                  </div>
+                </div>
               </div>
 
               <div className="relative w-full px-5">
-                <div className="pointer-events-none absolute top-1/2 left-0 z-10 -translate-y-1/2">
+                <div className="pointer-events-none absolute top-1/2 -left-4 z-10 -translate-y-1/2">
                   <Button
                     type="button"
                     size="icon"
                     variant="outline"
-                    className="bg-background/80 hover:bg-background pointer-events-auto rounded-full border backdrop-blur"
+                    className="bg-background hover:bg-accent pointer-events-auto h-10 w-10 rounded-full border-2 shadow-md transition-all hover:scale-110"
                     onClick={() => handleScroll("left")}
                     aria-label="Previous suggestions"
                   >
-                    <ChevronLeft className="size-4" />
+                    <ChevronLeft className="size-5" />
                   </Button>
                 </div>
-                <div className="pointer-events-none absolute top-1/2 right-0 z-10 -translate-y-1/2">
+                <div className="pointer-events-none absolute top-1/2 -right-4 z-10 -translate-y-1/2">
                   <Button
                     type="button"
                     size="icon"
                     variant="outline"
-                    className="bg-background/80 hover:bg-background pointer-events-auto rounded-full border backdrop-blur"
+                    className="bg-background hover:bg-accent pointer-events-auto h-10 w-10 rounded-full border-2 shadow-md transition-all hover:scale-110"
                     onClick={() => handleScroll("right")}
                     aria-label="Next suggestions"
                   >
-                    <ChevronRight className="size-4" />
+                    <ChevronRight className="size-5" />
                   </Button>
                 </div>
                 <Suggestions ref={carouselRef} className="py-1">
@@ -434,28 +442,41 @@ const LandingSection = () => {
         </div>
 
         {userId && (
-          <section className="w-full py-10" aria-label="Recent projects">
-            <div className="mx-auto max-w-3xl px-4">
-              <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <h2 className="text-xl font-medium tracking-tight">Recent Projects</h2>
-                <div className="relative w-full sm:max-w-xs">
-                  <Search className="text-muted-foreground pointer-events-none absolute top-2.5 left-2.5 h-4 w-4" />
-                  <Input
-                    type="search"
+          <section className="w-full py-16" aria-label="Recent projects">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <div className="mb-8 flex items-center justify-between px-2">
+                <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                  <Sparkles className="text-primary" /> Recent Projects
+                </h2>
+                <InputGroup className="w-[260px] md:w-[320px]">
+                  <InputGroupAddon aria-hidden="true">
+                    <Search className="size-4 text-muted-foreground" />
+                  </InputGroupAddon>
+                  <InputGroupInput
                     placeholder="Search projects..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="h-9 pl-9"
-                    aria-label="Search projects"
+                    aria-label="Search recent projects"
                   />
-                </div>
+                  {searchQuery && (
+                    <InputGroupAddon align="inline-end">
+                      <InputGroupButton
+                        variant="ghost"
+                        onClick={() => setSearchQuery("")}
+                        aria-label="Clear search"
+                      >
+                        Clear
+                      </InputGroupButton>
+                    </InputGroupAddon>
+                  )}
+                </InputGroup>
               </div>
 
               {isLoading ? (
-                <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+                <div className="flex overflow-x-auto gap-6 pb-10 snap-x snap-mandatory px-2">
                   {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="flex w-full flex-col overflow-hidden rounded-xl border">
-                      <div className="bg-background h-40">
+                    <div key={i} className="snap-start shrink-0 w-[240px] md:w-[280px] flex flex-col overflow-hidden rounded-2xl border">
+                      <div className="bg-background aspect-[9/14]">
                         <Skeleton className="h-full w-full rounded-none" />
                       </div>
                       <div className="space-y-2 p-4">
@@ -466,7 +487,27 @@ const LandingSection = () => {
                   ))}
                 </div>
               ) : filteredProjects.length > 0 ? (
-                <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+                <div className="flex overflow-x-auto gap-6 pb-10 snap-x snap-mandatory px-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-card">
+                  <div className="snap-start shrink-0 w-[240px] md:w-[280px]">
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      className="aspect-[9/14] rounded-2xl border-2 border-dashed border-white/10 hover:border-primary/50 hover:bg-white/5 flex flex-col items-center justify-center gap-4 transition-all duration-300 cursor-pointer group"
+                      onClick={handleStartNewProject}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          handleStartNewProject();
+                        }
+                      }}
+                      aria-label="Create new project"
+                    >
+                      <div className="h-16 w-16 rounded-full bg-card flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-300">
+                        <FolderOpen className="text-3xl text-primary" />
+                      </div>
+                      <span className="font-bold text-white">New Project</span>
+                    </div>
+                  </div>
                   {filteredProjects.map((project: ProjectType) => (
                     <ProjectCard key={project.id} project={project} />
                   ))}
@@ -526,36 +567,44 @@ const ProjectCard = memo(({ project }: { project: ProjectType }) => {
   );
 
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      className="focus:ring-primary flex w-full cursor-pointer flex-col overflow-hidden rounded-xl border transition-shadow hover:shadow-md focus:ring-2 focus:outline-none"
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      aria-label={`Open project: ${project.name}`}
-    >
-      <div className="relative flex h-40 items-center justify-center overflow-hidden bg-[#eee]">
-        {project.thumbnail ? (
-          <FallbackImage
-            src={project.thumbnail}
-            alt={`${project.name} thumbnail`}
-            className="h-full w-full scale-110 object-cover object-left"
-            fallbackType="folder"
-          />
-        ) : (
-          <div className="bg-primary/20 text-primary flex h-16 w-16 items-center justify-center rounded-full">
-            <FolderOpen aria-hidden="true" />
-          </div>
-        )}
+    <div className="snap-start shrink-0 w-[240px] md:w-[280px] group cursor-pointer">
+      <div
+        role="button"
+        tabIndex={0}
+        className="aspect-[9/14] rounded-2xl bg-card border border-white/5 overflow-hidden relative shadow-lg group-hover:shadow-glow-hover transition-all duration-300 transform group-hover:-translate-y-2"
+        onClick={handleClick}
+        onKeyDown={handleKeyDown}
+        aria-label={`Open project: ${project.name}`}
+      >
+        <div className="absolute inset-0">
+          {project.thumbnail ? (
+            <FallbackImage
+              src={project.thumbnail}
+              alt={`${project.name} thumbnail`}
+              className="h-full w-full object-cover"
+              fallbackType="folder"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900">
+              <div className="bg-primary/20 text-primary flex h-16 w-16 items-center justify-center rounded-full">
+                <FolderOpen aria-hidden="true" className="size-8" />
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+          <Button className="px-6 py-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-black text-sm font-bold uppercase tracking-wider rounded-lg shadow-[0_0_20px_-5px_rgba(245,158,11,0.4)] transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+            Open
+          </Button>
+        </div>
       </div>
-
-      <div className="flex flex-col p-4">
-        <h3 className="mb-1 line-clamp-1 w-full truncate text-sm font-semibold">{project.name}</h3>
+      <div className="mt-4 px-1">
+        <h3 className="text-lg font-bold text-white group-hover:text-primary transition-colors">{project.name}</h3>
         <time
-          className="text-muted-foreground text-xs"
+          className="text-xs text-muted-foreground"
           dateTime={new Date(project.createdAt).toISOString()}
         >
-          {timeAgo}
+          Edited {timeAgo}
         </time>
       </div>
     </div>
