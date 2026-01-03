@@ -327,7 +327,7 @@ const DeviceFrame = ({
 
         <div
           className={cn(
-            `relative h-auto w-full overflow-hidden rounded-[36px] bg-black shadow-2xl`,
+            "relative h-auto w-full overflow-hidden rounded-[36px] bg-black shadow-2xl",
             isSelected && toolMode !== TOOL_MODE_ENUM.HAND && "rounded-none"
           )}
         >

@@ -122,12 +122,12 @@ export const generateScreens = inngest.createFunction(
       if (onboardingCount !== undefined) {
         constraintLines.push(`- Onboarding screens: ${onboardingCount} (range 1–5)`);
       } else {
-        constraintLines.push(`- Onboarding screens: 1–5 (designer to choose)`);
+        constraintLines.push("- Onboarding screens: 1–5 (designer to choose)");
       }
       if (nonOnboardingCount !== undefined) {
         constraintLines.push(`- Non-onboarding screens: ${nonOnboardingCount} (range 1–10)`);
       } else {
-        constraintLines.push(`- Non-onboarding screens: 1–10 (designer to choose)`);
+        constraintLines.push("- Non-onboarding screens: 1–10 (designer to choose)");
       }
       constraintLines.push(`- Include paywall: ${includePaywall ? "Yes" : "No"}`);
       if (negativePrompts.length > 0) {
@@ -280,16 +280,16 @@ export const generateScreens = inngest.createFunction(
         - **Style preset rules: ${stylePreset || "None"}
           ${
             stylePreset === "Minimalist"
-              ? `Use ample whitespace, thin borders, minimal shadows, subtle color accents, restrained radius (rounded-md), no gradients.`
+              ? "Use ample whitespace, thin borders, minimal shadows, subtle color accents, restrained radius (rounded-md), no gradients."
               : stylePreset === "Brutalist"
-                ? `Use thick borders, hard drop shadows, bold solid colors, blocky geometry, minimal radius (rounded-none/rounded-sm), visible outlines.`
+                ? "Use thick borders, hard drop shadows, bold solid colors, blocky geometry, minimal radius (rounded-none/rounded-sm), visible outlines."
                 : stylePreset === "Corporate / Enterprise"
-                  ? `Use neutral palette, accessible contrast, clear hierarchy, restrained accents, professional tone, moderate radius, minimal playful elements.`
+                  ? "Use neutral palette, accessible contrast, clear hierarchy, restrained accents, professional tone, moderate radius, minimal playful elements."
                   : stylePreset === "Playful / Gamified"
-                    ? `Use vibrant accents, badges/chips, rounded-2xl/3xl, soft glows on interactive elements, lively micro-interactions, friendly typography.`
+                    ? "Use vibrant accents, badges/chips, rounded-2xl/3xl, soft glows on interactive elements, lively micro-interactions, friendly typography."
                     : stylePreset === "Dark Mode Native"
-                      ? `Use deep dark backgrounds, OLED-friendly, high-contrast text, subtle glows, avoid pure white surfaces; ensure consistent dark variants.`
-                      : `Follow general premium mobile style.`
+                      ? "Use deep dark backgrounds, OLED-friendly, high-contrast text, subtle glows, avoid pure white surfaces; ensure consistent dark variants."
+                      : "Follow general premium mobile style."
           }
 
         1. **Generate ONLY raw HTML markup for this mobile app screen using Tailwind CSS.**

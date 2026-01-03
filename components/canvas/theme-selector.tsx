@@ -42,7 +42,7 @@ function ThemeItem({
     <button
       onClick={onSelect}
       className={cn(
-        `bg-background hover:border-primary/50 hover:bg-accent/50 flex w-full items-center justify-between gap-4 rounded-xl border p-1`,
+        "bg-background hover:border-primary/50 hover:bg-accent/50 flex w-full items-center justify-between gap-4 rounded-xl border p-1",
         isSelected ? "border-2" : "border"
       )}
       style={{
