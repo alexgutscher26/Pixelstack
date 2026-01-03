@@ -40,8 +40,7 @@ export const useUpdateProject = (projectId: string) => {
       brandLogoUrl?: string;
       brandPrimaryColor?: string;
       brandFontFamily?: string;
-    }) =>
-      await axios.patch(`/api/project/${projectId}`, payload).then((res) => res.data),
+    }) => await axios.patch(`/api/project/${projectId}`, payload).then((res) => res.data),
     onSuccess: () => {
       toast.success("Project updated");
       queryClient.invalidateQueries({ queryKey: ["project", projectId] });

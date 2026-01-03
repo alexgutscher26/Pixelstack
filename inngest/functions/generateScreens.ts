@@ -51,21 +51,27 @@ function computeCounts(preferences: Preferences) {
   const effective =
     onboarding !== undefined && total !== undefined ? Math.min(onboarding, total - 1) : onboarding;
   const nonOnboarding =
-    total !== undefined && effective !== undefined ? Math.max(1, Math.min(10, total - effective)) : undefined;
+    total !== undefined && effective !== undefined
+      ? Math.max(1, Math.min(10, total - effective))
+      : undefined;
   const includePaywall =
     typeof preferences?.includePaywall === "boolean" ? preferences.includePaywall : false;
   return { onboarding, total, effective, nonOnboarding, includePaywall };
 }
 
-function buildConstraintLines({
-  onboarding,
-  nonOnboarding,
-  includePaywall,
-}: {
-  onboarding?: number;
-  nonOnboarding?: number;
-  includePaywall: boolean;
-}, negativePrompts: string[], stylePreset?: string) {
+function buildConstraintLines(
+  {
+    onboarding,
+    nonOnboarding,
+    includePaywall,
+  }: {
+    onboarding?: number;
+    nonOnboarding?: number;
+    includePaywall: boolean;
+  },
+  negativePrompts: string[],
+  stylePreset?: string
+) {
   const lines: string[] = [];
   if (onboarding !== undefined) {
     lines.push(`- Onboarding screens: ${onboarding} (range 1–5)`);
@@ -127,7 +133,13 @@ function buildThemeCSS(selectedTheme: { style?: string } | undefined, brandKit?:
     ? (() => {
         const hex = String(brandKit.primaryColor);
         const clean = hex.replace(/^#/, "");
-        const full = clean.length === 3 ? clean.split("").map((c) => c + c).join("") : clean;
+        const full =
+          clean.length === 3
+            ? clean
+                .split("")
+                .map((c) => c + c)
+                .join("")
+            : clean;
         const num = Number.parseInt(full, 16);
         const r = (num >> 16) & 255;
         const g = (num >> 8) & 255;
@@ -286,7 +298,9 @@ export const generateScreens = inngest.createFunction(
     } = event.data;
     const CHANNEL = `user:${userId}`;
     const isExistingGeneration = Array.isArray(frames) && frames.length > 0;
-    const { onboarding, effective, nonOnboarding, includePaywall } = computeCounts(preferences as Preferences);
+    const { onboarding, effective, nonOnboarding, includePaywall } = computeCounts(
+      preferences as Preferences
+    );
     const negativeListRaw = preferences?.negativePrompts;
     const negativePrompts: string[] = Array.isArray(negativeListRaw)
       ? negativeListRaw
