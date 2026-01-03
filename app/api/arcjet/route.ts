@@ -31,7 +31,7 @@ const aj = arcjet({
       interval: 10, // Refill every 10 seconds
       capacity: 10, // Bucket capacity of 10 tokens
     }),
-     validateEmail({
+    validateEmail({
       mode: "LIVE", // will block requests. Use "DRY_RUN" to log only
       // block disposable, invalid, and email addresses with no MX records
       deny: ["DISPOSABLE", "INVALID", "NO_MX_RECORDS"],
@@ -42,7 +42,7 @@ const aj = arcjet({
 export async function GET(req: Request) {
   const decision = await aj.protect(req, {
     requested: 5,
-    email: ""
+    email: "",
   }); // Deduct 5 tokens from the bucket
   console.log("Arcjet decision", decision);
 
