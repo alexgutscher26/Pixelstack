@@ -78,8 +78,8 @@ export default function AdminSettingsPage() {
         <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-6">
           <h2 className="text-2xl font-semibold mb-4">Dribbble Integration</h2>
           <p className="text-[var(--muted-foreground)] mb-6">
-            Connect your Dribbble account to fetch real-time design trends and inspiration
-            for AI-generated designs.
+            Connect your Dribbble account to fetch real-time design trends and inspiration for
+            AI-generated designs.
           </p>
 
           <div className="space-y-4">
@@ -95,26 +95,16 @@ export default function AdminSettingsPage() {
                 </p>
               </div>
               <div
-                className={`h-3 w-3 rounded-full ${
-                  isConnected ? "bg-green-500" : "bg-gray-400"
-                }`}
+                className={`h-3 w-3 rounded-full ${isConnected ? "bg-green-500" : "bg-gray-400"}`}
               />
             </div>
 
             {!isConnected ? (
-              <Button
-                onClick={handleConnectDribbble}
-                disabled={isChecking}
-                className="w-full"
-              >
+              <Button onClick={handleConnectDribbble} disabled={isChecking} className="w-full">
                 Connect Dribbble Account
               </Button>
             ) : (
-              <Button
-                onClick={handleDisconnectDribbble}
-                variant="outline"
-                className="w-full"
-              >
+              <Button onClick={handleDisconnectDribbble} variant="outline" className="w-full">
                 Disconnect Dribbble
               </Button>
             )}
@@ -147,9 +137,13 @@ export default function AdminSettingsPage() {
                 </span>
               </li>
               <li>
-                Add <code className="bg-[var(--background)] px-2 py-1 rounded">DRIBBBLE_CLIENT_ID</code> and{" "}
-                <code className="bg-[var(--background)] px-2 py-1 rounded">DRIBBBLE_CLIENT_SECRET</code> to your{" "}
-                <code className="bg-[var(--background)] px-2 py-1 rounded">.env</code> file
+                Add{" "}
+                <code className="bg-[var(--background)] px-2 py-1 rounded">DRIBBBLE_CLIENT_ID</code>{" "}
+                and{" "}
+                <code className="bg-[var(--background)] px-2 py-1 rounded">
+                  DRIBBBLE_CLIENT_SECRET
+                </code>{" "}
+                to your <code className="bg-[var(--background)] px-2 py-1 rounded">.env</code> file
               </li>
               <li>Click "Connect Dribbble Account" above</li>
             </ol>
