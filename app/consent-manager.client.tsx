@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-undef */
 "use client";
 
 import type { ReactNode } from "react";
