@@ -40,3 +40,11 @@ model Frame {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
+
+model Setting {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    key       String   @unique
+    value     String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}

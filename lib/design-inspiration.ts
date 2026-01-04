@@ -38,19 +38,80 @@ type DesignInspiration = {
 };
 
 /**
+ * Get Dribbble access token from database
+ */
+async function getDribbbleAccessToken(): Promise<string | null> {
+  try {
+    const prisma = (await import("@/lib/prisma")).default;
+    const setting = await prisma.setting.findUnique({
+      where: { key: "dribbble_access_token" },
+    });
+    return setting?.value || null;
+  } catch (error) {
+    console.error("Error fetching Dribbble token:", error);
+    return null;
+  }
+}
+
+/**
+ * Fetch trending shots from Dribbble API
+ */
+async function fetchDribbbleShots(perPage: number = 12): Promise<DribbbleShot[]> {
+  try {
+    const accessToken = await getDribbbleAccessToken();
+    
+    if (!accessToken) {
+      console.log("No Dribbble access token found, using curated trends");
+      return [];
+    }
+
+    const response = await fetch(
+      `https://api.dribbble.com/v2/shots?per_page=${perPage}&sort=popular`,
+      {
+        headers: {
+          "Authorization": `Bearer ${accessToken}`,
+          "Accept": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      console.error("Dribbble API error:", response.status, response.statusText);
+      return [];
+    }
+
+    const shots = await response.json();
+    
+    // Extract only metadata we need
+    return shots.map((shot: any) => ({
+      id: shot.id,
+      title: shot.title,
+      description: shot.description || "",
+      tags: shot.tags || [],
+      colors: shot.images?.colors || [],
+      html_url: shot.html_url,
+    }));
+  } catch (error) {
+    console.error("Error fetching Dribbble shots:", error);
+    return [];
+  }
+}
+
+/**
  * Fetch design inspiration from multiple sources
- * Uses public APIs and web scraping (legal, public data only)
+ * Tries Dribbble API first, falls back to curated trends
  */
 async function fetchDesignTrends(): Promise<DribbbleShot[]> {
-  // For now, we'll use curated design trends based on industry research
-  // This avoids OAuth complexity while still providing valuable inspiration
+  // Try to fetch from Dribbble API
+  const dribbbleShots = await fetchDribbbleShots(12);
   
-  // Future: Can integrate with:
-  // - Unsplash API (free, no OAuth for public data)
-  // - CSS Design Awards public data
-  // - Awwwards public data
-  // - Your own curated design database
+  if (dribbbleShots.length > 0) {
+    console.log(`Fetched ${dribbbleShots.length} shots from Dribbble API`);
+    return dribbbleShots;
+  }
   
+  // Fall back to curated trends
+  console.log("Using curated design trends");
   return getCuratedDesignTrends();
 }
 
