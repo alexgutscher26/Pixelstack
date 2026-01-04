@@ -84,22 +84,19 @@ export async function GET(request: NextRequest) {
     const accessToken = tokenData.access_token;
     const scope = tokenData.scope;
 
-    // Store the token in database
-    // We'll use a simple key-value store for this
-    await prisma.$executeRaw`
-      INSERT INTO "Setting" (key, value, "createdAt", "updatedAt")
-      VALUES ('dribbble_access_token', ${accessToken}, NOW(), NOW())
-      ON CONFLICT (key) 
-      DO UPDATE SET value = ${accessToken}, "updatedAt" = NOW()
-    `;
+    // Store the token in database using upsert (MongoDB compatible)
+    await prisma.setting.upsert({
+      where: { key: "dribbble_access_token" },
+      update: { value: accessToken },
+      create: { key: "dribbble_access_token", value: accessToken },
+    });
 
     // Also store the scope
-    await prisma.$executeRaw`
-      INSERT INTO "Setting" (key, value, "createdAt", "updatedAt")
-      VALUES ('dribbble_scope', ${scope}, NOW(), NOW())
-      ON CONFLICT (key) 
-      DO UPDATE SET value = ${scope}, "updatedAt" = NOW()
-    `;
+    await prisma.setting.upsert({
+      where: { key: "dribbble_scope" },
+      update: { value: scope },
+      create: { key: "dribbble_scope", value: scope },
+    });
 
     console.log("Dribbble OAuth successful, token stored");
 
