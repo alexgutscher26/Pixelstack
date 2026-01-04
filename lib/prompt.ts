@@ -3,10 +3,11 @@ import { BASE_VARIABLES, THEME_LIST } from "./themes";
 //MADE AN UPDATE HERE AND IN THE generateScreens.ts AND regenerateFrame.ts 🙏Check it out...
 
 export const getGenerationSystemPrompt = (platform: "mobile" | "website" = "mobile") => {
-  const platformContext = platform === "website" 
-    ? "You are an elite web UI/UX designer creating Dribbble-quality HTML pages using Tailwind and CSS variables"
-    : "You are an elite mobile UI/UX designer creating Dribbble-quality HTML screens using Tailwind and CSS variables";
-  
+  const platformContext =
+    platform === "website"
+      ? "You are an elite web UI/UX designer creating Dribbble-quality HTML pages using Tailwind and CSS variables"
+      : "You are an elite mobile UI/UX designer creating Dribbble-quality HTML screens using Tailwind and CSS variables";
+
   return `
 ${platformContext}
 
@@ -92,17 +93,21 @@ ${platformContext}
 - Use realistic data: "8,432 steps", "7h 20m", "$12.99" (not generic placeholders)
 - Lists include logos, names, status/subtext
 
-${platform === "mobile" ? `# BOTTOM NAVIGATION (if needed)
+${
+  platform === "mobile"
+    ? `# BOTTOM NAVIGATION (if needed)
 - Floating, rounded-full, glassmorphic (z-30, bottom-6 left-6 right-6, h-16)
 - Style: bg-[var(--card)]/80 backdrop-blur-xl shadow-2xl
 - 5 lucide icons: home, bar-chart-2, zap, user, menu
 - Active icon: text-[var(--primary)] + drop-shadow-[0_0_8px_var(--primary)]
 - Inactive: text-[var(--muted-foreground)]
-- NO bottom nav on splash/onboarding/auth screens` : `# FOOTER (if needed)
+- NO bottom nav on splash/onboarding/auth screens`
+    : `# FOOTER (if needed)
 - Full-width footer section at bottom
 - Style: bg-[var(--card)] border-t border-[var(--border)]
 - Include links, social icons, copyright
-- Responsive grid layout for footer columns`}
+- Responsive grid layout for footer columns`
+}
 
 # TAILWIND & CSS
 - Use Tailwind v3 utility classes only
@@ -136,13 +141,14 @@ export const GENERATION_SYSTEM_PROMPT = getGenerationSystemPrompt("mobile");
 const THEME_OPTIONS_STRING = THEME_LIST.map((t) => `- ${t.id} (${t.name})`).join("\n");
 
 export const getAnalysisPrompt = (platform: "mobile" | "website" = "mobile") => {
-  const platformContext = platform === "website"
-    ? "You are a Lead UI/UX web designer.\nReturn JSON with pages based on user request."
-    : "You are a Lead UI/UX mobile app Designer.\nReturn JSON with screens based on user request.";
-  
+  const platformContext =
+    platform === "website"
+      ? "You are a Lead UI/UX web designer.\nReturn JSON with pages based on user request."
+      : "You are a Lead UI/UX mobile app Designer.\nReturn JSON with screens based on user request.";
+
   const screenOrPage = platform === "website" ? "page" : "screen";
   const screensOrPages = platform === "website" ? "pages" : "screens";
-  
+
   return `
 ${platformContext}
 If "${screensOrPages.toUpperCase()} GENERATION CONSTRAINTS" are provided, STRICTLY respect them:
@@ -191,11 +197,15 @@ Below: heart rate line chart (24-hour trend, 60-112 BPM range, var(--accent) str
 All cards: rounded-3xl, bg-[var(--card)], subtle borders border-[var(--border)], soft shadow-lg.
 
 **SPECIAL RULES ON ${platform === "website" ? "NAVIGATION" : "BOTTOM NAVIGATION"} IF NEEDED:**
-${platform === "website" ? `- All pages should have consistent top navigation
+${
+  platform === "website"
+    ? `- All pages should have consistent top navigation
 - Include logo, nav links, and CTA buttons in header
-- Footer should be present on all pages except landing/hero` : `- Splash/Onboarding screens: NO bottom navigation
+- Footer should be present on all pages except landing/hero`
+    : `- Splash/Onboarding screens: NO bottom navigation
 - Auth screens (Login/Signup): NO bottom navigation
-- Home/Dashboard/ all other screens: MUST include bottom nav with correct active icon`}
+- Home/Dashboard/ all other screens: MUST include bottom nav with correct active icon`
+}
 
 ### AVAILABLE THEME STYLES
 ${THEME_OPTIONS_STRING}
