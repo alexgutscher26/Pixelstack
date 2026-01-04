@@ -8,6 +8,7 @@ export const useCreateProject = () => {
   return useMutation({
     mutationFn: async (payload: {
       prompt: string;
+      platform?: "mobile" | "website";
       totalScreens?: number;
       onboardingScreens?: number;
       includePaywall?: boolean;

@@ -17,6 +17,8 @@ import {
   MicIcon,
   Sparkles,
   Search,
+  Smartphone,
+  Monitor,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -109,6 +111,7 @@ const LandingSection = () => {
   const { user } = useKindeBrowserClient();
   const [promptText, setPromptText] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [platform, setPlatform] = useState<"mobile" | "website">("mobile");
   const [totalScreens, setTotalScreens] = useState<number>(9);
   const [onboardingScreens, setOnboardingScreens] = useState<number>(1);
   const [includePaywall, setIncludePaywall] = useState<boolean>(false);
@@ -147,6 +150,7 @@ const LandingSection = () => {
     if (!promptText.trim()) return;
     mutate({
       prompt: promptText,
+      platform,
       totalScreens,
       onboardingScreens,
       includePaywall,
@@ -155,6 +159,7 @@ const LandingSection = () => {
     });
   }, [
     promptText,
+    platform,
     totalScreens,
     onboardingScreens,
     includePaywall,
@@ -201,11 +206,12 @@ const LandingSection = () => {
     const starter = SUGGESTIONS[0]?.value ?? "Create a modern mobile app home screen";
     mutate({
       prompt: starter,
+      platform,
       totalScreens,
       onboardingScreens,
       includePaywall,
     });
-  }, [mutate, totalScreens, onboardingScreens, includePaywall]);
+  }, [mutate, platform, totalScreens, onboardingScreens, includePaywall]);
 
   // Helper function for number input validation
   const clampValue = (value: number, min: number, max: number) => {
@@ -241,14 +247,49 @@ const LandingSection = () => {
               </h1>
               <div className="mx-auto max-w-2xl">
                 <p className="text-muted-foreground text-center text-base sm:text-lg">
-                  Generate stunning mobile interfaces in seconds with our AI explorer.
+                  Generate stunning {platform === "mobile" ? "mobile interfaces" : "websites"} in seconds with our AI explorer.
                 </p>
               </div>
             </div>
 
             <div className="item-center relative z-50 flex w-full max-w-4xl flex-col gap-6">
               <div className="w-full px-5">
-                <div className="flex flex-wrap justify-center gap-3">
+                <div className="flex flex-col gap-4">
+                  <div className="flex justify-center gap-2">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="lg"
+                      className={`group relative h-auto gap-3 rounded-2xl border px-8 py-4 transition-all hover:-translate-y-1 hover:scale-105 ${
+                        platform === "mobile" 
+                          ? "border-primary/50 bg-card shadow-lg shadow-primary/20" 
+                          : "border-white/5 bg-card/50 hover:bg-card"
+                      } hover:border-primary/30`}
+                      onClick={() => setPlatform("mobile")}
+                    >
+                      <Smartphone className={`size-6 transition-colors ${platform === "mobile" ? "text-primary" : "text-muted-foreground"}`} />
+                      <span className={`text-base font-bold transition-colors ${platform === "mobile" ? "text-white" : "text-gray-300 group-hover:text-white"}`}>
+                        Mobile App
+                      </span>
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="lg"
+                      className={`group relative h-auto gap-3 rounded-2xl border px-8 py-4 transition-all hover:-translate-y-1 hover:scale-105 ${
+                        platform === "website" 
+                          ? "border-primary/50 bg-card shadow-lg shadow-primary/20" 
+                          : "border-white/5 bg-card/50 hover:bg-card"
+                      } hover:border-primary/30`}
+                      onClick={() => setPlatform("website")}
+                    >
+                      <Monitor className={`size-6 transition-colors ${platform === "website" ? "text-primary" : "text-muted-foreground"}`} />
+                      <span className={`text-base font-bold transition-colors ${platform === "website" ? "text-white" : "text-gray-300 group-hover:text-white"}`}>
+                        Website
+                      </span>
+                    </Button>
+                  </div>
+                  <div className="flex flex-wrap justify-center gap-3">
                   {STYLE_PRESETS.map((p) => {
                     const colorClass =
                       p === "Futuristic"
@@ -296,6 +337,7 @@ const LandingSection = () => {
                     );
                   })}
                 </div>
+                </div>
               </div>
               <div className="w-full">
                 <div className="group relative mt-4">
@@ -307,7 +349,10 @@ const LandingSection = () => {
                       setPromptText={setPromptText}
                       isLoading={isPending}
                       onSubmit={handleSubmit}
-                      placeholder="Describe your app idea here... e.g. 'A meditation tracker with forest sounds, using a calming green palette and rounded cards.'"
+                      platform={platform}
+                      placeholder={platform === "mobile" 
+                        ? "Describe your app idea here... e.g. 'A meditation tracker with forest sounds, using a calming green palette and rounded cards.'"
+                        : "Describe your website idea here... e.g. 'A portfolio website with a hero section, project gallery, and contact form using a modern minimalist design.'"}
                       onEnhance={handleEnhance}
                       isEnhancing={isEnhancing}
                       bottomLeftAddon={

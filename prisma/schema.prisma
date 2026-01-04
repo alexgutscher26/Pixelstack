@@ -19,6 +19,7 @@ model Project {
     id        String @id @default(auto()) @map("_id") @db.ObjectId
     userId   String
     name    String
+    platform String @default("mobile")
     theme String?
     thumbnail String?
     brandLogoUrl String?

@@ -1,7 +1,7 @@
 import { generateText, stepCountIs } from "ai";
 import { inngest } from "../client";
 import { openrouter } from "@/lib/openrouter";
-import { GENERATION_SYSTEM_PROMPT } from "@/lib/prompt";
+import { getGenerationSystemPrompt } from "@/lib/prompt";
 import prisma from "@/lib/prisma";
 import { BASE_VARIABLES, THEME_LIST } from "@/lib/themes";
 import { unsplashTool } from "../tool";
@@ -269,6 +269,11 @@ export const regenerateFrame = inngest.createFunction(
     });
 
     await step.run("regenerate-screen", async () => {
+      const project = await prisma.project.findUnique({
+        where: { id: projectId },
+        select: { platform: true },
+      });
+      const platform = (project?.platform as "mobile" | "website") || "mobile";
       const selectedTheme = THEME_LIST.find((t) => t.id === themeId);
       const priorFrames = await prisma.frame.findMany({
         where: {
@@ -280,14 +285,14 @@ export const regenerateFrame = inngest.createFunction(
       });
       const priorContext =
         priorFrames.length > 0
-          ? priorFrames.map((pf) => `<!-- ${pf.title} -->\n${pf.htmlContent}`).join("\n\n")
+          ? priorFrames.map((pf: { title: string; htmlContent: string }) => `<!-- ${pf.title} -->\n${pf.htmlContent}`).join("\n\n")
           : "";
 
       const fullThemeCSS = buildThemeCSS(selectedTheme, brandKit);
 
       const result = await generateText({
         model: openrouter("google/gemini-3-pro-preview"),
-        system: GENERATION_SYSTEM_PROMPT,
+        system: getGenerationSystemPrompt(platform),
         tools: {
           searchUnsplash: unsplashTool,
         },

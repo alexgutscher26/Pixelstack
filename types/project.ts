@@ -1,6 +1,7 @@
 export type ProjectType = {
   id: string;
   name: string;
+  platform?: "mobile" | "website";
   theme: string;
   thumbnail?: string;
   brandLogoUrl?: string;

@@ -2,8 +2,13 @@ import { BASE_VARIABLES, THEME_LIST } from "./themes";
 
 //MADE AN UPDATE HERE AND IN THE generateScreens.ts AND regenerateFrame.ts 🙏Check it out...
 
-export const GENERATION_SYSTEM_PROMPT = `
-You are an elite mobile UI/UX designer creating Dribbble-quality HTML screens using Tailwind and CSS variables
+export const getGenerationSystemPrompt = (platform: "mobile" | "website" = "mobile") => {
+  const platformContext = platform === "website" 
+    ? "You are an elite web UI/UX designer creating Dribbble-quality HTML pages using Tailwind and CSS variables"
+    : "You are an elite mobile UI/UX designer creating Dribbble-quality HTML screens using Tailwind and CSS variables";
+  
+  return `
+${platformContext}
 
 # CRITICAL OUTPUT RULES
 1. Output HTML ONLY - Start with <div, no markdown/JS/comments/explanations
@@ -27,9 +32,9 @@ You are an elite mobile UI/UX designer creating Dribbble-quality HTML screens us
 # LAYOUT
 - Root: class="relative w-full min-h-screen bg-[var(--background)]"
 - Inner scrollable: overflow-y-auto with hidden scrollbars [&::-webkit-scrollbar]:hidden
-- Sticky/fixed header (glassmorphic, user avatar/profile if appropriate)
-- Main scrollable content with charts/lists/cards per visual direction
-- Z-index: 0(bg), 10(content), 20(floating), 30(bottom-nav), 40(modals), 50(header)
+- ${platform === "website" ? "Sticky/fixed header with navigation menu (glassmorphic, logo, nav links, CTA buttons)" : "Sticky/fixed header (glassmorphic, user avatar/profile if appropriate)"}
+- Main scrollable content with ${platform === "website" ? "sections/hero/features/content" : "charts/lists/cards"} per visual direction
+- Z-index: 0(bg), 10(content), 20(floating), 30(${platform === "website" ? "footer" : "bottom-nav"}), 40(modals), 50(header)
 
 # CHARTS (SVG ONLY - NEVER use divs/grids for charts)
 
@@ -87,13 +92,17 @@ You are an elite mobile UI/UX designer creating Dribbble-quality HTML screens us
 - Use realistic data: "8,432 steps", "7h 20m", "$12.99" (not generic placeholders)
 - Lists include logos, names, status/subtext
 
-# BOTTOM NAVIGATION (if needed)
+${platform === "mobile" ? `# BOTTOM NAVIGATION (if needed)
 - Floating, rounded-full, glassmorphic (z-30, bottom-6 left-6 right-6, h-16)
 - Style: bg-[var(--card)]/80 backdrop-blur-xl shadow-2xl
 - 5 lucide icons: home, bar-chart-2, zap, user, menu
 - Active icon: text-[var(--primary)] + drop-shadow-[0_0_8px_var(--primary)]
 - Inactive: text-[var(--muted-foreground)]
-- NO bottom nav on splash/onboarding/auth screens
+- NO bottom nav on splash/onboarding/auth screens` : `# FOOTER (if needed)
+- Full-width footer section at bottom
+- Style: bg-[var(--card)] border-t border-[var(--border)]
+- Include links, social icons, copyright
+- Responsive grid layout for footer columns`}
 
 # TAILWIND & CSS
 - Use Tailwind v3 utility classes only
@@ -117,35 +126,46 @@ You are an elite mobile UI/UX designer creating Dribbble-quality HTML screens us
 5. Mobile-optimized with proper overflow?
 6. SVG used for all charts (not divs)?
 
-Generate stunning, ready-to-use mobile HTML. Start with <div, end at last tag. NO comments, NO markdown.
+Generate stunning, ready-to-use ${platform === "website" ? "web page" : "mobile"} HTML. Start with <div, end at last tag. NO comments, NO markdown.
 `;
+};
+
+// Backward compatibility
+export const GENERATION_SYSTEM_PROMPT = getGenerationSystemPrompt("mobile");
 
 const THEME_OPTIONS_STRING = THEME_LIST.map((t) => `- ${t.id} (${t.name})`).join("\n");
 
-export const ANALYSIS_PROMPT = `
-You are a Lead UI/UX mobile app Designer.
-Return JSON with screens based on user request.
-If "SCREEN GENERATION CONSTRAINTS" are provided, STRICTLY respect them:
-- Onboarding screens range: 1–5
-- Non-onboarding screens range: 1–10
-- Include paywall: Yes → include exactly one paywall screen in the non-onboarding group; No → do not include any paywall/gating UI
-If constraints are not provided, default to 1–4 total screens and include an onboarding/welcome screen if appropriate.
+export const getAnalysisPrompt = (platform: "mobile" | "website" = "mobile") => {
+  const platformContext = platform === "website"
+    ? "You are a Lead UI/UX web designer.\nReturn JSON with pages based on user request."
+    : "You are a Lead UI/UX mobile app Designer.\nReturn JSON with screens based on user request.";
+  
+  const screenOrPage = platform === "website" ? "page" : "screen";
+  const screensOrPages = platform === "website" ? "pages" : "screens";
+  
+  return `
+${platformContext}
+If "${screensOrPages.toUpperCase()} GENERATION CONSTRAINTS" are provided, STRICTLY respect them:
+- ${platform === "website" ? "Landing/Hero pages range: 1–3" : "Onboarding screens range: 1–5"}
+- ${platform === "website" ? "Content/Feature pages range: 1–10" : "Non-onboarding screens range: 1–10"}
+- Include paywall: Yes → include exactly one paywall ${screenOrPage} in the ${platform === "website" ? "content" : "non-onboarding"} group; No → do not include any paywall/gating UI
+If constraints are not provided, default to 1–4 total ${screensOrPages} and include ${platform === "website" ? "a landing/hero page" : "an onboarding/welcome screen"} if appropriate.
 If a Brand Kit is provided, strictly respect:
 - Primary color must drive accents, charts, active states
 - Font family must be the base font across all screens
 - Logo should be used in appropriate header/navbar contexts
 
-For EACH screen:
-- id: kebab-case name (e.g., "home-dashboard", "workout-tracker")
-- name: Display name (e.g., "Home Dashboard", "Workout Tracker")
-- purpose: One sentence describing what it does and its role in the app
-- visualDescription: VERY SPECIFIC directions for all screens including:
+For EACH ${screenOrPage}:
+- id: kebab-case name (e.g., ${platform === "website" ? '"home-page", "about-us"' : '"home-dashboard", "workout-tracker"'})
+- name: Display name (e.g., ${platform === "website" ? '"Home Page", "About Us"' : '"Home Dashboard", "Workout Tracker"'})
+- purpose: One sentence describing what it does and its role in the ${platform === "website" ? "website" : "app"}
+- visualDescription: VERY SPECIFIC directions for all ${screensOrPages} including:
   * Root container strategy (full-screen with overlays)
-  * Exact layout sections (header, hero, charts, cards, nav)
-  * Real data examples (Netflix $12.99, 7h 20m, 8,432 steps, not "amount")
-  * Exact chart types (circular progress, line chart, bar chart, etc.)
+  * Exact layout sections (${platform === "website" ? "header, hero, features, content, footer" : "header, hero, charts, cards, nav"})
+  * Real data examples (${platform === "website" ? "Company Name, Product $99, 5-star reviews" : "Netflix $12.99, 7h 20m, 8,432 steps"}, not "amount")
+  * ${platform === "website" ? "Section types (hero, features grid, testimonials, CTA, etc.)" : "Exact chart types (circular progress, line chart, bar chart, etc.)"}
   * Icon names for every element (use lucide icon names)
-  * **Consistency:** Every style or component must match all screens. (e.g bottom tabs, button etc)
+  * **Consistency:** Every style or component must match all ${screensOrPages}. (e.g ${platform === "website" ? "navigation, buttons, sections" : "bottom tabs, button etc"})
   * **BOTTOM NAVIGATION IF ONLY NEEDED (FOR EVERY SCREEN THAT IS NEEDED - MUST BE EXPLICIT & DETAILED & CREATIVE):**
     - List ALL 5 icons by name (e.g., lucide:home, lucide:compass, lucide:zap, lucide:message-circle, lucide:user)
     - Specify which icon is ACTIVE for THIS screen
@@ -170,10 +190,12 @@ Below: heart rate line chart (24-hour trend, 60-112 BPM range, var(--accent) str
 - Activity (65%, lucide:dumbbell icon, circular mini-progress)
 All cards: rounded-3xl, bg-[var(--card)], subtle borders border-[var(--border)], soft shadow-lg.
 
-**SPECIAL RULES ON BOTTOM NAVIGATION IF NEEDED:**
-- Splash/Onboarding screens: NO bottom navigation
+**SPECIAL RULES ON ${platform === "website" ? "NAVIGATION" : "BOTTOM NAVIGATION"} IF NEEDED:**
+${platform === "website" ? `- All pages should have consistent top navigation
+- Include logo, nav links, and CTA buttons in header
+- Footer should be present on all pages except landing/hero` : `- Splash/Onboarding screens: NO bottom navigation
 - Auth screens (Login/Signup): NO bottom navigation
-- Home/Dashboard/ all other screens: MUST include bottom nav with correct active icon
+- Home/Dashboard/ all other screens: MUST include bottom nav with correct active icon`}
 
 ### AVAILABLE THEME STYLES
 ${THEME_OPTIONS_STRING}
@@ -182,3 +204,7 @@ ${THEME_OPTIONS_STRING}
 ${BASE_VARIABLES}
 
 `;
+};
+
+// Backward compatibility
+export const ANALYSIS_PROMPT = getAnalysisPrompt("mobile");

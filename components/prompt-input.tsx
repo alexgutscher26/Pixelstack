@@ -23,6 +23,7 @@ interface PropsType {
   blockStartAddon?: React.ReactNode;
   inlineStartAddon?: React.ReactNode;
   bottomLeftAddon?: React.ReactNode;
+  platform?: "mobile" | "website";
 }
 const PromptInput = ({
   promptText,
@@ -37,6 +38,7 @@ const PromptInput = ({
   blockStartAddon,
   inlineStartAddon,
   bottomLeftAddon,
+  platform = "mobile",
 }: PropsType) => {
   const trimmed = promptText.trim();
   return (
@@ -97,7 +99,7 @@ const PromptInput = ({
                   <Spinner />
                 ) : (
                   <>
-                    Design App
+                    Design {platform === "mobile" ? "App" : "Website"}
                     <CornerDownLeftIcon className="size-5 font-bold" />
                   </>
                 )}

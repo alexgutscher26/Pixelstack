@@ -4,7 +4,7 @@ import { inngest } from "../client";
 import { z } from "zod";
 //import { openrouter } from "@/lib/openrouter";
 import { FrameType } from "@/types/project";
-import { ANALYSIS_PROMPT, GENERATION_SYSTEM_PROMPT } from "@/lib/prompt";
+import { getAnalysisPrompt, getGenerationSystemPrompt } from "@/lib/prompt";
 import prisma from "@/lib/prisma";
 import { BASE_VARIABLES, THEME_LIST } from "@/lib/themes";
 import { unsplashTool } from "../tool";
@@ -16,6 +16,7 @@ type BrandKit = {
 };
 
 type Preferences = {
+  platform?: "mobile" | "website";
   onboardingScreens?: number;
   totalScreens?: number;
   includePaywall?: boolean;
@@ -298,6 +299,7 @@ export const generateScreens = inngest.createFunction(
       brandKit,
     } = event.data;
     const CHANNEL = `user:${userId}`;
+    const platform = preferences?.platform || "mobile";
     const isExistingGeneration = Array.isArray(frames) && frames.length > 0;
     const { onboarding, effective, nonOnboarding, includePaywall } = computeCounts(
       preferences as Preferences
@@ -356,7 +358,7 @@ export const generateScreens = inngest.createFunction(
       const { object } = await generateObject({
         model: openrouter("google/gemini-3-pro-preview"),
         schema: AnalysisSchema,
-        system: ANALYSIS_PROMPT,
+        system: getAnalysisPrompt(platform),
         prompt: analysisPrompt,
       });
 
@@ -406,7 +408,7 @@ export const generateScreens = inngest.createFunction(
       await step.run(`generated-screen-${i}`, async () => {
         const result = await generateText({
           model: openrouter("google/gemini-3-pro-preview"),
-          system: GENERATION_SYSTEM_PROMPT,
+          system: getGenerationSystemPrompt(platform),
           tools: {
             searchUnsplash: unsplashTool,
           },

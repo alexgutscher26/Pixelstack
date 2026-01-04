@@ -5,6 +5,7 @@ import { inngest } from "@/inngest/client";
 import { moderateText } from "@/lib/moderation";
 
 type Preferences = {
+  platform?: "mobile" | "website";
   totalScreens?: number;
   onboardingScreens?: number;
   includePaywall?: boolean;
@@ -34,6 +35,10 @@ function parseNegatives(input: unknown): string[] | undefined {
 }
 
 function parsePreferences(body: Record<string, unknown>): Preferences {
+  const platform =
+    body.platform === "website" || body.platform === "mobile"
+      ? body.platform
+      : "mobile";
   const totalScreens =
     typeof body.totalScreens === "number"
       ? body.totalScreens
@@ -53,7 +58,7 @@ function parsePreferences(body: Record<string, unknown>): Preferences {
       ? body.stylePreset.trim()
       : undefined;
   const negativePrompts = parseNegatives(body.negativePrompts);
-  return { totalScreens, onboardingScreens, includePaywall, negativePrompts, stylePreset };
+  return { platform, totalScreens, onboardingScreens, includePaywall, negativePrompts, stylePreset };
 }
 
 function parseBrandKit(body: Record<string, unknown>): BrandKit {
@@ -132,17 +137,18 @@ export async function POST(request: Request) {
     const userId = user.id;
     const projectName = await generateProjectName(prompt);
     const brandKitInputs = parseBrandKit(body);
+    const preferences = parsePreferences(body);
     const project = await prisma.project.create({
       data: {
         userId,
         name: projectName,
+        platform: preferences.platform || "mobile",
         brandLogoUrl: brandKitInputs.logoUrl,
         brandPrimaryColor: brandKitInputs.primaryColor,
         brandFontFamily: brandKitInputs.fontFamily,
       },
     });
 
-    const preferences = parsePreferences(body);
     await inngest.send({
       name: "ui/generate.screens",
       data: {
