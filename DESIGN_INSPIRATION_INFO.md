@@ -1,6 +1,7 @@
 # Design Inspiration System
 
 ## Overview
+
 The design inspiration system provides the AI with current design trends and patterns to generate better, more modern designs.
 
 ## How It Works
@@ -8,6 +9,7 @@ The design inspiration system provides the AI with current design trends and pat
 ### Current Implementation: Curated Design Trends
 
 Instead of using complex OAuth flows, we use **curated design trends** based on:
+
 - Industry research and best practices
 - Popular design patterns from top websites
 - Modern UI/UX trends (2024-2025)
@@ -35,77 +37,89 @@ while maintaining uniqueness and following the user's specific requirements.
 ✅ **Always Available** - No rate limits or downtime  
 ✅ **Curated Quality** - Hand-picked modern design patterns  
 ✅ **Legal & Safe** - Based on general design principles  
-✅ **Up-to-date** - Regularly updated with new trends  
+✅ **Up-to-date** - Regularly updated with new trends
 
 ## Design Patterns Included
 
 ### 1. **Modern SaaS Landing Pages**
+
 - Gradient backgrounds
 - Bold typography
 - Glassmorphism effects
 - Clear CTAs
 
 ### 2. **Minimalist Dashboards**
+
 - Card-based layouts
 - Data visualization
 - Clean navigation
 - Subtle shadows
 
 ### 3. **E-commerce Designs**
+
 - Large product images
 - Vibrant colors
 - Grid layouts
 - Clear product CTAs
 
 ### 4. **Dark Mode Themes**
+
 - Dark backgrounds
 - Neon accents
 - Smooth animations
 - Bento grid layouts
 
 ### 5. **Pricing Pages**
+
 - Three-tier cards
 - Feature comparisons
 - Monthly/yearly toggles
 - Highlighted popular plans
 
 ### 6. **Testimonial Sections**
+
 - Customer quotes
 - Avatar images
 - Star ratings
 - Carousel layouts
 
 ### 7. **Hero Sections**
+
 - Video backgrounds
 - Full-screen layouts
 - Overlay text
 - Scroll indicators
 
 ### 8. **Feature Grids**
+
 - Icon-based features
 - Hover effects
 - 3 or 6 column layouts
 - Clear descriptions
 
 ### 9. **Mobile App Showcases**
+
 - Phone mockups
 - Feature highlights
 - App store buttons
 - Gradient backgrounds
 
 ### 10. **Blog Layouts**
+
 - Article grids
 - Featured images
 - Category tags
 - Author information
 
 ### 11. **Contact Forms**
+
 - Split layouts
 - Form validation
 - Map integration
 - Contact information
 
 ### 12. **Footer Designs**
+
 - Multi-column layouts
 - Newsletter signups
 - Social media icons
@@ -116,16 +130,19 @@ while maintaining uniqueness and following the user's specific requirements.
 The system provides trending color combinations:
 
 ### Modern & Professional
+
 - `#6366F1` (Indigo) - Primary actions
 - `#8B5CF6` (Purple) - Accents
 - `#EC4899` (Pink) - Highlights
 
 ### Fresh & Vibrant
+
 - `#3B82F6` (Blue) - Trust & reliability
 - `#10B981` (Green) - Success & growth
 - `#F59E0B` (Amber) - Attention & energy
 
 ### Dark Mode
+
 - `#1F2937` (Dark Gray) - Backgrounds
 - `#6366F1` (Indigo) - Primary
 - `#EC4899` (Pink) - Accents
@@ -133,6 +150,7 @@ The system provides trending color combinations:
 ## Style Keywords
 
 The AI learns these trending styles:
+
 - **Minimalist** - Clean, simple, focused
 - **Gradient** - Smooth color transitions
 - **Glassmorphism** - Frosted glass effects
@@ -156,6 +174,7 @@ The AI learns these trending styles:
 ## Future Enhancements
 
 Potential additions:
+
 - Integration with Unsplash API (free, no OAuth)
 - Web scraping of public design galleries
 - User-submitted design preferences
@@ -188,7 +207,7 @@ function getCuratedDesignTrends(): DribbbleShot[] {
 ✅ **No Copyright Issues** - Uses general design principles  
 ✅ **No API Dependencies** - Self-contained system  
 ✅ **No User Data** - Privacy-friendly  
-✅ **Open Source** - Transparent implementation  
+✅ **Open Source** - Transparent implementation
 
 ## Testing
 
