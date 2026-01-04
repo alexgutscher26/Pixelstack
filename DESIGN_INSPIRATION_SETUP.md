@@ -1,23 +1,26 @@
 # Design Inspiration System Setup
 
 ## Overview
+
 The design inspiration system fetches trending design patterns from Dribbble to provide conceptual inspiration to the AI, helping it generate better, more modern designs.
 
 ## ⚠️ Important Legal Notes
 
 ### What This System Does (Legal & Safe):
+
 ✅ Fetches design **metadata** (titles, descriptions, tags, colors)  
 ✅ Extracts **design patterns** (layout types, style trends)  
 ✅ Provides **text-based inspiration** to AI  
 ✅ Uses **official Dribbble API**  
-✅ Respects **rate limits** and terms of service  
+✅ Respects **rate limits** and terms of service
 
 ### What This System Does NOT Do:
+
 ❌ Display Dribbble shots in our app  
 ❌ Copy or replicate specific designs  
 ❌ Store or cache Dribbble images  
 ❌ Build a competing design gallery  
-❌ Scrape data outside the API  
+❌ Scrape data outside the API
 
 **This system only uses design trends as conceptual inspiration - it never copies actual designs.**
 
@@ -45,6 +48,7 @@ DRIBBBLE_ACCESS_TOKEN=your_access_token_here
 ### 3. Verify Setup
 
 The system will automatically:
+
 - Fetch trending designs when generating new projects
 - Extract design patterns (colors, styles, layouts)
 - Provide inspiration text to the AI
@@ -53,12 +57,14 @@ The system will automatically:
 ## How It Works
 
 ### 1. Fetch Trending Shots
+
 ```typescript
 // Fetches 12 popular shots from Dribbble
 const shots = await fetchTrendingShots("website", 12);
 ```
 
 ### 2. Extract Patterns
+
 ```typescript
 // Analyzes metadata to identify:
 // - Layout types (hero, dashboard, card-grid)
@@ -68,6 +74,7 @@ const shots = await fetchTrendingShots("website", 12);
 ```
 
 ### 3. Generate Inspiration Text
+
 ```typescript
 // Creates text-based inspiration:
 "CURRENT DESIGN TRENDS:
@@ -78,6 +85,7 @@ const shots = await fetchTrendingShots("website", 12);
 ```
 
 ### 4. Provide to AI
+
 The inspiration text is added to the AI prompt, helping it understand current design trends without copying specific designs.
 
 ## Rate Limits
@@ -86,6 +94,7 @@ The inspiration text is added to the AI prompt, helping it understand current de
 - **1,440 requests per day** per authenticated user
 
 The system is designed to stay well within these limits:
+
 - Only fetches inspiration for **new projects** (not regenerations)
 - Fetches only **12 shots** per request
 - Caches results when possible
@@ -93,6 +102,7 @@ The system is designed to stay well within these limits:
 ## Fallback Behavior
 
 If the Dribbble API is unavailable or the token is not set:
+
 - System falls back to **general design best practices**
 - AI still generates high-quality designs
 - No errors or interruptions to user experience
@@ -127,14 +137,17 @@ curl -H "Authorization: Bearer TOKEN" https://api.dribbble.com/v2/user
 ## Troubleshooting
 
 ### "DRIBBBLE_ACCESS_TOKEN not set" warning
+
 - Add the token to your `.env` file
 - Restart your development server
 
 ### "Dribbble API error: 401"
+
 - Your access token is invalid or expired
 - Generate a new token from Dribbble
 
 ### "Dribbble API error: 429"
+
 - Rate limit exceeded
 - Wait for the rate limit to reset (shown in response headers)
 - System will automatically fall back to default inspiration
@@ -142,6 +155,7 @@ curl -H "Authorization: Bearer TOKEN" https://api.dribbble.com/v2/user
 ## Legal Compliance
 
 This system complies with:
+
 - ✅ Dribbble API Terms of Service
 - ✅ Dribbble Terms & Guidelines
 - ✅ Copyright law (no copying of actual designs)
@@ -152,6 +166,7 @@ This system complies with:
 ## Future Enhancements
 
 Potential improvements:
+
 - Cache inspiration data to reduce API calls
 - Support for category-specific inspiration (e.g., "SaaS", "E-commerce")
 - Integration with other design platforms (Behance, Awwwards)
