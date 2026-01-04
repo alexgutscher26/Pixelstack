@@ -8,6 +8,7 @@ import { getAnalysisPrompt, getGenerationSystemPrompt } from "@/lib/prompt";
 import prisma from "@/lib/prisma";
 import { BASE_VARIABLES, THEME_LIST } from "@/lib/themes";
 import { unsplashTool } from "../tool";
+import { getDesignInspiration, getFallbackInspiration } from "@/lib/design-inspiration";
 
 type BrandKit = {
   primaryColor?: string;
@@ -100,8 +101,13 @@ function buildAnalysisPrompt(
   prompt: string,
   existingTheme: string | undefined,
   contextHTML: string,
-  constraintLines: string[]
+  constraintLines: string[],
+  designInspiration?: string
 ) {
+  const inspirationSection = designInspiration 
+    ? `\n\nDESIGN INSPIRATION (use as conceptual guidance only):\n${designInspiration}\n`
+    : "";
+
   if (isExistingGeneration) {
     return `
           USER REQUEST: ${prompt}
@@ -126,6 +132,7 @@ function buildAnalysisPrompt(
 
           SCREEN GENERATION CONSTRAINTS:
           ${constraintLines.join("\n")}
+          ${inspirationSection}
         `.trim();
 }
 
@@ -347,12 +354,27 @@ export const generateScreens = inngest.createFunction(
         stylePreset
       );
 
+      // Fetch design inspiration (only for new generations)
+      let designInspiration = "";
+      if (!isExistingGeneration) {
+        try {
+          designInspiration = await getDesignInspiration(platform);
+          if (!designInspiration) {
+            designInspiration = getFallbackInspiration(platform);
+          }
+        } catch (error) {
+          console.error("Error fetching design inspiration:", error);
+          designInspiration = getFallbackInspiration(platform);
+        }
+      }
+
       const analysisPrompt = buildAnalysisPrompt(
         isExistingGeneration,
         prompt,
         existingTheme,
         contextHTML,
-        constraintLines
+        constraintLines,
+        designInspiration
       );
 
       const { object } = await generateObject({
