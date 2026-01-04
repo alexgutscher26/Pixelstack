@@ -104,7 +104,7 @@ function buildAnalysisPrompt(
   constraintLines: string[],
   designInspiration?: string
 ) {
-  const inspirationSection = designInspiration 
+  const inspirationSection = designInspiration
     ? `\n\nDESIGN INSPIRATION (use as conceptual guidance only):\n${designInspiration}\n`
     : "";
 
