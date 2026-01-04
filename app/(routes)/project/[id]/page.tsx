@@ -44,9 +44,9 @@ const Page = () => {
         <div className="flex flex-1 overflow-hidden">
           <div className="relative flex-1">
             <ErrorBoundary>
-              <Canvas 
-                projectId={project?.id} 
-                projectName={project?.name} 
+              <Canvas
+                projectId={project?.id}
+                projectName={project?.name}
                 isPending={isPending}
                 platform={project?.platform as "mobile" | "website" | undefined}
               />
