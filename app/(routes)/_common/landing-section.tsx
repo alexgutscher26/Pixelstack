@@ -227,17 +227,17 @@ const LandingSection = () => {
 
         <div className="relative overflow-hidden pt-28">
           <div
-            className="fixed inset-0 pointer-events-none opacity-40"
+            className="pointer-events-none fixed inset-0 opacity-40"
             style={{
               backgroundImage: "radial-gradient(rgba(255, 0, 0, 0.07) 1px, transparent 1px)",
               backgroundSize: "40px 40px",
             }}
           />
           <div
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] pointer-events-none blur-3xl"
+            className="pointer-events-none absolute top-0 left-1/2 h-[600px] w-full -translate-x-1/2 blur-3xl"
             style={{ background: "linear-gradient(to bottom, rgba(255, 0, 0, 0.2), transparent)" }}
           />
-          <div className="mx-auto flex max-w-6xl flex-col items-center justify-center gap-8 px-4 relative z-10">
+          <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-center justify-center gap-8 px-4">
             <div className="space-y-4">
               <h1 className="text-center text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
                 Unlock your{" "}
@@ -247,7 +247,8 @@ const LandingSection = () => {
               </h1>
               <div className="mx-auto max-w-2xl">
                 <p className="text-muted-foreground text-center text-base sm:text-lg">
-                  Generate stunning {platform === "mobile" ? "mobile interfaces" : "websites"} in seconds with our AI explorer.
+                  Generate stunning {platform === "mobile" ? "mobile interfaces" : "websites"} in
+                  seconds with our AI explorer.
                 </p>
               </div>
             </div>
@@ -261,14 +262,18 @@ const LandingSection = () => {
                       variant="ghost"
                       size="lg"
                       className={`group relative h-auto gap-3 rounded-2xl border px-8 py-4 transition-all hover:-translate-y-1 hover:scale-105 ${
-                        platform === "mobile" 
-                          ? "border-primary/50 bg-card shadow-lg shadow-primary/20" 
-                          : "border-white/5 bg-card/50 hover:bg-card"
+                        platform === "mobile"
+                          ? "border-primary/50 bg-card shadow-primary/20 shadow-lg"
+                          : "bg-card/50 hover:bg-card border-white/5"
                       } hover:border-primary/30`}
                       onClick={() => setPlatform("mobile")}
                     >
-                      <Smartphone className={`size-6 transition-colors ${platform === "mobile" ? "text-primary" : "text-muted-foreground"}`} />
-                      <span className={`text-base font-bold transition-colors ${platform === "mobile" ? "text-white" : "text-gray-300 group-hover:text-white"}`}>
+                      <Smartphone
+                        className={`size-6 transition-colors ${platform === "mobile" ? "text-primary" : "text-muted-foreground"}`}
+                      />
+                      <span
+                        className={`text-base font-bold transition-colors ${platform === "mobile" ? "text-white" : "text-gray-300 group-hover:text-white"}`}
+                      >
                         Mobile App
                       </span>
                     </Button>
@@ -277,82 +282,88 @@ const LandingSection = () => {
                       variant="ghost"
                       size="lg"
                       className={`group relative h-auto gap-3 rounded-2xl border px-8 py-4 transition-all hover:-translate-y-1 hover:scale-105 ${
-                        platform === "website" 
-                          ? "border-primary/50 bg-card shadow-lg shadow-primary/20" 
-                          : "border-white/5 bg-card/50 hover:bg-card"
+                        platform === "website"
+                          ? "border-primary/50 bg-card shadow-primary/20 shadow-lg"
+                          : "bg-card/50 hover:bg-card border-white/5"
                       } hover:border-primary/30`}
                       onClick={() => setPlatform("website")}
                     >
-                      <Monitor className={`size-6 transition-colors ${platform === "website" ? "text-primary" : "text-muted-foreground"}`} />
-                      <span className={`text-base font-bold transition-colors ${platform === "website" ? "text-white" : "text-gray-300 group-hover:text-white"}`}>
+                      <Monitor
+                        className={`size-6 transition-colors ${platform === "website" ? "text-primary" : "text-muted-foreground"}`}
+                      />
+                      <span
+                        className={`text-base font-bold transition-colors ${platform === "website" ? "text-white" : "text-gray-300 group-hover:text-white"}`}
+                      >
                         Website
                       </span>
                     </Button>
                   </div>
                   <div className="flex flex-wrap justify-center gap-3">
-                  {STYLE_PRESETS.map((p) => {
-                    const colorClass =
-                      p === "Futuristic"
-                        ? "from-blue-400 to-blue-600"
-                        : p === "Neo‑Brutalism"
-                          ? "from-pink-400 to-pink-600"
-                          : p === "Nature"
-                            ? "from-emerald-400 to-emerald-600"
-                            : p === "Playful"
-                              ? "from-orange-400 to-orange-600"
-                              : p === "Minimal"
-                                ? "from-purple-400 to-purple-600"
-                                : "from-yellow-400 to-yellow-600";
-                    const borderColor =
-                      p === "Futuristic"
-                        ? "hover:border-blue-400/50"
-                        : p === "Neo‑Brutalism"
-                          ? "hover:border-pink-400/50"
-                          : p === "Nature"
-                            ? "hover:border-emerald-400/50"
-                            : p === "Playful"
-                              ? "hover:border-orange-400/50"
-                              : p === "Minimal"
-                                ? "hover:border-purple-400/50"
-                                : "hover:border-yellow-400/50";
-                    const active = stylePreset === p;
-                    return (
-                      <Button
-                        key={p}
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className={`hover:bg-card group relative h-auto gap-2 rounded-full border px-5 py-2 transition-all hover:-translate-y-1 hover:scale-105 ${
-                          active ? "border-primary/50 bg-card" : "border-white/5 bg-card"
-                        } ${borderColor}`}
-                        onClick={() => setStylePreset(active ? undefined : p)}
-                      >
-                        <span
-                          className={`size-2.5 rounded-full bg-gradient-to-tr shadow-sm ${colorClass}`}
-                        />
-                        <span className="text-sm font-bold text-gray-300 transition-colors group-hover:text-white">
-                          {p}
-                        </span>
-                      </Button>
-                    );
-                  })}
-                </div>
+                    {STYLE_PRESETS.map((p) => {
+                      const colorClass =
+                        p === "Futuristic"
+                          ? "from-blue-400 to-blue-600"
+                          : p === "Neo‑Brutalism"
+                            ? "from-pink-400 to-pink-600"
+                            : p === "Nature"
+                              ? "from-emerald-400 to-emerald-600"
+                              : p === "Playful"
+                                ? "from-orange-400 to-orange-600"
+                                : p === "Minimal"
+                                  ? "from-purple-400 to-purple-600"
+                                  : "from-yellow-400 to-yellow-600";
+                      const borderColor =
+                        p === "Futuristic"
+                          ? "hover:border-blue-400/50"
+                          : p === "Neo‑Brutalism"
+                            ? "hover:border-pink-400/50"
+                            : p === "Nature"
+                              ? "hover:border-emerald-400/50"
+                              : p === "Playful"
+                                ? "hover:border-orange-400/50"
+                                : p === "Minimal"
+                                  ? "hover:border-purple-400/50"
+                                  : "hover:border-yellow-400/50";
+                      const active = stylePreset === p;
+                      return (
+                        <Button
+                          key={p}
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className={`hover:bg-card group relative h-auto gap-2 rounded-full border px-5 py-2 transition-all hover:-translate-y-1 hover:scale-105 ${
+                            active ? "border-primary/50 bg-card" : "bg-card border-white/5"
+                          } ${borderColor}`}
+                          onClick={() => setStylePreset(active ? undefined : p)}
+                        >
+                          <span
+                            className={`size-2.5 rounded-full bg-gradient-to-tr shadow-sm ${colorClass}`}
+                          />
+                          <span className="text-sm font-bold text-gray-300 transition-colors group-hover:text-white">
+                            {p}
+                          </span>
+                        </Button>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
               <div className="w-full">
                 <div className="group relative mt-4">
                   <div className="bg-primary-dark via-primary to-primary-dark absolute -inset-0.5 rounded-[2.1rem] bg-gradient-to-r opacity-30 blur-xl transition duration-500 group-hover:opacity-60" />
-                  <div className="border-border relative w-full rounded-[2rem] border border-white/10 bg-card p-2 shadow-2xl">
+                  <div className="border-border bg-card relative w-full rounded-[2rem] border border-white/10 p-2 shadow-2xl">
                     <PromptInput
-                      className="border-0 bg-transparent ring-0 shadow-none"
+                      className="border-0 bg-transparent shadow-none ring-0"
                       promptText={promptText}
                       setPromptText={setPromptText}
                       isLoading={isPending}
                       onSubmit={handleSubmit}
                       platform={platform}
-                      placeholder={platform === "mobile" 
-                        ? "Describe your app idea here... e.g. 'A meditation tracker with forest sounds, using a calming green palette and rounded cards.'"
-                        : "Describe your website idea here... e.g. 'A portfolio website with a hero section, project gallery, and contact form using a modern minimalist design.'"}
+                      placeholder={
+                        platform === "mobile"
+                          ? "Describe your app idea here... e.g. 'A meditation tracker with forest sounds, using a calming green palette and rounded cards.'"
+                          : "Describe your website idea here... e.g. 'A portfolio website with a hero section, project gallery, and contact form using a modern minimalist design.'"
+                      }
                       onEnhance={handleEnhance}
                       isEnhancing={isEnhancing}
                       bottomLeftAddon={
@@ -361,7 +372,7 @@ const LandingSection = () => {
                             size="icon"
                             variant="ghost"
                             aria-label="Upload image"
-                            className="rounded-xl bg-card border border-white/5 p-2.5 text-muted-foreground hover:text-white hover:border-primary/30 transition-all"
+                            className="bg-card text-muted-foreground hover:border-primary/30 rounded-xl border border-white/5 p-2.5 transition-all hover:text-white"
                           >
                             <ImageIcon className="size-5" />
                           </Button>
@@ -369,18 +380,18 @@ const LandingSection = () => {
                             size="icon"
                             variant="ghost"
                             aria-label="Voice input"
-                            className="rounded-xl bg-card border border-white/5 p-2.5 text-muted-foreground hover:text-white hover:border-primary/30 transition-all"
+                            className="bg-card text-muted-foreground hover:border-primary/30 rounded-xl border border-white/5 p-2.5 transition-all hover:text-white"
                           >
                             <MicIcon className="size-5" />
                           </Button>
-                          <div className="h-8 w-[1px] bg-white/10 mx-1" />
+                          <div className="mx-1 h-8 w-[1px] bg-white/10" />
                           <Popover>
                             <PopoverTrigger asChild>
                               <Button
                                 size="sm"
                                 variant="ghost"
                                 aria-label="Open design options"
-                                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                                className="text-muted-foreground hover:text-primary flex items-center gap-2 text-sm transition-colors"
                               >
                                 <SlidersHorizontal className="size-4" />
                                 <span>Settings</span>
@@ -475,7 +486,7 @@ const LandingSection = () => {
                                     className="bg-background focus:ring-primary rounded-md border px-2 py-2 focus:ring-2 focus:outline-none"
                                     aria-label="Negative prompts to exclude styles or elements"
                                   />
-                                  <span className="text-[10px] text-muted-foreground">
+                                  <span className="text-muted-foreground text-[10px]">
                                     Comma or newline separated phrases to avoid in generation.
                                   </span>
                                 </div>
@@ -488,7 +499,7 @@ const LandingSection = () => {
                                 size="sm"
                                 variant="ghost"
                                 aria-label="Open negative prompts"
-                                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                                className="text-muted-foreground hover:text-primary flex items-center gap-2 text-sm transition-colors"
                               >
                                 <span>Negative Prompts</span>
                               </Button>
@@ -510,7 +521,7 @@ const LandingSection = () => {
                                   className="bg-background focus:ring-primary rounded-md border px-2 py-2 focus:ring-2 focus:outline-none"
                                   aria-label="Negative prompts to exclude styles or elements"
                                 />
-                                <span className="text-[10px] text-muted-foreground">
+                                <span className="text-muted-foreground text-[10px]">
                                   Comma or newline separated phrases to avoid in generation.
                                 </span>
                               </div>
@@ -578,12 +589,12 @@ const LandingSection = () => {
           <section className="w-full py-16" aria-label="Recent projects">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <div className="mb-8 flex items-center justify-between px-2">
-                <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                <h2 className="flex items-center gap-2 text-2xl font-bold text-white">
                   <Sparkles className="text-primary" /> Recent Projects
                 </h2>
                 <InputGroup className="w-[260px] md:w-[320px]">
                   <InputGroupAddon aria-hidden="true">
-                    <Search className="size-4 text-muted-foreground" />
+                    <Search className="text-muted-foreground size-4" />
                   </InputGroupAddon>
                   <InputGroupInput
                     placeholder="Search projects..."
@@ -606,11 +617,11 @@ const LandingSection = () => {
               </div>
 
               {isLoading ? (
-                <div className="flex overflow-x-auto gap-6 pb-10 snap-x snap-mandatory px-2">
+                <div className="flex snap-x snap-mandatory gap-6 overflow-x-auto px-2 pb-10">
                   {Array.from({ length: 6 }).map((_, i) => (
                     <div
                       key={i}
-                      className="snap-start shrink-0 w-[240px] md:w-[280px] flex flex-col overflow-hidden rounded-2xl border"
+                      className="flex w-[240px] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border md:w-[280px]"
                     >
                       <div className="bg-background aspect-[9/14]">
                         <Skeleton className="h-full w-full rounded-none" />
@@ -623,12 +634,12 @@ const LandingSection = () => {
                   ))}
                 </div>
               ) : filteredProjects.length > 0 ? (
-                <div className="flex overflow-x-auto gap-6 pb-10 snap-x snap-mandatory px-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-card">
-                  <div className="snap-start shrink-0 w-[240px] md:w-[280px]">
+                <div className="scrollbar-thin scrollbar-thumb-border scrollbar-track-card flex snap-x snap-mandatory gap-6 overflow-x-auto px-2 pb-10">
+                  <div className="w-[240px] shrink-0 snap-start md:w-[280px]">
                     <div
                       role="button"
                       tabIndex={0}
-                      className="aspect-[9/14] rounded-2xl border-2 border-dashed border-white/10 hover:border-primary/50 hover:bg-white/5 flex flex-col items-center justify-center gap-4 transition-all duration-300 cursor-pointer group"
+                      className="hover:border-primary/50 group flex aspect-[9/14] cursor-pointer flex-col items-center justify-center gap-4 rounded-2xl border-2 border-dashed border-white/10 transition-all duration-300 hover:bg-white/5"
                       onClick={handleStartNewProject}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" || e.key === " ") {
@@ -638,8 +649,8 @@ const LandingSection = () => {
                       }}
                       aria-label="Create new project"
                     >
-                      <div className="h-16 w-16 rounded-full bg-card flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-300">
-                        <FolderOpen className="text-3xl text-primary" />
+                      <div className="bg-card group-hover:bg-primary/20 flex h-16 w-16 items-center justify-center rounded-full shadow-lg transition-all duration-300 group-hover:scale-110">
+                        <FolderOpen className="text-primary text-3xl" />
                       </div>
                       <span className="font-bold text-white">New Project</span>
                     </div>
@@ -703,11 +714,11 @@ const ProjectCard = memo(({ project }: { project: ProjectType }) => {
   );
 
   return (
-    <div className="snap-start shrink-0 w-[240px] md:w-[280px] group cursor-pointer">
+    <div className="group w-[240px] shrink-0 cursor-pointer snap-start md:w-[280px]">
       <div
         role="button"
         tabIndex={0}
-        className="aspect-[9/14] rounded-2xl bg-card border border-white/5 overflow-hidden relative shadow-lg group-hover:shadow-glow-hover transition-all duration-300 transform group-hover:-translate-y-2"
+        className="bg-card group-hover:shadow-glow-hover relative aspect-[9/14] transform overflow-hidden rounded-2xl border border-white/5 shadow-lg transition-all duration-300 group-hover:-translate-y-2"
         onClick={handleClick}
         onKeyDown={handleKeyDown}
         aria-label={`Open project: ${project.name}`}
@@ -728,18 +739,18 @@ const ProjectCard = memo(({ project }: { project: ProjectType }) => {
             </div>
           )}
         </div>
-        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
-          <Button className="px-6 py-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-black text-sm font-bold uppercase tracking-wider rounded-lg shadow-[0_0_20px_-5px_rgba(245,158,11,0.4)] transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+        <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 backdrop-blur-[2px] transition-opacity group-hover:opacity-100">
+          <Button className="translate-y-4 transform rounded-lg bg-gradient-to-r from-yellow-500 to-orange-500 px-6 py-2 text-sm font-bold tracking-wider text-black uppercase shadow-[0_0_20px_-5px_rgba(245,158,11,0.4)] transition-all duration-300 group-hover:translate-y-0">
             Open
           </Button>
         </div>
       </div>
       <div className="mt-4 px-1">
-        <h3 className="text-lg font-bold text-white group-hover:text-primary transition-colors">
+        <h3 className="group-hover:text-primary text-lg font-bold text-white transition-colors">
           {project.name}
         </h3>
         <time
-          className="text-xs text-muted-foreground"
+          className="text-muted-foreground text-xs"
           dateTime={new Date(project.createdAt).toISOString()}
         >
           Edited {timeAgo}

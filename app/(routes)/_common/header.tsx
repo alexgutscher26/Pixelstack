@@ -32,12 +32,12 @@ const Header = () => {
     { label: "Community", href: "/community" },
   ];
   return (
-    <div className="sticky top-0 right-0 left-0 z-30 relative">
+    <div className="relative sticky top-0 right-0 left-0 z-30">
       <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] pointer-events-none blur-3xl"
+        className="pointer-events-none absolute top-0 left-1/2 h-[600px] w-full -translate-x-1/2 blur-3xl"
         style={{ background: "linear-gradient(to bottom, rgba(255, 0, 0, 0.2), transparent)" }}
       />
-      <header className="bg-transparent h-16 py-4 relative z-10">
+      <header className="relative z-10 h-16 bg-transparent py-4">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between">
           <Logo />
 
@@ -49,7 +49,7 @@ const Header = () => {
                   key={href}
                   href={href}
                   className={cn(
-                    "text-foreground hover:text-foreground/80 text-sm font-medium transition-colors pb-1 border-b-2",
+                    "text-foreground hover:text-foreground/80 border-b-2 pb-1 text-sm font-medium transition-colors",
                     active ? "border-primary" : "border-transparent"
                   )}
                 >

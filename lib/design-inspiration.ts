@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Design Inspiration System
- * 
+ *
  * Fetches design trends and patterns from Dribbble API for inspiration only.
  * IMPORTANT: This system extracts metadata and patterns, NOT actual designs.
  * We never copy, display, or store actual design images - only use as conceptual inspiration.
- * 
+ *
  * Legal Compliance:
  * - Uses official Dribbble API
  * - Extracts only metadata (colors, tags, descriptions)
@@ -60,7 +60,7 @@ async function getDribbbleAccessToken(): Promise<string | null> {
 async function fetchDribbbleShots(perPage: number = 12): Promise<DribbbleShot[]> {
   try {
     const accessToken = await getDribbbleAccessToken();
-    
+
     if (!accessToken) {
       console.log("No Dribbble access token found, using curated trends");
       return [];
@@ -70,8 +70,8 @@ async function fetchDribbbleShots(perPage: number = 12): Promise<DribbbleShot[]>
       `https://api.dribbble.com/v2/shots?per_page=${perPage}&sort=popular`,
       {
         headers: {
-          "Authorization": `Bearer ${accessToken}`,
-          "Accept": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+          Accept: "application/json",
         },
       }
     );
@@ -82,7 +82,7 @@ async function fetchDribbbleShots(perPage: number = 12): Promise<DribbbleShot[]>
     }
 
     const shots = await response.json();
-    
+
     // Extract only metadata we need
     return shots.map((shot: any) => ({
       id: shot.id,
@@ -105,12 +105,12 @@ async function fetchDribbbleShots(perPage: number = 12): Promise<DribbbleShot[]>
 async function fetchDesignTrends(): Promise<DribbbleShot[]> {
   // Try to fetch from Dribbble API
   const dribbbleShots = await fetchDribbbleShots(12);
-  
+
   if (dribbbleShots.length > 0) {
     console.log(`Fetched ${dribbbleShots.length} shots from Dribbble API`);
     return dribbbleShots;
   }
-  
+
   // Fall back to curated trends
   console.log("Using curated design trends");
   return getCuratedDesignTrends();
@@ -125,7 +125,8 @@ function getCuratedDesignTrends(): DribbbleShot[] {
     {
       id: 1,
       title: "Modern SaaS Landing Page",
-      description: "Clean hero section with gradient backgrounds, bold typography, and glassmorphism effects",
+      description:
+        "Clean hero section with gradient backgrounds, bold typography, and glassmorphism effects",
       tags: ["saas", "landing", "hero", "gradient", "glassmorphism", "modern"],
       colors: ["#6366F1", "#8B5CF6", "#EC4899"],
       html_url: "",
@@ -133,7 +134,8 @@ function getCuratedDesignTrends(): DribbbleShot[] {
     {
       id: 2,
       title: "Minimalist Dashboard Design",
-      description: "Card-based layout with data visualization, clean navigation, and subtle shadows",
+      description:
+        "Card-based layout with data visualization, clean navigation, and subtle shadows",
       tags: ["dashboard", "minimalist", "cards", "data-viz", "clean"],
       colors: ["#3B82F6", "#10B981", "#F59E0B"],
       html_url: "",
@@ -230,24 +232,41 @@ function extractDesignPatterns(shots: DribbbleShot[]): DesignPattern[] {
 
   for (const shot of shots) {
     const text = `${shot.title} ${shot.description} ${shot.tags.join(" ")}`.toLowerCase();
-    
+
     // Identify layout types
-    const layoutType = 
-      text.includes("hero") || text.includes("landing") ? "hero-section" :
-      text.includes("dashboard") ? "dashboard" :
-      text.includes("card") || text.includes("grid") ? "card-grid" :
-      text.includes("form") ? "form-layout" :
-      text.includes("pricing") ? "pricing-table" :
-      "general";
+    const layoutType =
+      text.includes("hero") || text.includes("landing")
+        ? "hero-section"
+        : text.includes("dashboard")
+          ? "dashboard"
+          : text.includes("card") || text.includes("grid")
+            ? "card-grid"
+            : text.includes("form")
+              ? "form-layout"
+              : text.includes("pricing")
+                ? "pricing-table"
+                : "general";
 
     // Extract style keywords
     const styleKeywords: string[] = [];
     const styleTerms = [
-      "minimalist", "bold", "gradient", "glassmorphism", "neumorphism",
-      "dark mode", "light", "colorful", "monochrome", "vibrant",
-      "modern", "clean", "elegant", "playful", "professional"
+      "minimalist",
+      "bold",
+      "gradient",
+      "glassmorphism",
+      "neumorphism",
+      "dark mode",
+      "light",
+      "colorful",
+      "monochrome",
+      "vibrant",
+      "modern",
+      "clean",
+      "elegant",
+      "playful",
+      "professional",
     ];
-    
+
     for (const term of styleTerms) {
       if (text.includes(term)) {
         styleKeywords.push(term);
@@ -257,10 +276,19 @@ function extractDesignPatterns(shots: DribbbleShot[]): DesignPattern[] {
     // Extract common elements
     const commonElements: string[] = [];
     const elements = [
-      "navigation", "hero", "cta", "button", "card", "icon",
-      "illustration", "photo", "typography", "animation", "chart"
+      "navigation",
+      "hero",
+      "cta",
+      "button",
+      "card",
+      "icon",
+      "illustration",
+      "photo",
+      "typography",
+      "animation",
+      "chart",
     ];
-    
+
     for (const element of elements) {
       if (text.includes(element)) {
         commonElements.push(element);
@@ -291,17 +319,17 @@ function generateInspirationText(patterns: DesignPattern[]): DesignInspiration {
   for (const pattern of patterns) {
     // Count layouts
     layoutCounts.set(pattern.layoutType, (layoutCounts.get(pattern.layoutType) || 0) + 1);
-    
+
     // Count styles
     for (const style of pattern.styleKeywords) {
       styleCounts.set(style, (styleCounts.get(style) || 0) + 1);
     }
-    
+
     // Count elements
     for (const element of pattern.commonElements) {
       elementCounts.set(element, (elementCounts.get(element) || 0) + 1);
     }
-    
+
     // Collect colors
     allColors.push(...pattern.colorScheme);
   }
@@ -365,17 +393,17 @@ export async function getDesignInspiration(
   try {
     // Fetch curated design trends
     const shots = await fetchDesignTrends();
-    
+
     if (shots.length === 0) {
       return getFallbackInspiration(category === "mobile" ? "mobile" : "website");
     }
 
     // Extract patterns
     const patterns = extractDesignPatterns(shots);
-    
+
     // Generate inspiration text
     const inspiration = generateInspirationText(patterns);
-    
+
     return inspiration.inspirationText;
   } catch (error) {
     console.error("Error generating design inspiration:", error);

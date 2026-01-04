@@ -285,7 +285,12 @@ export const regenerateFrame = inngest.createFunction(
       });
       const priorContext =
         priorFrames.length > 0
-          ? priorFrames.map((pf: { title: string; htmlContent: string }) => `<!-- ${pf.title} -->\n${pf.htmlContent}`).join("\n\n")
+          ? priorFrames
+              .map(
+                (pf: { title: string; htmlContent: string }) =>
+                  `<!-- ${pf.title} -->\n${pf.htmlContent}`
+              )
+              .join("\n\n")
           : "";
 
       const fullThemeCSS = buildThemeCSS(selectedTheme, brandKit);

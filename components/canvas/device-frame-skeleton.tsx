@@ -29,9 +29,9 @@ const DeviceFrameSkeleton = ({ style, platform = "mobile" }: PropsType) => {
 
         {/* Hero Section */}
         <div className="space-y-4 p-8">
-          <Skeleton className="h-12 w-2/3 mx-auto" />
-          <Skeleton className="h-6 w-1/2 mx-auto" />
-          <div className="flex gap-3 justify-center mt-6">
+          <Skeleton className="mx-auto h-12 w-2/3" />
+          <Skeleton className="mx-auto h-6 w-1/2" />
+          <div className="mt-6 flex justify-center gap-3">
             <Skeleton className="h-11 w-32 rounded-md" />
             <Skeleton className="h-11 w-32 rounded-md" />
           </div>

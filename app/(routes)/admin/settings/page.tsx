@@ -69,21 +69,21 @@ export default function AdminSettingsPage() {
 
   return (
     <div className="min-h-screen bg-[var(--background)] p-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-2">Admin Settings</h1>
-        <p className="text-[var(--muted-foreground)] mb-8">
+      <div className="mx-auto max-w-4xl">
+        <h1 className="mb-2 text-4xl font-bold">Admin Settings</h1>
+        <p className="mb-8 text-[var(--muted-foreground)]">
           Configure integrations and system settings
         </p>
 
-        <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-6">
-          <h2 className="text-2xl font-semibold mb-4">Dribbble Integration</h2>
-          <p className="text-[var(--muted-foreground)] mb-6">
-            Connect your Dribbble account to fetch real-time design trends and inspiration
-            for AI-generated designs.
+        <div className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6">
+          <h2 className="mb-4 text-2xl font-semibold">Dribbble Integration</h2>
+          <p className="mb-6 text-[var(--muted-foreground)]">
+            Connect your Dribbble account to fetch real-time design trends and inspiration for
+            AI-generated designs.
           </p>
 
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 bg-[var(--background)] rounded-lg">
+            <div className="flex items-center justify-between rounded-lg bg-[var(--background)] p-4">
               <div>
                 <p className="font-medium">Status</p>
                 <p className="text-sm text-[var(--muted-foreground)]">
@@ -95,50 +95,40 @@ export default function AdminSettingsPage() {
                 </p>
               </div>
               <div
-                className={`h-3 w-3 rounded-full ${
-                  isConnected ? "bg-green-500" : "bg-gray-400"
-                }`}
+                className={`h-3 w-3 rounded-full ${isConnected ? "bg-green-500" : "bg-gray-400"}`}
               />
             </div>
 
             {!isConnected ? (
-              <Button
-                onClick={handleConnectDribbble}
-                disabled={isChecking}
-                className="w-full"
-              >
+              <Button onClick={handleConnectDribbble} disabled={isChecking} className="w-full">
                 Connect Dribbble Account
               </Button>
             ) : (
-              <Button
-                onClick={handleDisconnectDribbble}
-                variant="outline"
-                className="w-full"
-              >
+              <Button onClick={handleDisconnectDribbble} variant="outline" className="w-full">
                 Disconnect Dribbble
               </Button>
             )}
           </div>
 
-          <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-            <h3 className="font-semibold text-blue-600 dark:text-blue-400 mb-2">
+          <div className="mt-6 rounded-lg border border-blue-500/20 bg-blue-500/10 p-4">
+            <h3 className="mb-2 font-semibold text-blue-600 dark:text-blue-400">
               Setup Instructions
             </h3>
-            <ol className="text-sm text-[var(--muted-foreground)] space-y-2 list-decimal list-inside">
+            <ol className="list-inside list-decimal space-y-2 text-sm text-[var(--muted-foreground)]">
               <li>
                 Register your app at{" "}
                 <a
                   href="https://dribbble.com/account/applications/new"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-400 hover:underline"
+                  className="text-blue-600 hover:underline dark:text-blue-400"
                 >
                   Dribbble Applications
                 </a>
               </li>
               <li>
                 Set Callback URL to:{" "}
-                <code className="bg-[var(--background)] px-2 py-1 rounded">
+                <code className="rounded bg-[var(--background)] px-2 py-1">
                   YOUR_DOMAIN/api/dribbble/callback
                 </code>
                 <br />
@@ -147,9 +137,13 @@ export default function AdminSettingsPage() {
                 </span>
               </li>
               <li>
-                Add <code className="bg-[var(--background)] px-2 py-1 rounded">DRIBBBLE_CLIENT_ID</code> and{" "}
-                <code className="bg-[var(--background)] px-2 py-1 rounded">DRIBBBLE_CLIENT_SECRET</code> to your{" "}
-                <code className="bg-[var(--background)] px-2 py-1 rounded">.env</code> file
+                Add{" "}
+                <code className="rounded bg-[var(--background)] px-2 py-1">DRIBBBLE_CLIENT_ID</code>{" "}
+                and{" "}
+                <code className="rounded bg-[var(--background)] px-2 py-1">
+                  DRIBBBLE_CLIENT_SECRET
+                </code>{" "}
+                to your <code className="rounded bg-[var(--background)] px-2 py-1">.env</code> file
               </li>
               <li>Click "Connect Dribbble Account" above</li>
             </ol>

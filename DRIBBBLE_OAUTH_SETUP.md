@@ -9,7 +9,7 @@ Connect your Dribbble account to fetch real-time design trends and inspiration f
 ✅ **Real-time design trends** - Get the latest popular designs  
 ✅ **Fresh inspiration** - AI learns from current Dribbble shots  
 ✅ **Better designs** - More variety and modern aesthetics  
-✅ **Automatic updates** - Always uses trending patterns  
+✅ **Automatic updates** - Always uses trending patterns
 
 ## Setup Instructions
 
@@ -222,7 +222,7 @@ Features:
 ✅ **Use HTTPS in production** - Required for OAuth  
 ✅ **Rotate secrets regularly** - Generate new credentials periodically  
 ✅ **Validate state parameter** - Prevents CSRF attacks  
-✅ **Store tokens securely** - Database with proper access controls  
+✅ **Store tokens securely** - Database with proper access controls
 
 ## Rate Limits
 
@@ -357,6 +357,6 @@ For issues or questions:
 ✅ **Secure** - OAuth 2.0 standard  
 ✅ **Reliable** - Automatic fallback  
 ✅ **Legal** - Official API usage  
-✅ **Optional** - Works without connection  
+✅ **Optional** - Works without connection
 
 Connect Dribbble to get the best AI-generated designs with real-time inspiration! 🎨
