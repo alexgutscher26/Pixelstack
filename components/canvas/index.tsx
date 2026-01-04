@@ -19,10 +19,12 @@ const Canvas = ({
   projectId,
   isPending,
   projectName,
+  platform = "mobile",
 }: {
   projectId: string;
   isPending: boolean;
   projectName: string | null;
+  platform?: "mobile" | "website";
 }) => {
   const {
     theme,
@@ -326,6 +328,7 @@ const Canvas = ({
                           }}
                           toolMode={toolMode}
                           theme_style={themeStyle}
+                          platform={platform}
                           onOpenHtmlDialog={onOpenHtmlDialog}
                           onOpenReactDialog={onOpenReactDialog}
                         />

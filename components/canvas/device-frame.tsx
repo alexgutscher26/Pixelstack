@@ -28,6 +28,7 @@ type PropsType = {
   theme_style?: string;
   isLoading?: boolean;
   projectId: string;
+  platform?: "mobile" | "website";
   onOpenHtmlDialog: () => void;
   onOpenReactDialog?: () => void;
 };
@@ -118,6 +119,7 @@ type FrameViewportProps = {
   isSelectable: boolean;
   wireframeMode: boolean;
   toolMode: ToolModeType;
+  platform?: "mobile" | "website";
 };
 const FrameViewport = ({
   isLoading,
@@ -130,11 +132,14 @@ const FrameViewport = ({
   isSelectable,
   wireframeMode,
   toolMode,
+  platform = "mobile",
 }: FrameViewportProps) => {
+  const borderRadius = platform === "website" ? "rounded-lg" : "rounded-[36px]";
   return (
     <div
       className={cn(
-        "relative h-auto w-full overflow-hidden rounded-[36px] bg-black shadow-2xl",
+        "relative h-auto w-full overflow-hidden bg-black shadow-2xl",
+        borderRadius,
         isSelectable && toolMode !== TOOL_MODE_ENUM.HAND && "rounded-none"
       )}
     >
@@ -152,6 +157,7 @@ const FrameViewport = ({
               minHeight: minHeight,
               height: `${frameHeight}px`,
             }}
+            platform={platform}
           />
         ) : (
           <iframe
@@ -177,8 +183,8 @@ const FrameViewport = ({
 const DeviceFrame = ({
   html,
   title = "Untitled",
-  width = 420,
-  minHeight = 800,
+  width: propWidth,
+  minHeight: propMinHeight,
   initialPosition = { x: 0, y: 0 },
   frameId,
   scale = 1,
@@ -186,9 +192,13 @@ const DeviceFrame = ({
   theme_style,
   isLoading = false,
   projectId,
+  platform = "mobile",
   onOpenHtmlDialog,
   onOpenReactDialog,
 }: PropsType) => {
+  // Set dimensions based on platform
+  const width = propWidth ?? (platform === "website" ? 1200 : 420);
+  const minHeight = propMinHeight ?? (platform === "website" ? 800 : 800);
   const { selectedFrameId, setSelectedFrameId, updateFrame, wireframeMode, frames } = useCanvas();
   const [frameSize, setFrameSize] = useState({
     width,
@@ -494,6 +504,7 @@ const DeviceFrame = ({
           isSelectable={isSelected}
           wireframeMode={wireframeMode}
           toolMode={toolMode}
+          platform={platform}
         />
         <SelectionEditor
           visible={
