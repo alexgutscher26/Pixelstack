@@ -36,9 +36,7 @@ function parseNegatives(input: unknown): string[] | undefined {
 
 function parsePreferences(body: Record<string, unknown>): Preferences {
   const platform =
-    body.platform === "website" || body.platform === "mobile"
-      ? body.platform
-      : "mobile";
+    body.platform === "website" || body.platform === "mobile" ? body.platform : "mobile";
   const totalScreens =
     typeof body.totalScreens === "number"
       ? body.totalScreens
@@ -58,7 +56,14 @@ function parsePreferences(body: Record<string, unknown>): Preferences {
       ? body.stylePreset.trim()
       : undefined;
   const negativePrompts = parseNegatives(body.negativePrompts);
-  return { platform, totalScreens, onboardingScreens, includePaywall, negativePrompts, stylePreset };
+  return {
+    platform,
+    totalScreens,
+    onboardingScreens,
+    includePaywall,
+    negativePrompts,
+    stylePreset,
+  };
 }
 
 function parseBrandKit(body: Record<string, unknown>): BrandKit {

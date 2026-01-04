@@ -247,7 +247,8 @@ const LandingSection = () => {
               </h1>
               <div className="mx-auto max-w-2xl">
                 <p className="text-muted-foreground text-center text-base sm:text-lg">
-                  Generate stunning {platform === "mobile" ? "mobile interfaces" : "websites"} in seconds with our AI explorer.
+                  Generate stunning {platform === "mobile" ? "mobile interfaces" : "websites"} in
+                  seconds with our AI explorer.
                 </p>
               </div>
             </div>
@@ -261,14 +262,18 @@ const LandingSection = () => {
                       variant="ghost"
                       size="lg"
                       className={`group relative h-auto gap-3 rounded-2xl border px-8 py-4 transition-all hover:-translate-y-1 hover:scale-105 ${
-                        platform === "mobile" 
-                          ? "border-primary/50 bg-card shadow-lg shadow-primary/20" 
+                        platform === "mobile"
+                          ? "border-primary/50 bg-card shadow-lg shadow-primary/20"
                           : "border-white/5 bg-card/50 hover:bg-card"
                       } hover:border-primary/30`}
                       onClick={() => setPlatform("mobile")}
                     >
-                      <Smartphone className={`size-6 transition-colors ${platform === "mobile" ? "text-primary" : "text-muted-foreground"}`} />
-                      <span className={`text-base font-bold transition-colors ${platform === "mobile" ? "text-white" : "text-gray-300 group-hover:text-white"}`}>
+                      <Smartphone
+                        className={`size-6 transition-colors ${platform === "mobile" ? "text-primary" : "text-muted-foreground"}`}
+                      />
+                      <span
+                        className={`text-base font-bold transition-colors ${platform === "mobile" ? "text-white" : "text-gray-300 group-hover:text-white"}`}
+                      >
                         Mobile App
                       </span>
                     </Button>
@@ -277,66 +282,70 @@ const LandingSection = () => {
                       variant="ghost"
                       size="lg"
                       className={`group relative h-auto gap-3 rounded-2xl border px-8 py-4 transition-all hover:-translate-y-1 hover:scale-105 ${
-                        platform === "website" 
-                          ? "border-primary/50 bg-card shadow-lg shadow-primary/20" 
+                        platform === "website"
+                          ? "border-primary/50 bg-card shadow-lg shadow-primary/20"
                           : "border-white/5 bg-card/50 hover:bg-card"
                       } hover:border-primary/30`}
                       onClick={() => setPlatform("website")}
                     >
-                      <Monitor className={`size-6 transition-colors ${platform === "website" ? "text-primary" : "text-muted-foreground"}`} />
-                      <span className={`text-base font-bold transition-colors ${platform === "website" ? "text-white" : "text-gray-300 group-hover:text-white"}`}>
+                      <Monitor
+                        className={`size-6 transition-colors ${platform === "website" ? "text-primary" : "text-muted-foreground"}`}
+                      />
+                      <span
+                        className={`text-base font-bold transition-colors ${platform === "website" ? "text-white" : "text-gray-300 group-hover:text-white"}`}
+                      >
                         Website
                       </span>
                     </Button>
                   </div>
                   <div className="flex flex-wrap justify-center gap-3">
-                  {STYLE_PRESETS.map((p) => {
-                    const colorClass =
-                      p === "Futuristic"
-                        ? "from-blue-400 to-blue-600"
-                        : p === "Neo‑Brutalism"
-                          ? "from-pink-400 to-pink-600"
-                          : p === "Nature"
-                            ? "from-emerald-400 to-emerald-600"
-                            : p === "Playful"
-                              ? "from-orange-400 to-orange-600"
-                              : p === "Minimal"
-                                ? "from-purple-400 to-purple-600"
-                                : "from-yellow-400 to-yellow-600";
-                    const borderColor =
-                      p === "Futuristic"
-                        ? "hover:border-blue-400/50"
-                        : p === "Neo‑Brutalism"
-                          ? "hover:border-pink-400/50"
-                          : p === "Nature"
-                            ? "hover:border-emerald-400/50"
-                            : p === "Playful"
-                              ? "hover:border-orange-400/50"
-                              : p === "Minimal"
-                                ? "hover:border-purple-400/50"
-                                : "hover:border-yellow-400/50";
-                    const active = stylePreset === p;
-                    return (
-                      <Button
-                        key={p}
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className={`hover:bg-card group relative h-auto gap-2 rounded-full border px-5 py-2 transition-all hover:-translate-y-1 hover:scale-105 ${
-                          active ? "border-primary/50 bg-card" : "border-white/5 bg-card"
-                        } ${borderColor}`}
-                        onClick={() => setStylePreset(active ? undefined : p)}
-                      >
-                        <span
-                          className={`size-2.5 rounded-full bg-gradient-to-tr shadow-sm ${colorClass}`}
-                        />
-                        <span className="text-sm font-bold text-gray-300 transition-colors group-hover:text-white">
-                          {p}
-                        </span>
-                      </Button>
-                    );
-                  })}
-                </div>
+                    {STYLE_PRESETS.map((p) => {
+                      const colorClass =
+                        p === "Futuristic"
+                          ? "from-blue-400 to-blue-600"
+                          : p === "Neo‑Brutalism"
+                            ? "from-pink-400 to-pink-600"
+                            : p === "Nature"
+                              ? "from-emerald-400 to-emerald-600"
+                              : p === "Playful"
+                                ? "from-orange-400 to-orange-600"
+                                : p === "Minimal"
+                                  ? "from-purple-400 to-purple-600"
+                                  : "from-yellow-400 to-yellow-600";
+                      const borderColor =
+                        p === "Futuristic"
+                          ? "hover:border-blue-400/50"
+                          : p === "Neo‑Brutalism"
+                            ? "hover:border-pink-400/50"
+                            : p === "Nature"
+                              ? "hover:border-emerald-400/50"
+                              : p === "Playful"
+                                ? "hover:border-orange-400/50"
+                                : p === "Minimal"
+                                  ? "hover:border-purple-400/50"
+                                  : "hover:border-yellow-400/50";
+                      const active = stylePreset === p;
+                      return (
+                        <Button
+                          key={p}
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className={`hover:bg-card group relative h-auto gap-2 rounded-full border px-5 py-2 transition-all hover:-translate-y-1 hover:scale-105 ${
+                            active ? "border-primary/50 bg-card" : "border-white/5 bg-card"
+                          } ${borderColor}`}
+                          onClick={() => setStylePreset(active ? undefined : p)}
+                        >
+                          <span
+                            className={`size-2.5 rounded-full bg-gradient-to-tr shadow-sm ${colorClass}`}
+                          />
+                          <span className="text-sm font-bold text-gray-300 transition-colors group-hover:text-white">
+                            {p}
+                          </span>
+                        </Button>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
               <div className="w-full">
@@ -350,9 +359,11 @@ const LandingSection = () => {
                       isLoading={isPending}
                       onSubmit={handleSubmit}
                       platform={platform}
-                      placeholder={platform === "mobile" 
-                        ? "Describe your app idea here... e.g. 'A meditation tracker with forest sounds, using a calming green palette and rounded cards.'"
-                        : "Describe your website idea here... e.g. 'A portfolio website with a hero section, project gallery, and contact form using a modern minimalist design.'"}
+                      placeholder={
+                        platform === "mobile"
+                          ? "Describe your app idea here... e.g. 'A meditation tracker with forest sounds, using a calming green palette and rounded cards.'"
+                          : "Describe your website idea here... e.g. 'A portfolio website with a hero section, project gallery, and contact form using a modern minimalist design.'"
+                      }
                       onEnhance={handleEnhance}
                       isEnhancing={isEnhancing}
                       bottomLeftAddon={
