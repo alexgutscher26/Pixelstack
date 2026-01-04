@@ -139,10 +139,12 @@ export default function AdminSettingsPage() {
               <li>
                 Set Callback URL to:{" "}
                 <code className="bg-[var(--background)] px-2 py-1 rounded">
-                  {typeof window !== "undefined"
-                    ? `${window.location.origin}/api/dribbble/callback`
-                    : "YOUR_DOMAIN/api/dribbble/callback"}
+                  YOUR_DOMAIN/api/dribbble/callback
                 </code>
+                <br />
+                <span className="text-xs">
+                  (e.g., http://localhost:3000/api/dribbble/callback for development)
+                </span>
               </li>
               <li>
                 Add <code className="bg-[var(--background)] px-2 py-1 rounded">DRIBBBLE_CLIENT_ID</code> and{" "}
