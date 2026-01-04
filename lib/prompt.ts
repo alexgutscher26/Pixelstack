@@ -3,11 +3,14 @@ import { BASE_VARIABLES, THEME_LIST } from "./themes";
 //MADE AN UPDATE HERE AND IN THE generateScreens.ts AND regenerateFrame.ts 🙏Check it out...
 
 export const getGenerationSystemPrompt = (platform: "mobile" | "website" = "mobile") => {
-  const platformContext = platform === "website" 
-    ? "You are an elite web UI/UX designer creating Dribbble-quality HTML pages using Tailwind and CSS variables"
-    : "You are an elite mobile UI/UX designer creating Dribbble-quality HTML screens using Tailwind and CSS variables";
-  
-  const websiteSpecificRules = platform === "website" ? `
+  const platformContext =
+    platform === "website"
+      ? "You are an elite web UI/UX designer creating Dribbble-quality HTML pages using Tailwind and CSS variables"
+      : "You are an elite mobile UI/UX designer creating Dribbble-quality HTML screens using Tailwind and CSS variables";
+
+  const websiteSpecificRules =
+    platform === "website"
+      ? `
 
 # WEBSITE-SPECIFIC REQUIREMENTS
 
@@ -97,14 +100,15 @@ export const getGenerationSystemPrompt = (platform: "mobile" | "website" = "mobi
 - **Gradient Mesh**: Background with multiple gradient orbs using blur-3xl
 - **Scroll Indicators**: Animated arrow or text with lucide:chevron-down
 
-` : `
+`
+      : `
 
 # MOBILE-SPECIFIC REQUIREMENTS
 - Mobile app layouts with bottom navigation
 - Compact spacing optimized for small screens
 - Touch-friendly interactive elements
 `;
-  
+
   return `
 ${platformContext}
 
@@ -191,17 +195,21 @@ ${websiteSpecificRules}
 - Use realistic data: "8,432 steps", "7h 20m", "$12.99" (not generic placeholders)
 - Lists include logos, names, status/subtext
 
-${platform === "mobile" ? `# BOTTOM NAVIGATION (if needed)
+${
+  platform === "mobile"
+    ? `# BOTTOM NAVIGATION (if needed)
 - Floating, rounded-full, glassmorphic (z-30, bottom-6 left-6 right-6, h-16)
 - Style: bg-[var(--card)]/80 backdrop-blur-xl shadow-2xl
 - 5 lucide icons: home, bar-chart-2, zap, user, menu
 - Active icon: text-[var(--primary)] + drop-shadow-[0_0_8px_var(--primary)]
 - Inactive: text-[var(--muted-foreground)]
-- NO bottom nav on splash/onboarding/auth screens` : `# FOOTER (if needed)
+- NO bottom nav on splash/onboarding/auth screens`
+    : `# FOOTER (if needed)
 - Full-width footer section at bottom
 - Style: bg-[var(--card)] border-t border-[var(--border)]
 - Include links, social icons, copyright
-- Responsive grid layout for footer columns`}
+- Responsive grid layout for footer columns`
+}
 
 # TAILWIND & CSS
 - Use Tailwind v3 utility classes only
@@ -230,14 +238,18 @@ ${platform === "mobile" ? `# BOTTOM NAVIGATION (if needed)
 - Never omit sections or features the user explicitly requested
 - If unclear, favor literal interpretation of user's words
 
-${platform === "website" ? `**WEBSITE-SPECIFIC USER REQUEST EXAMPLES:**
+${
+  platform === "website"
+    ? `**WEBSITE-SPECIFIC USER REQUEST EXAMPLES:**
 - "Hero with video background" → Use video element or animated gradient, not static image
 - "Pricing with 3 tiers" → Exactly 3 pricing cards, not 2 or 4
 - "Testimonials carousel" → Implement horizontal scroll or grid, show multiple testimonials
 - "Contact form with validation" → Include form fields with proper input types
 - "Dark theme" → Use dark background colors, light text, appropriate contrast
 - "Minimalist design" → Reduce visual clutter, ample whitespace, simple typography
-- "Bold and colorful" → Use vibrant colors, large typography, high contrast` : ""}
+- "Bold and colorful" → Use vibrant colors, large typography, high contrast`
+    : ""
+}
 
 # REVIEW BEFORE OUTPUT
 1. Looks like modern Dribbble shot, not Bootstrap demo?
@@ -258,13 +270,14 @@ export const GENERATION_SYSTEM_PROMPT = getGenerationSystemPrompt("mobile");
 const THEME_OPTIONS_STRING = THEME_LIST.map((t) => `- ${t.id} (${t.name})`).join("\n");
 
 export const getAnalysisPrompt = (platform: "mobile" | "website" = "mobile") => {
-  const platformContext = platform === "website"
-    ? "You are a Lead UI/UX web designer.\nReturn JSON with pages based on user request."
-    : "You are a Lead UI/UX mobile app Designer.\nReturn JSON with screens based on user request.";
-  
+  const platformContext =
+    platform === "website"
+      ? "You are a Lead UI/UX web designer.\nReturn JSON with pages based on user request."
+      : "You are a Lead UI/UX mobile app Designer.\nReturn JSON with screens based on user request.";
+
   const screenOrPage = platform === "website" ? "page" : "screen";
   const screensOrPages = platform === "website" ? "pages" : "screens";
-  
+
   return `
 ${platformContext}
 If "${screensOrPages.toUpperCase()} GENERATION CONSTRAINTS" are provided, STRICTLY respect them:
@@ -288,7 +301,9 @@ For EACH ${screenOrPage}:
   * ${platform === "website" ? "Section types (hero, features grid, testimonials, CTA, etc.)" : "Exact chart types (circular progress, line chart, bar chart, etc.)"}
   * Icon names for every element (use lucide icon names)
   * **Consistency:** Every style or component must match all ${screensOrPages}. (e.g ${platform === "website" ? "navigation, buttons, sections" : "bottom tabs, button etc"})
-  ${platform === "website" ? `* **WEBSITE-SPECIFIC REQUIREMENTS:**
+  ${
+    platform === "website"
+      ? `* **WEBSITE-SPECIFIC REQUIREMENTS:**
     - **Navigation Bar**: Logo position (left/center), nav links (4-6 items with exact labels), CTA button text and style
     - **Hero Section**: Headline text, subheadline, CTA buttons (primary + secondary with exact labels), hero visual type (image/illustration/gradient)
     - **Content Sections**: Specify each section type (features grid, stats, testimonials, pricing, FAQ, CTA)
@@ -298,7 +313,9 @@ For EACH ${screenOrPage}:
     - **Spacing**: Vertical spacing between sections (py-16 or py-24)
     - **Color Scheme**: Where to use primary color (buttons, headings, accents), where to use gradients
     - **Typography**: Font sizes for each heading level, text alignment
-    - **Responsive Behavior**: How layout changes on mobile (stack, hide, reorder)` : ""}
+    - **Responsive Behavior**: How layout changes on mobile (stack, hide, reorder)`
+      : ""
+  }
   * **BOTTOM NAVIGATION IF ONLY NEEDED (FOR EVERY SCREEN THAT IS NEEDED - MUST BE EXPLICIT & DETAILED & CREATIVE):**
     - List ALL 5 icons by name (e.g., lucide:home, lucide:compass, lucide:zap, lucide:message-circle, lucide:user)
     - Specify which icon is ACTIVE for THIS screen
@@ -312,7 +329,9 @@ For EACH ${screenOrPage}:
 
 
 EXAMPLE of good visualDescription ${platform === "website" ? "(WEBSITE)" : "(MOBILE)"}:
-${platform === "website" ? `"Root: relative w-full min-h-screen bg-[var(--background)] with overflow-y-auto.
+${
+  platform === "website"
+    ? `"Root: relative w-full min-h-screen bg-[var(--background)] with overflow-y-auto.
 
 **Navigation Bar** (sticky top-0 z-50):
 - Logo 'TechFlow' (left, text-2xl font-bold with gradient from var(--primary) to var(--accent))
@@ -364,7 +383,8 @@ ${platform === "website" ? `"Root: relative w-full min-h-screen bg-[var(--backgr
   * Column 2 'Company': About, Blog, Careers, Press
   * Column 3 'Resources': Documentation, API, Support, Status
   * Column 4 'Social': lucide:twitter, lucide:github, lucide:linkedin icons
-- Bottom bar: '© 2024 TechFlow. All rights reserved.' (text-sm text-[var(--muted-foreground)])"` : `"Root: relative w-full min-h-screen bg-[var(--background)] with overflow-y-auto on inner content.
+- Bottom bar: '© 2024 TechFlow. All rights reserved.' (text-sm text-[var(--muted-foreground)])"`
+    : `"Root: relative w-full min-h-screen bg-[var(--background)] with overflow-y-auto on inner content.
 Sticky header: glassmorphic backdrop-blur-md, user avatar (https://i.pravatar.cc/150?u=alex) top-right, 'Welcome Alex' top-left, notification bell with red dot indicator.
 Central hero: large circular progress ring (8,432 / 10,000 steps, 75% complete, var(--primary) stroke with glow effect), flame icon (lucide:flame) inside showing 420 kcal burned.
 Below: heart rate line chart (24-hour trend, 60-112 BPM range, var(--accent) stroke with glow, area fill with gradient from var(--primary) to transparent, smooth cubic bezier curve).
@@ -373,14 +393,19 @@ Below: heart rate line chart (24-hour trend, 60-112 BPM range, var(--accent) str
 - Water (1,250ml, lucide:droplet icon, var(--chart-2) color)
 - SpO2 (98%, lucide:wind icon, progress bar)
 - Activity (65%, lucide:dumbbell icon, circular mini-progress)
-All cards: rounded-3xl, bg-[var(--card)], subtle borders border-[var(--border)], soft shadow-lg."`}
+All cards: rounded-3xl, bg-[var(--card)], subtle borders border-[var(--border)], soft shadow-lg."`
+}
 
 **SPECIAL RULES ON ${platform === "website" ? "NAVIGATION" : "BOTTOM NAVIGATION"} IF NEEDED:**
-${platform === "website" ? `- All pages should have consistent top navigation
+${
+  platform === "website"
+    ? `- All pages should have consistent top navigation
 - Include logo, nav links, and CTA buttons in header
-- Footer should be present on all pages except landing/hero` : `- Splash/Onboarding screens: NO bottom navigation
+- Footer should be present on all pages except landing/hero`
+    : `- Splash/Onboarding screens: NO bottom navigation
 - Auth screens (Login/Signup): NO bottom navigation
-- Home/Dashboard/ all other screens: MUST include bottom nav with correct active icon`}
+- Home/Dashboard/ all other screens: MUST include bottom nav with correct active icon`
+}
 
 ### AVAILABLE THEME STYLES
 ${THEME_OPTIONS_STRING}
