@@ -13,7 +13,6 @@ import {
   useState,
 } from "react";
 import { type BundledLanguage, codeToHtml, type ShikiTransformer } from "shiki";
-import DOMPurify from "dompurify";
 
 type CodeBlockProps = HTMLAttributes<HTMLDivElement> & {
   code: string;
@@ -80,7 +79,11 @@ export const CodeBlock = ({
   ...props
 }: CodeBlockProps) => {
   const sanitize = (input: string) => {
-    return DOMPurify.sanitize(input || "");
+    let out = input || "";
+    out = out.replace(/<script[\s\S]*?<\/script>/gi, "");
+    out = out.replace(/\son\w+="[^"]*"/gi, "");
+    out = out.replace(/\s(href|xlink:href)="javascript:[^"]*"/gi, "");
+    return out;
   };
   const [html, setHtml] = useState<string>("");
   const [darkHtml, setDarkHtml] = useState<string>("");
