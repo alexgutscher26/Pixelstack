@@ -1,6 +1,7 @@
 # Dribbble OAuth Setup Guide
 
 ## Overview
+
 Connect your Dribbble account to fetch real-time design trends and inspiration for AI-generated designs.
 
 ## Benefits of Connecting Dribbble
@@ -8,7 +9,7 @@ Connect your Dribbble account to fetch real-time design trends and inspiration f
 ✅ **Real-time design trends** - Get the latest popular designs  
 ✅ **Fresh inspiration** - AI learns from current Dribbble shots  
 ✅ **Better designs** - More variety and modern aesthetics  
-✅ **Automatic updates** - Always uses trending patterns  
+✅ **Automatic updates** - Always uses trending patterns
 
 ## Setup Instructions
 
@@ -17,6 +18,7 @@ Connect your Dribbble account to fetch real-time design trends and inspiration f
 1. Go to [Dribbble Applications](https://dribbble.com/account/applications/new)
 
 2. Fill in the registration form:
+
    ```
    Name: Pixelstack (or your app name)
    Description: AI design generation tool that uses Dribbble trends for inspiration
@@ -48,6 +50,7 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000  # Change to your production URL in pr
 ```
 
 **Example**:
+
 ```bash
 DRIBBBLE_CLIENT_ID=abc123def456ghi789jkl012mno345pqr678stu901vwx234yz
 DRIBBBLE_CLIENT_SECRET=xyz789uvw012abc345def678ghi901jkl234mno567pqr890st
@@ -68,11 +71,13 @@ This creates the `Setting` model for storing the OAuth token.
 ### Step 4: Connect Dribbble Account
 
 1. Start your development server:
+
    ```bash
    npm run dev
    ```
 
 2. Navigate to the admin settings page:
+
    ```
    http://localhost:3000/admin/settings
    ```
@@ -130,19 +135,24 @@ This creates the `Setting` model for storing the OAuth token.
 ## API Endpoints
 
 ### `/api/dribbble/connect` (GET)
+
 Initiates OAuth flow by redirecting to Dribbble authorization page.
 
 ### `/api/dribbble/callback` (GET)
+
 Receives authorization code from Dribbble and exchanges it for access token.
 
 **Query Parameters**:
+
 - `code` - Authorization code from Dribbble
 - `state` - CSRF protection token
 
 ### `/api/dribbble/status` (GET)
+
 Checks if Dribbble is connected.
 
 **Response**:
+
 ```json
 {
   "connected": true
@@ -150,9 +160,11 @@ Checks if Dribbble is connected.
 ```
 
 ### `/api/dribbble/disconnect` (POST)
+
 Removes stored Dribbble token.
 
 **Response**:
+
 ```json
 {
   "success": true
@@ -164,6 +176,7 @@ Removes stored Dribbble token.
 Access at: `/admin/settings`
 
 Features:
+
 - ✅ View connection status
 - ✅ Connect Dribbble account
 - ✅ Disconnect Dribbble account
@@ -173,24 +186,32 @@ Features:
 ## Troubleshooting
 
 ### "Dribbble credentials not configured"
+
 **Solution**: Add `DRIBBBLE_CLIENT_ID` and `DRIBBBLE_CLIENT_SECRET` to `.env`
 
 ### "Redirect URI mismatch"
+
 **Solution**: Make sure the Callback URL in Dribbble matches exactly:
+
 - Development: `http://localhost:3000/api/dribbble/callback`
 - Production: `https://yourdomain.com/api/dribbble/callback`
 
 ### "Token exchange failed"
-**Solution**: 
+
+**Solution**:
+
 - Check that Client ID and Client Secret are correct
 - Verify environment variables are loaded (restart server)
 - Check Dribbble application status
 
 ### "No authorization code received"
+
 **Solution**: User may have denied authorization. Try connecting again.
 
 ### Connection shows "Not connected" after authorizing
+
 **Solution**:
+
 - Check database connection
 - Verify Prisma schema is up to date (`npx prisma generate`)
 - Check server logs for errors
@@ -201,15 +222,17 @@ Features:
 ✅ **Use HTTPS in production** - Required for OAuth  
 ✅ **Rotate secrets regularly** - Generate new credentials periodically  
 ✅ **Validate state parameter** - Prevents CSRF attacks  
-✅ **Store tokens securely** - Database with proper access controls  
+✅ **Store tokens securely** - Database with proper access controls
 
 ## Rate Limits
 
 Dribbble API limits:
+
 - **60 requests per minute** per authenticated user
 - **1,440 requests per day** per authenticated user
 
 Our implementation:
+
 - Fetches inspiration only for **new projects** (not regenerations)
 - Fetches only **12 shots** per request
 - Well within rate limits for normal usage
@@ -217,6 +240,7 @@ Our implementation:
 ## Fallback Behavior
 
 If Dribbble is not connected or API fails:
+
 - ✅ System automatically uses **curated design trends**
 - ✅ No errors or interruptions
 - ✅ AI still generates high-quality designs
@@ -227,6 +251,7 @@ If Dribbble is not connected or API fails:
 ### Test OAuth Flow
 
 1. Clear any existing tokens:
+
    ```bash
    # In your database, delete from Setting table
    ```
@@ -246,6 +271,7 @@ If Dribbble is not connected or API fails:
 1. Create a new project
 
 2. Check server logs for:
+
    ```
    Fetched 12 shots from Dribbble API
    ```
@@ -267,6 +293,7 @@ NEXT_PUBLIC_APP_URL=https://yourdomain.com
 ### Callback URL
 
 Update Dribbble application settings:
+
 ```
 Callback URL: https://yourdomain.com/api/dribbble/callback
 ```
@@ -274,6 +301,7 @@ Callback URL: https://yourdomain.com/api/dribbble/callback
 ### Database
 
 Ensure `Setting` table exists:
+
 ```bash
 npx prisma migrate deploy
 ```
@@ -317,6 +345,7 @@ A: Yes, we use the official Dribbble API and only extract metadata (not actual d
 ## Support
 
 For issues or questions:
+
 1. Check server logs for error messages
 2. Verify environment variables are set correctly
 3. Test OAuth flow in development first
@@ -328,6 +357,6 @@ For issues or questions:
 ✅ **Secure** - OAuth 2.0 standard  
 ✅ **Reliable** - Automatic fallback  
 ✅ **Legal** - Official API usage  
-✅ **Optional** - Works without connection  
+✅ **Optional** - Works without connection
 
 Connect Dribbble to get the best AI-generated designs with real-time inspiration! 🎨

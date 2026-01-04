@@ -3,10 +3,10 @@ import prisma from "@/lib/prisma";
 
 /**
  * Dribbble OAuth Callback Handler
- * 
+ *
  * This endpoint receives the authorization code from Dribbble
  * and exchanges it for an access token.
- * 
+ *
  * Flow:
  * 1. User clicks "Connect Dribbble" in admin settings
  * 2. User is redirected to Dribbble authorization page
@@ -26,24 +26,18 @@ export async function GET(request: NextRequest) {
     // Check for errors from Dribbble
     if (error) {
       console.error("Dribbble OAuth error:", error);
-      return NextResponse.redirect(
-        new URL(`/admin/settings?error=${error}`, request.url)
-      );
+      return NextResponse.redirect(new URL(`/admin/settings?error=${error}`, request.url));
     }
 
     // Validate code
     if (!code) {
-      return NextResponse.redirect(
-        new URL("/admin/settings?error=no_code", request.url)
-      );
+      return NextResponse.redirect(new URL("/admin/settings?error=no_code", request.url));
     }
 
     // Validate state (CSRF protection)
     // In production, you should verify this matches the state you sent
     if (!state) {
-      return NextResponse.redirect(
-        new URL("/admin/settings?error=invalid_state", request.url)
-      );
+      return NextResponse.redirect(new URL("/admin/settings?error=invalid_state", request.url));
     }
 
     // Exchange code for access token
@@ -53,9 +47,7 @@ export async function GET(request: NextRequest) {
 
     if (!clientId || !clientSecret) {
       console.error("Dribbble credentials not configured");
-      return NextResponse.redirect(
-        new URL("/admin/settings?error=not_configured", request.url)
-      );
+      return NextResponse.redirect(new URL("/admin/settings?error=not_configured", request.url));
     }
 
     // Exchange authorization code for access token
@@ -109,8 +101,6 @@ export async function GET(request: NextRequest) {
     );
   } catch (error) {
     console.error("OAuth callback error:", error);
-    return NextResponse.redirect(
-      new URL("/admin/settings?error=unknown", request.url)
-    );
+    return NextResponse.redirect(new URL("/admin/settings?error=unknown", request.url));
   }
 }
