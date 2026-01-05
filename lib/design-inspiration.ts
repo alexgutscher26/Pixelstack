@@ -67,7 +67,7 @@ async function fetchDribbbleShots(perPage: number = 12): Promise<DribbbleShot[]>
     }
 
     const response = await fetch(
-      `https://api.dribbble.com/v2/shots?per_page=${perPage}&sort=popular`,
+      `https://api.dribbble.com/v2/user/shots?per_page=${perPage}&sort=views&timeframe=month`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
