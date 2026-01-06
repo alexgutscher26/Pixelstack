@@ -412,7 +412,9 @@ export const generateScreens = inngest.createFunction(
       const targetTotal =
         (nonOnboarding ?? 0) + (effective ?? onboarding ?? 0) || object.screens.length;
       const constrainedScreens =
-        targetTotal > 0 ? object.screens.slice(0, Math.min(targetTotal, object.screens.length)) : object.screens;
+        targetTotal > 0
+          ? object.screens.slice(0, Math.min(targetTotal, object.screens.length))
+          : object.screens;
 
       return { ...object, screens: constrainedScreens, themeToUse };
     });
