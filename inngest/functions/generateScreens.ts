@@ -408,13 +408,20 @@ export const generateScreens = inngest.createFunction(
         },
       });
 
-      return { ...object, themeToUse };
+      // Enforce target screen counts if constraints provided
+      const targetTotal =
+        (nonOnboarding ?? 0) + (effective ?? onboarding ?? 0) || object.screens.length;
+      const constrainedScreens =
+        targetTotal > 0 ? object.screens.slice(0, Math.min(targetTotal, object.screens.length)) : object.screens;
+
+      return { ...object, screens: constrainedScreens, themeToUse };
     });
 
     // Actuall generation of each screens
     const generatedFrames: typeof frames = isExistingGeneration ? [...frames] : [];
     const existingCount = isExistingGeneration ? frames.length : 0;
 
+    const paywallIndex = includePaywall ? Math.max(analysis.screens.length - 1, 0) : -1;
     for (let i = 0; i < analysis.screens.length; i++) {
       const screenPlan = analysis.screens[i];
       const selectedTheme = THEME_LIST.find((t) => t.id === analysis.themeToUse);
@@ -444,7 +451,7 @@ export const generateScreens = inngest.createFunction(
             brandKit,
             negativePrompts,
             stylePreset,
-            includePaywall
+            i === paywallIndex
           ),
         });
 

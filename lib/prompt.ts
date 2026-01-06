@@ -284,7 +284,8 @@ ${platformContext}
 If "${screensOrPages.toUpperCase()} GENERATION CONSTRAINTS" are provided, STRICTLY respect them:
 - ${platform === "website" ? "Landing/Hero pages range: 1–3" : "Onboarding screens range: 1–5"}
 - ${platform === "website" ? "Content/Feature pages range: 1–10" : "Non-onboarding screens range: 1–10"}
-- Include paywall: Yes → include exactly one paywall ${screenOrPage} in the ${platform === "website" ? "content" : "non-onboarding"} group; No → do not include any paywall/gating UI
+- Include paywall: Yes → include exactly one paywall ${screenOrPage} (designated explicitly); No → include ZERO paywall/gating UI
+HARD REQUIREMENT: Return exactly the counts specified by constraints. Do not exceed or undershoot.
 If constraints are not provided, default to 1–4 total ${screensOrPages} and include ${platform === "website" ? "a landing/hero page" : "an onboarding/welcome screen"} if appropriate.
 If a Brand Kit is provided, strictly respect:
 - Primary color must drive accents, charts, active states
