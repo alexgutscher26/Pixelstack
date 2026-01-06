@@ -56,7 +56,7 @@ const Canvas = ({
         if (!result?.html) return null;
         setSelectedFrameId(null);
         setIsSaving(true);
-        const response = await axios.post("/api/screenshot", {
+        await axios.post("/api/screenshot", {
           html: result.html,
           width: result.element.scrollWidth,
           height: 700,
@@ -300,7 +300,8 @@ const Canvas = ({
                 >
                   <div>
                     {frames?.map((frame, index: number) => {
-                      const baseX = 100 + index * 480;
+                      const stepX = platform === "website" ? 1320 : 480;
+                      const baseX = 100 + index * stepX;
                       const y = 100;
 
                       // if (frame.isLoading) {
