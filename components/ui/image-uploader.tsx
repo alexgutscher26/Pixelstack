@@ -40,13 +40,15 @@ export const ImageUploader = ({ onUploaded, className, label }: Props) => {
         }}
         content={{
           button({ ready }: { ready: boolean }) {
-            return ready ? <ImageIcon className="size-5" /> : <Loader2 className="size-5 animate-spin" />;
+            return ready ? (
+              <ImageIcon className="size-5" />
+            ) : (
+              <Loader2 className="size-5 animate-spin" />
+            );
           },
         }}
       />
-      {preview && (
-        <span className="sr-only">{label ?? "Uploading image..."}</span>
-      )}
+      {preview && <span className="sr-only">{label ?? "Uploading image..."}</span>}
     </>
   );
 };

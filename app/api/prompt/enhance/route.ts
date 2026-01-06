@@ -10,6 +10,7 @@ type ParsedBody = {
   includePaywall?: boolean;
   negatives: string[];
   stylePreset?: string;
+  platform?: "mobile" | "website";
 };
 
 function parseNegatives(input: unknown): string[] {
@@ -38,7 +39,17 @@ function parseBody(body: unknown): ParsedBody {
       ? (b.stylePreset as string).trim()
       : undefined;
   const negatives = parseNegatives(b?.negativePrompts);
-  return { prompt, totalScreens, onboardingScreens, includePaywall, negatives, stylePreset };
+  const platform =
+    b?.platform === "website" ? "website" : b?.platform === "mobile" ? "mobile" : undefined;
+  return {
+    prompt,
+    totalScreens,
+    onboardingScreens,
+    includePaywall,
+    negatives,
+    stylePreset,
+    platform,
+  };
 }
 
 function buildConstraintsText({
@@ -72,7 +83,7 @@ export async function POST(request: Request) {
   try {
     const raw = await request.json().catch(() => ({}));
     const parsed = parseBody(raw);
-    const { prompt } = parsed;
+    const { prompt, platform } = parsed;
 
     if (!prompt) {
       return NextResponse.json({ error: "Missing prompt" }, { status: 400 });
@@ -85,9 +96,40 @@ export async function POST(request: Request) {
 
     const constraintsText = buildConstraintsText(parsed);
 
-    const { text } = await generateText({
-      model: openrouter.chat("google/gemini-2.5-flash-lite"),
-      system: `You are a senior mobile product designer.
+    const isWebsite = platform === "website";
+    const systemText = isWebsite
+      ? `You are a senior web product designer.
+Rewrite the user's brief into a production-ready website design specification.
+Use plain text only (no Markdown). 180–300 words.
+
+Output as labeled sections in this order:
+Overview
+Flows
+Pages
+Visual
+Layout
+Components
+Icons
+Data
+Navigation
+Constraints (only if constraints are provided)
+
+Include:
+- Site overview and target user
+- Core user flows
+- Page list with names and purposes
+- Visual direction and theme guidance (colors, tone, typography hints)
+- Layout and components per page (headers, hero, sections, cards, tables, forms)
+- Icons to use (Lucide icon names where relevant)
+- Realistic data examples with units, ranges, prices, durations
+- Primary navigation, secondary navigation, and footer content
+- Explicit constraints applied verbatim if provided
+
+Requirements:
+- Avoid placeholders, generic text, or lorem ipsum
+- Prefer web-first patterns and concise language
+- Keep content self-contained and implementable`
+      : `You are a senior mobile product designer.
 Rewrite the user's brief into a production-ready mobile UI design specification.
 Use plain text only (no Markdown). 180–300 words.
 
@@ -116,7 +158,11 @@ Include:
 Requirements:
 - Avoid placeholders, generic text, or lorem ipsum
 - Prefer mobile-first patterns and concise language
-- Keep content self-contained and implementable`,
+- Keep content self-contained and implementable`;
+
+    const { text } = await generateText({
+      model: openrouter.chat("google/gemini-2.5-flash-lite"),
+      system: systemText,
       prompt: `${prompt}${constraintsText}`,
       temperature: 0.7,
       maxOutputTokens: 600,

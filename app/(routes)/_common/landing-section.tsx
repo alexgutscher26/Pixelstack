@@ -262,6 +262,7 @@ const LandingSection = () => {
           includePaywall,
           negativePrompts: negativeText,
           stylePreset,
+          platform,
         }),
       });
       const data = await res.json();
@@ -270,7 +271,15 @@ const LandingSection = () => {
       }
     } catch {}
     setIsEnhancing(false);
-  }, [promptText, totalScreens, onboardingScreens, includePaywall, negativeText, stylePreset]);
+  }, [
+    promptText,
+    totalScreens,
+    onboardingScreens,
+    includePaywall,
+    negativeText,
+    stylePreset,
+    platform,
+  ]);
 
   const handleScroll = useCallback((direction: "left" | "right") => {
     const viewport = carouselRef.current?.querySelector(
@@ -577,40 +586,7 @@ const LandingSection = () => {
                               </div>
                             </PopoverContent>
                           </Popover>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                aria-label="Open negative prompts"
-                                className="text-muted-foreground hover:text-primary flex items-center gap-2 text-sm transition-colors"
-                              >
-                                <span>Negative Prompts</span>
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-80 p-3">
-                              <div className="flex flex-col gap-1.5">
-                                <label
-                                  htmlFor="negative-prompts-inline"
-                                  className="text-xs font-medium"
-                                >
-                                  Negative prompts
-                                </label>
-                                <textarea
-                                  id="negative-prompts-inline"
-                                  rows={3}
-                                  placeholder="e.g. No ads, avoid neon colors, no charts"
-                                  value={negativeText}
-                                  onChange={(e) => setNegativeText(e.target.value)}
-                                  className="bg-background focus:ring-primary rounded-md border px-2 py-2 focus:ring-2 focus:outline-none"
-                                  aria-label="Negative prompts to exclude styles or elements"
-                                />
-                                <span className="text-muted-foreground text-[10px]">
-                                  Comma or newline separated phrases to avoid in generation.
-                                </span>
-                              </div>
-                            </PopoverContent>
-                          </Popover>
+                          <Popover></Popover>
                         </>
                       }
                     />
@@ -701,7 +677,7 @@ const LandingSection = () => {
               </div>
 
               {isLoading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-2 pb-10">
+                <div className="grid grid-cols-1 gap-6 px-2 pb-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                   {Array.from({ length: 6 }).map((_, i) => (
                     <div
                       key={i}
@@ -718,7 +694,7 @@ const LandingSection = () => {
                   ))}
                 </div>
               ) : filteredProjects.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-2 pb-10">
+                <div className="grid grid-cols-1 gap-6 px-2 pb-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                   <div className="w-full">
                     <div
                       role="button"
