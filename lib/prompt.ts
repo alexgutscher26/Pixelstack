@@ -192,6 +192,7 @@ ${websiteSpecificRules}
 
 # ICONS & DATA
 - All icons: <iconify-icon icon="lucide:NAME"></iconify-icon>
+- Never use <img> for icons, and never call /api/icon in generated HTML
 - Use realistic data: "8,432 steps", "7h 20m", "$12.99" (not generic placeholders)
 - Lists include logos, names, status/subtext
 

@@ -617,11 +617,11 @@ const LandingSection = () => {
               </div>
 
               {isLoading ? (
-                <div className="flex snap-x snap-mandatory gap-6 overflow-x-auto px-2 pb-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-2 pb-10">
                   {Array.from({ length: 6 }).map((_, i) => (
                     <div
                       key={i}
-                      className="flex w-[240px] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border md:w-[280px]"
+                      className="flex w-full flex-col overflow-hidden rounded-2xl border"
                     >
                       <div className="bg-background aspect-[9/14]">
                         <Skeleton className="h-full w-full rounded-none" />
@@ -634,8 +634,8 @@ const LandingSection = () => {
                   ))}
                 </div>
               ) : filteredProjects.length > 0 ? (
-                <div className="scrollbar-thin scrollbar-thumb-border scrollbar-track-card flex snap-x snap-mandatory gap-6 overflow-x-auto px-2 pb-10">
-                  <div className="w-[240px] shrink-0 snap-start md:w-[280px]">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-2 pb-10">
+                  <div className="w-full">
                     <div
                       role="button"
                       tabIndex={0}
@@ -714,7 +714,7 @@ const ProjectCard = memo(({ project }: { project: ProjectType }) => {
   );
 
   return (
-    <div className="group w-[240px] shrink-0 cursor-pointer snap-start md:w-[280px]">
+    <div className="group w-full cursor-pointer">
       <div
         role="button"
         tabIndex={0}

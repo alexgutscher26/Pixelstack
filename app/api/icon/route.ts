@@ -4,6 +4,16 @@ import { generateText } from "ai";
 import { moderateText } from "@/lib/moderation";
 import { JSDOM } from "jsdom";
 
+function defaultIcon(size: number, title: string): string {
+  return [
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="${size}" height="${size}"`,
+    `  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" role="img" aria-label="${title}">`,
+    `  <rect x="3" y="3" width="18" height="18" rx="4"/>`,
+    `  <path d="M8 12h8M12 8v8"/>`,
+    `</svg>`,
+  ].join("");
+}
+
 function sanitizeSvg(svg: string): string {
   // Wrap SVG in an HTML document so jsdom can parse it reliably
   const dom = new JSDOM(`<!DOCTYPE html><html><body>${svg}</body></html>`);
@@ -78,7 +88,14 @@ export async function GET(request: Request) {
 
     const moderation = await moderateText(prompt);
     if (!moderation.allowed) {
-      return NextResponse.json({ error: "Prompt violates content policy" }, { status: 400 });
+      const safe = defaultIcon(size, "icon");
+      return new NextResponse(sanitizeSvg(safe), {
+        headers: {
+          "Content-Type": "image/svg+xml; charset=utf-8",
+          "X-Content-Type-Options": "nosniff",
+          "Cache-Control": "no-store",
+        },
+      });
     }
 
     const { text } = await generateText({
@@ -97,20 +114,26 @@ Constraints:
     });
 
     const svg = extractSvg(text || "");
-    if (!svg) {
-      return NextResponse.json({ error: "Failed to generate SVG" }, { status: 500 });
-    }
+    const safe = sanitizeSvg(svg || defaultIcon(size, "icon"));
 
-    const safe = sanitizeSvg(svg);
     return new NextResponse(safe, {
       headers: {
         "Content-Type": "image/svg+xml; charset=utf-8",
+        "X-Content-Type-Options": "nosniff",
         "Cache-Control": "no-store",
       },
     });
   } catch (error) {
     console.log("Icon generation error", error);
-    return NextResponse.json({ error: "Failed to generate icon" }, { status: 500 });
+    const safe = sanitizeSvg(defaultIcon(24, "icon"));
+    return new NextResponse(safe, {
+      headers: {
+        "Content-Type": "image/svg+xml; charset=utf-8",
+        "X-Content-Type-Options": "nosniff",
+        "Cache-Control": "no-store",
+      },
+      status: 200,
+    });
   }
 }
 
@@ -130,7 +153,14 @@ export async function POST(request: Request) {
 
     const moderation = await moderateText(prompt);
     if (!moderation.allowed) {
-      return NextResponse.json({ error: "Prompt violates content policy" }, { status: 400 });
+      const safe = sanitizeSvg(defaultIcon(sizeVal, "icon"));
+      return new NextResponse(safe, {
+        headers: {
+          "Content-Type": "image/svg+xml; charset=utf-8",
+          "X-Content-Type-Options": "nosniff",
+          "Cache-Control": "no-store",
+        },
+      });
     }
 
     const { text } = await generateText({
@@ -149,19 +179,25 @@ Constraints:
     });
 
     const svg = extractSvg(text || "");
-    if (!svg) {
-      return NextResponse.json({ error: "Failed to generate SVG" }, { status: 500 });
-    }
+    const safe = sanitizeSvg(svg || defaultIcon(sizeVal, "icon"));
 
-    const safe = sanitizeSvg(svg);
     return new NextResponse(safe, {
       headers: {
         "Content-Type": "image/svg+xml; charset=utf-8",
+        "X-Content-Type-Options": "nosniff",
         "Cache-Control": "no-store",
       },
     });
   } catch (error) {
     console.log("Icon generation error", error);
-    return NextResponse.json({ error: "Failed to generate icon" }, { status: 500 });
+    const safe = sanitizeSvg(defaultIcon(24, "icon"));
+    return new NextResponse(safe, {
+      headers: {
+        "Content-Type": "image/svg+xml; charset=utf-8",
+        "X-Content-Type-Options": "nosniff",
+        "Cache-Control": "no-store",
+      },
+      status: 200,
+    });
   }
 }
