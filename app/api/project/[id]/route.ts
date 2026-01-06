@@ -116,8 +116,8 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const trimmedName = typeof name === "string" ? name.trim() : undefined;
-    const hasValidName = Boolean(trimmedName) && trimmedName.length > 0;
+    const trimmedName = typeof name === "string" ? name.trim() : "";
+    const hasValidName = trimmedName.length > 0;
     const hasTheme = themeId !== undefined;
     const hasBrandLogo = typeof brandLogoUrl === "string";
     const hasBrandPrimaryColor = typeof brandPrimaryColor === "string";

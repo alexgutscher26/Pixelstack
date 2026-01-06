@@ -145,7 +145,7 @@ export default function AdminSettingsPage() {
                 </code>{" "}
                 to your <code className="rounded bg-[var(--background)] px-2 py-1">.env</code> file
               </li>
-              <li>Click "Connect Dribbble Account" above</li>
+              <li>Click &quot;Connect Dribbble Account&quot; above</li>
             </ol>
           </div>
         </div>

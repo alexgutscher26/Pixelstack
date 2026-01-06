@@ -13,13 +13,13 @@ import {
   ChevronLeft,
   ChevronRight,
   SlidersHorizontal,
-  ImageIcon,
   MicIcon,
   Sparkles,
   Search,
   Smartphone,
   Monitor,
 } from "lucide-react";
+import { ImageUploader } from "@/components/ui/image-uploader";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FallbackImage } from "@/components/ui/fallback-image";
@@ -450,14 +450,16 @@ const LandingSection = () => {
                       isEnhancing={isEnhancing}
                       bottomLeftAddon={
                         <>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            aria-label="Upload image"
+                          <ImageUploader
                             className="bg-card text-muted-foreground hover:border-primary/30 rounded-xl border border-white/5 p-2.5 transition-all hover:text-white"
-                          >
-                            <ImageIcon className="size-5" />
-                          </Button>
+                            onUploaded={(url) => {
+                              setPromptText((prev) =>
+                                prev
+                                  ? `${prev}\n\nReference image: ${url}`
+                                  : `Reference image: ${url}`
+                              );
+                            }}
+                          />
                           <Button
                             size="icon"
                             variant="ghost"
