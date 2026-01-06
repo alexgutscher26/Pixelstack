@@ -37,68 +37,142 @@ const SUGGESTIONS = [
   {
     label: "Finance Tracker",
     icon: "💸",
+    platform: "mobile",
     value:
-      "Finance app statistics screen. Current balance at top with dollar amount, bar chart showing spending over months (Oct-Mar) with month selector pills below, transaction list with app icons, amounts, and categories. Bottom navigation bar. Mobile app, single screen. Style: Dark theme, chunky rounded cards, playful but professional, modern sans-serif typography, Gen Z fintech vibe. Fun and fresh, not corporate.",
+      "Mobile finance dashboard. Top summary with current balance and daily/weekly change. Bar chart for monthly spend, category chips to filter, and recent transactions list with brand icons. Bottom nav. Style: Dark OLED, rounded cards, bold sans-serif, playful but professional.",
   },
   {
     label: "Fitness Activity",
     icon: "🔥",
+    platform: "mobile",
     value:
-      "Fitness tracker summary screen. Large central circular progress ring showing steps and calories with neon glow. Line graph showing heart rate over time. Bottom section with grid of health metrics (Sleep, Water, SpO2). Mobile app, single screen. Style: Deep Dark Mode (OLED friendly). Pitch black background with electric neon green and vibrant blue accents. High contrast, data-heavy but organized, sleek and sporty aesthetic.",
+      "Mobile fitness overview. Large progress ring for steps/calories, heart-rate line graph, grid of metrics (Sleep, Water, SpO2). Sticky bottom player for guided workouts. Style: Deep dark, neon accents, sleek sporty, high contrast.",
   },
   {
     label: "Food Delivery",
     icon: "🍔",
+    platform: "mobile",
     value:
-      "Food delivery home feed. Top search bar with location pin. Horizontal scrolling hero carousel of daily deals. Vertical list of restaurants with large delicious food thumbnails, delivery time badges, and rating stars. Floating Action Button (FAB) for cart. Mobile app, single screen. Style: Vibrant and Appetizing. Warm colors (orange, red, yellow), rounded card corners, subtle drop shadows to create depth. Friendly and inviting UI.",
+      "Mobile food delivery home. Search bar, hero deals carousel, restaurant list with large thumbnails, delivery time, rating stars, and cuisine chips. Floating cart FAB. Style: Warm appetizing, rounded cards, soft shadows, friendly UI.",
   },
   {
     label: "Travel Booking",
     icon: "✈️",
+    platform: "mobile",
     value:
-      'Travel destination detail screen. Full-screen immersive photography of a tropical beach. Bottom sheet overlay with rounded top corners containing hotel title, star rating, price per night, and a large "Book Now" button. Horizontal scroll of amenity icons. Mobile app, single screen. Style: Minimalist Luxury. ample whitespace, elegant serif typography for headings, clean sans-serif for body text. Sophisticated, airy, high-end travel vibe.',
+      'Mobile destination detail. Immersive full-bleed photo, bottom sheet with title, rating, price/night, and prominent "Book Now". Amenities scroll row. Style: Minimal luxury, airy spacing, elegant serif headings, clean sans body.',
   },
   {
-    label: "E-Commerce",
+    label: "Sneaker Store",
     icon: "👟",
+    platform: "mobile",
     value:
-      'Sneaker product page. Large high-quality product image on a light gray background. Color selector swatches, size selector grid, and a sticky "Add to Cart" button at the bottom. Title and price in bold, oversized typography. Mobile app, single screen. Style: Neo-Brutalism. High contrast, thick black outlines on buttons and cards, hard shadows (no blur), unrefined geometry, bold solid colors (yellow and black). Trendy streetwear aesthetic.',
+      'Mobile product page. Large sneaker photo, color swatches, size grid, sticky "Add to Cart". Price and title in oversized type. Style: Neo-brutalism, high contrast, bold outlines, solid yellow/black palette.',
   },
   {
-    label: "Meditation",
+    label: "Meditation Player",
     icon: "🧘",
+    platform: "mobile",
     value:
-      "Meditation player screen. Central focus is a soft, abstract breathing bubble animation. Play/Pause controls and a time slider below. Background is a soothing solid pastel sage green. Mobile app, single screen. Style: Soft Minimal. Rounded corners on everything, low contrast text for relaxation, pastel color palette, very little UI clutter. Zen, calming, and therapeutic atmosphere.",
+      "Mobile now-playing screen for meditation. Central breathing bubble animation, play/pause, duration slider, session tags. Style: Soft minimal, pastel sage, rounded everything, gentle typography.",
   },
   {
     label: "Crypto Portfolio",
     icon: "📈",
+    platform: "mobile",
     value:
-      "Crypto portfolio dashboard. Top summary with total balance and 24h change. Asset list with coin icons, prices, % change chips (green/red), and mini sparklines. Tabs for Overview, Markets, Wallet. Mobile app, single screen. Style: Dark neon. Deep charcoal background with cyan/magenta accents, glassy cards, sleek data visuals.",
+      "Mobile portfolio overview. Total balance, 24h move, asset list with icons, prices, up/down chips, sparklines. Tabs: Overview, Markets, Wallet. Style: Dark neon, cyan/magenta accents, glassy cards.",
   },
   {
     label: "Smart Home",
     icon: "🏠",
+    platform: "mobile",
     value:
-      "Smart home control center. Rooms grid with large tiles showing temperature, lights, and security status. Quick actions row (Lock Doors, Turn Off Lights). Bottom navigation with Home, Scenes, Energy, Settings. Mobile app, single screen. Style: Cozy modern. Warm neutrals, rounded tiles, subtle shadows, simple icons.",
+      "Mobile home control. Rooms grid with tiles showing temperature, lights, security. Quick actions row (Lock Doors, Lights Off). Bottom nav. Style: Cozy modern, warm neutrals, subtle shadows, simple icons.",
   },
   {
     label: "Music Player",
     icon: "🎧",
+    platform: "mobile",
     value:
-      "Music player now playing screen. Large album art, track title and artist, progress slider, playback controls (shuffle, previous, play/pause, next, repeat). Queue button. Mobile app, single screen. Style: Minimal vibrant. White background, bold typography, accent color matching album art.",
+      "Mobile now-playing. Large album art, track info, progress slider, playback controls (shuffle/prev/play/next/repeat). Queue button. Style: Minimal vibrant, white background, accent color from artwork.",
   },
   {
     label: "Course Library",
     icon: "📚",
+    platform: "mobile",
     value:
-      "E-learning course library. Search bar, category chips, vertical list of courses with thumbnail, title, duration, and progress bar. CTA to continue last course. Mobile app, single screen. Style: Clean academic. Off-white background, muted colors, structured card layout, clear hierarchy.",
+      "Mobile e-learning library. Search, category chips, vertical course cards with thumbnail, duration, progress bar, and CTA to continue last course. Style: Clean academic, muted colors, structured layout.",
   },
   {
     label: "News Reader",
     icon: "📰",
+    platform: "mobile",
     value:
-      "News home feed. Featured hero article with image and badge, list of headlines with source and time, topic filters (World, Tech, Sports). Save and share buttons. Mobile app, single screen. Style: Editorial modern. Serif headlines, sans-serif body, high contrast, ample whitespace.",
+      "Mobile news feed. Featured hero article with badge, list of headlines with source and time, topic filters. Save/share actions. Style: Editorial modern, serif headlines, high contrast, ample whitespace.",
+  },
+  {
+    label: "Portfolio Website",
+    icon: "🧑‍🎨",
+    platform: "website",
+    value:
+      "Website portfolio. Hero with name, role, and CTA. Projects grid with hover details, about section, skills/tools, testimonials, and contact form. Style: Minimal, generous whitespace, elegant serif headings, clean sans for body.",
+  },
+  {
+    label: "SaaS Landing",
+    icon: "⚙️",
+    platform: "website",
+    value:
+      "Website landing for SaaS. Hero with product screenshot, primary CTA, social proof logos. Feature sections with icons, pricing table, FAQ accordion, and footer with links. Style: Modern startup, soft gradients, rounded cards, accessible contrast.",
+  },
+  {
+    label: "Storefront",
+    icon: "🛍️",
+    platform: "website",
+    value:
+      "Website e‑commerce. Category nav, promo hero, product grid with filters and badges, quick-add buttons, cart drawer, and newsletter signup. Style: Contemporary retail, light theme, crisp cards, subtle shadows.",
+  },
+  {
+    label: "Magazine Blog",
+    icon: "📰",
+    platform: "website",
+    value:
+      "Website editorial blog. Hero feature story, topic sections, article cards with author/date, sticky sidebar with tags and trending, and rich article template. Style: Editorial, high-contrast type, spacious layout.",
+  },
+  {
+    label: "Restaurant Website",
+    icon: "🍽️",
+    platform: "website",
+    value:
+      "Website for restaurant. Hero with ambiance photo, menu sections with dish photos and tags, reservation CTA, location map, and gallery. Style: Warm, refined, tasteful typography, subtle texture.",
+  },
+  {
+    label: "Event Landing",
+    icon: "🎟️",
+    platform: "website",
+    value:
+      "Website event page. Countdown hero, speakers grid, schedule timeline, venue info with map, ticket pricing tiers, and FAQ. Style: Energetic, bold accents, clear hierarchy.",
+  },
+  {
+    label: "Startup Homepage",
+    icon: "🚀",
+    platform: "website",
+    value:
+      "Website homepage for startup. Statement hero, quick value props, product demo section, customer logos, testimonials carousel, pricing CTA, and comprehensive footer. Style: Clean tech, neutral palette, soft gradient highlights.",
+  },
+  {
+    label: "Agency Portfolio",
+    icon: "🏢",
+    platform: "website",
+    value:
+      "Website for creative agency. Case study grid, services overview, team bios, awards/press, contact inquiry form with project budget selector. Style: Premium, typographic focus, restrained color, confident spacing.",
+  },
+  {
+    label: "Docs Site",
+    icon: "📖",
+    platform: "website",
+    value:
+      "Website documentation. Sidebar nav, searchable index, content area with code blocks and tabs, version switcher, dark mode, and feedback widget. Style: Developer-friendly, high legibility, semantic spacing.",
   },
 ];
 
@@ -130,6 +204,10 @@ const LandingSection = () => {
   const { data: projects, isLoading, isError } = useGetProjects(userId);
   const { mutate, isPending } = useCreateProject();
   const carouselRef = useRef<HTMLDivElement>(null);
+
+  const platformSuggestions = useMemo(() => {
+    return SUGGESTIONS.filter((s) => s.platform === platform);
+  }, [platform]);
 
   // Memoize filtered projects to prevent unnecessary recalculations
   const filteredProjects = useMemo(() => {
@@ -203,7 +281,11 @@ const LandingSection = () => {
   }, []);
 
   const handleStartNewProject = useCallback(() => {
-    const starter = SUGGESTIONS[0]?.value ?? "Create a modern mobile app home screen";
+    const starter =
+      platformSuggestions[0]?.value ??
+      (platform === "mobile"
+        ? "Create a modern mobile app home screen"
+        : "Create a modern website homepage");
     mutate({
       prompt: starter,
       platform,
@@ -211,7 +293,7 @@ const LandingSection = () => {
       onboardingScreens,
       includePaywall,
     });
-  }, [mutate, platform, totalScreens, onboardingScreens, includePaywall]);
+  }, [mutate, platform, totalScreens, onboardingScreens, includePaywall, platformSuggestions]);
 
   // Helper function for number input validation
   const clampValue = (value: number, min: number, max: number) => {
@@ -560,7 +642,7 @@ const LandingSection = () => {
                   </Button>
                 </div>
                 <Suggestions ref={carouselRef} className="py-1">
-                  {SUGGESTIONS.map((s) => (
+                  {platformSuggestions.map((s) => (
                     <Suggestion
                       key={s.label}
                       suggestion={s.label}
