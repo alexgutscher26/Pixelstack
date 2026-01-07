@@ -469,14 +469,6 @@ const LandingSection = () => {
                               );
                             }}
                           />
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            aria-label="Voice input"
-                            className="bg-card text-muted-foreground hover:border-primary/30 rounded-xl border border-white/5 p-2.5 transition-all hover:text-white"
-                          >
-                            <MicIcon className="size-5" />
-                          </Button>
                           <div className="mx-1 h-8 w-[1px] bg-white/10" />
                           <Popover>
                             <PopoverTrigger asChild>
